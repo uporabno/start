@@ -1,0 +1,29 @@
+TECAJI-LJSE.JSON - NAVODILA
+============================
+
+Izhodni file: actions/tecaji-ljse.json
+GitHub Action: .github/workflows/ljse-data.yml (Fetch TecajiLJSE)
+
+URNIK
+-----
+Vsake 10 minut, ponedeljek-petek, 7-16 UTC (9-18 CET)
+Cron: */10 7-16 * * 1-5
+
+URL
+---
+https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0
+
+KAJ DELA
+--------
+Fetchá LJSE API in shrani surovi JSON v tecaji-ljse.json.
+Podatki se PREPIŠEJO (ne nabirajo) - vedno so trenutni tečaji.
+
+VSEBINA JSON
+------------
+Struktura: data.priceList[].tradingPriceList.rows[]
+Simboli ki se berejo v phone/index.html: KRKG, ZVTG, CICG, VZZR
+Polja: symbol, last_price_n, change_prev_close_percentage
+
+KJER SE BERE
+------------
+phone/index.html (LJSE skript v5) - bere ../actions/tecaji-ljse.json

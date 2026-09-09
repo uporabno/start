@@ -1,0 +1,47 @@
+TEMPERATURA-MORA.JSON - NAVODILA
+=================================
+
+Izhodni file: actions/temperatura-mora.json
+GitHub Action: .github/workflows/mora-temperatura.yml (Fetch TemperaturaMora)
+
+URNIK
+-----
+Vsak dan ob 19:00 CET (17:00 UTC), vsak dan v tednu
+Cron: 0 17 * * *
+
+URL
+---
+https://meteo.hr/podaci.php?section=podaci_vrijeme&param=more_n&el=
+
+KAJ DELA
+--------
+Fetchá DHMZ (Hrvaški meteorološki zavod) stran s temperaturami morja.
+Python parser (BeautifulSoup) izvleče tabelo s postajami in temperaturami.
+Podatki se NABIRAJO - vsak dan doda nov zapis (ne prepiše).
+
+VSEBINA JSON
+------------
+Array zapisov, en element na dan:
+[
+  {
+    "datum": "2026-09-09",
+    "postaje": {
+      "Opatija A": {"07h": 24.7, "14h": 24.9, "17h": 25.4},
+      "Zadar A":   {"07h": 26.0, "14h": 26.3, "17h": 26.3},
+      ...
+    }
+  },
+  ...
+]
+
+POSTAJE (17 skupaj)
+-------------------
+Božava, Crikvenica A, Dubrovnik A, Komiža, Mali Losinj A, Malinska A,
+Mljet-Malo jezero A, Mljet-Veliko jezero A, Mljet-otvoreno more A,
+Opatija A, Pula, Rab, Rovinj-Sv.Ivan n/p, Split, Šibenik, Zadar A
+
+POSEBNOSTI
+----------
+"-" v tabeli = okvara naprave (vrednost null v JSON)
+"*" v tabeli = servisiranje boje (vrednost null v JSON)
+Ure meritev: 07h, 08h, 11h, 14h, 15h, 17h (odvisno od postaje)
