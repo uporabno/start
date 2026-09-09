@@ -16,5 +16,4 @@ pages/index.html:110
 
 ARHIVSKE DATOTEKE (pusti pri miru)
 -----------------------------------
-phone/index---original.html  → shranjeni original s 66ghz.com, ok
-_navodila_/ljse.txt          → dokumentacija, ok
+_navodila_/ljse.txt  → dokumentacija, ok
