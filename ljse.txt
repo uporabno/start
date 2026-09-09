@@ -1,0 +1,55 @@
+LJSE TEČAJ - NAVODILA
+=====================
+
+PROBLEM
+-------
+GitHub Pages je statičen hosting - PHP ne teče, direkten fetch na ljse.si
+pa browser blokira zaradi CORS politike. Javni CORS proxiji (corsproxy.io,
+allorigins.win, thingproxy) so nezanesljivi ali zahtevajo plačilo.
+
+REŠITEV
+-------
+GitHub Action vsake 10 minut fetchá LJSE API in shrani podatke kot lokalno
+JSON datoteko. JavaScript potem bere to lokalno datoteko brez CORS problema.
+
+DATOTEKE
+--------
+.github/workflows/ljse-data.yml   - GitHub Action (urnik + fetch + commit)
+phone/ljse-data.json               - podatki (avtomatsko posodobljeni)
+phone/index.html                   - JS bere ljse-data.json (v5)
+
+LJSE API URL
+------------
+https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0
+
+URNIK
+-----
+Vsake 10 minut, ponedeljek-petek, 7-16 UTC (= 9-18 CET)
+Cron: */10 7-16 * * 1-5
+
+ROČNI ZAGON
+-----------
+https://github.com/uporabno/start/actions
+→ "Fetch LJSE data" → "Run workflow"
+
+ZAKOMENTIRANI PHP PROXY (za 66ghz.com strežnik)
+------------------------------------------------
+V phone/index.html je stara PHP rešitev zakomentirana:
+  <!-- REŠITEV ZA PHP STREŽNIK (66ghz.com) -->
+  <!-- ... proxy.php fetchá LJSE in vrne JSONP ... -->
+
+Za PHP strežnik: odkomentiraj staro kodo, zakomentiraj v5 blok.
+proxy.php kliče: https://ljse.si/json/TradingPriceList?...
+in vrne JSONP callback (script tag technika, brez CORS).
+
+DELNIŠKI SIMBOLI
+----------------
+KRKG, ZVTG, CICG, VZZR
+
+VERZIJE
+-------
+v1 - original PHP proxy (66ghz.com)
+v2 - corsproxy.io → 401 Unauthorized
+v3 - allorigins.win → 522 error
+v4 - multi proxy fallback (direktno + allorigins + thingproxy) → vsi padli
+v5 - GitHub Action + lokalna datoteka (DELA)
