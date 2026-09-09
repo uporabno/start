@@ -27,7 +27,7 @@ jobs:
           from datetime import datetime, timezone, timedelta
 
           URL = 'https://meteo.hr/podaci.php?section=podaci_vrijeme&param=more_n&el='
-          OUT = 'actions/mora.json'
+          OUT = 'actions/temperatura-mora.json'
           CET = timezone(timedelta(hours=2))  # CEST poleti
           danes = datetime.now(CET).strftime('%Y-%m-%d')
 
@@ -93,6 +93,6 @@ jobs:
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git add actions/mora.json
+          git add actions/temperatura-mora.json
           git diff --cached --quiet || git commit -m "Temperatura morja $(date -u '+%Y-%m-%d')"
           git push
