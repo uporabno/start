@@ -1,4 +1,4 @@
-name: Fetch temperatura morja
+name: Fetch TemperaturaMora
 
 on:
   schedule:
