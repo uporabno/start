@@ -1,0 +1,106 @@
+<html>
+
+<head>
+<title>CK100</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="ck100.css" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><filter id='d'><feColorMatrix type='matrix' values='0.55 0 0 0 0  0 0.55 0 0 0  0 0 0.55 0 0  0 0 0 1 0'/></filter><clipPath id='c'><rect x='0' y='0' width='100' height='80'/></clipPath></defs><text y='.9em' font-size='90' filter='url(%23d)' clip-path='url(%23c)'>⛵</text></svg>">
+</head>
+
+<body bgcolor=#000000 text=#808080 link=#ffffff vlink=#ffffff alink=#ffffff width="100%">
+
+<div id="id_header">
+    <button id="btn_vse" onclick="prikaziVse()">Prikaži vse</button>
+</div>
+
+<div id="id_content" class="contentNormalno"></div>
+
+<div id="overlay">
+    <div id="overlay_info">
+        <span id="overlay_oznaka"></span>
+        <span id="overlay_datum"></span>
+        <span id="overlay_lokacija"></span>
+        <button id="btn_close" onclick="zapriOverlay()">&#10005;</button>
+    </div>
+    <img id="overlay_img" src="" alt="">
+</div>
+
+<div id="overlay_vse">
+    <div id="overlay_vse_header">
+        <button id="btn_nazaj" onclick="document.getElementById('overlay_vse').classList.remove('visible')">&#8592; Nazaj</button>
+    </div>
+    <div id="overlay_vse_vsebina"></div>
+</div>
+
+<script src="ck100-data.js"></script>
+<script>
+    const userAgent = navigator.userAgent.toLowerCase();
+    if (userAgent.indexOf("hipad max") >= 0) {
+        document.getElementById("id_content").className = "contentTab";
+    }
+
+    const container = document.getElementById("id_content");
+    const overlay = document.getElementById("overlay");
+    const overlayImg = document.getElementById("overlay_img");
+
+    ck100Data.forEach((item, i) => {
+        const div = document.createElement("div");
+        const zelena = item.datum !== "";
+        const imaSliko = item.slika !== "";
+        div.className = "element " + (zelena ? "zelena" : "rdeca");
+        div.textContent = item.oznaka;
+        if (zelena && imaSliko) {
+            div.onclick = () => {
+                overlayImg.src = item.slika;
+                document.getElementById("overlay_oznaka").textContent = item.oznaka;
+                document.getElementById("overlay_datum").textContent = item.datum;
+                document.getElementById("overlay_lokacija").textContent = item.lokacija;
+                overlay.classList.add("visible");
+            };
+        }
+        container.appendChild(div);
+        if ((i + 1) % 5 === 0) {
+            const clear = document.createElement("div");
+            clear.className = "clear";
+            container.appendChild(clear);
+        }
+    });
+
+    function zapriOverlay() {
+        overlay.classList.remove("visible");
+        overlayImg.src = "";
+    }
+
+    overlay.addEventListener("click", (e) => {
+        if (e.target === overlay || e.target === overlayImg) zapriOverlay();
+    });
+
+    function prikaziVse() {
+        const vsebina = document.getElementById("overlay_vse_vsebina");
+        vsebina.innerHTML = "";
+        ck100Data.filter(item => item.slika !== "").forEach(item => {
+            const blok = document.createElement("div");
+            blok.className = "vse-blok";
+            blok.innerHTML = `
+                <div class="vse-info">
+                    <span class="vse-oznaka">${item.oznaka}</span>
+                    <span class="vse-datum">${item.datum}</span>
+                    <span class="vse-lokacija">${item.lokacija}</span>
+                </div>
+                <img src="${item.slika}" alt="${item.oznaka}">
+            `;
+            vsebina.appendChild(blok);
+        });
+        document.getElementById("overlay_vse").classList.add("visible");
+    }
+
+    document.getElementById("overlay_vse").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("overlay_vse")) {
+            document.getElementById("overlay_vse").classList.remove("visible");
+        }
+    });
+</script>
+
+</body>
+</html>

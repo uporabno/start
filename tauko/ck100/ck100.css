@@ -1,0 +1,211 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #000000;
+    color: #808080;
+}
+
+/* Desktop layout */
+.contentNormalno {
+    width: 100%;
+    padding: 10px;
+}
+
+.contentNormalno .element {
+    float: left;
+    width: 20%;
+    padding: 6px 10px;
+    text-align: center;
+    user-select: none;
+}
+
+/* Tablet layout (HiPad Max) */
+.contentTab {
+    width: 100%;
+    padding: 6px;
+}
+
+.contentTab .element {
+    float: left;
+    width: 20%;
+    padding: 4px 6px;
+    text-align: center;
+    user-select: none;
+}
+
+.clear {
+    clear: both;
+}
+
+.element {
+    padding-top: 0px;
+    font-family: 'Segoe UI', Candara, Calibri, sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    cursor: default;
+}
+
+.rdeca { color: #CC2200; }
+.zelena { color: #22AA00; cursor: pointer; }
+
+#id_header {
+    text-align: center;
+    padding: 10px 0 8px;
+}
+
+#btn_vse {
+    background: #222;
+    color: #aaa;
+    border: 1px solid #555;
+    padding: 6px 20px;
+    font-family: 'Segoe UI', Candara, Calibri, sans-serif;
+    font-size: 28px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+#btn_vse:hover {
+    background: #333;
+    color: #fff;
+}
+
+#overlay_vse {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 200;
+    overflow-y: auto;
+}
+#overlay_vse.visible { display: block; }
+
+#overlay_vse_header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.85);
+    text-align: center;
+}
+
+#btn_nazaj {
+    background: #222;
+    color: #aaa;
+    border: 1px solid #555;
+    padding: 6px 20px;
+    font-family: 'Segoe UI', Candara, Calibri, sans-serif;
+    font-size: 28px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+#btn_nazaj:hover {
+    background: #333;
+    color: #fff;
+}
+
+#overlay_vse_vsebina {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.vse-blok {
+    width: 100%;
+    max-width: 600px;
+    text-align: center;
+}
+
+.vse-blok img {
+    display: block;
+    height: auto;
+    width: 100%;
+    border: 1px solid #444;
+}
+
+.vse-info {
+    display: flex;
+    flex-direction: column;
+    color: #aaa;
+    font-family: 'Segoe UI', Candara, Calibri, sans-serif;
+    font-size: 26px;
+    margin-bottom: 4px;
+}
+
+.vse-oznaka {
+    color: #22AA00;
+    font-weight: 600;
+    font-size: 30px;
+}
+
+.vse-datum { color: #888; }
+.vse-lokacija { color: #aaa; }
+
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 100;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#overlay.visible { display: flex; }
+#overlay img {
+    width: 100vw;
+    flex: 1;
+    min-height: 0;
+    object-fit: contain;
+}
+
+#overlay_info {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.7);
+    font-family: 'Segoe UI', Candara, Calibri, sans-serif;
+    flex-shrink: 0;
+}
+
+#overlay_oznaka {
+    color: #22AA00;
+    font-weight: 700;
+    font-size: 34px;
+    min-width: 60px;
+}
+
+#overlay_datum {
+    color: #aaa;
+    font-size: 34px;
+}
+
+#overlay_lokacija {
+    color: #ccc;
+    font-size: 34px;
+    flex: 1;
+}
+
+#btn_close {
+    margin-left: auto;
+    background: #333;
+    color: #aaa;
+    border: 1px solid #555;
+    width: 60px;
+    height: 60px;
+    font-size: 32px;
+    cursor: pointer;
+    border-radius: 4px;
+    line-height: 1;
+}
+#btn_close:hover {
+    background: #555;
+    color: #fff;
+}
