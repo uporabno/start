@@ -153,20 +153,16 @@ onload="myOnLoad()">
      ============================================================ -->
 <script>
 (function() {
-  var VER = 'v4';
-  var LJSE_URL = 'https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0';
-  console.log('LJSE skript ' + VER + ' naložen');
-  var PROXIES = [
-    '',                                          // 1. direktno (če LJSE ima CORS)
-    'https://api.allorigins.win/raw?url=',       // 2. allorigins
-    'https://thingproxy.freeboard.io/fetch/',    // 3. thingproxy
-  ];
+  var VER = 'v5';
+  // GitHub Action fetchá LJSE vsake 10 min in shrani v ljse-data.json (brez CORS)
   var WANT = {
     'KRKG': {id:'sKRKG', lbl:'KRKG'},
     'ZVTG': {id:'sZVTG', lbl:'ZVTG'},
     'CICG': {id:'sCICG', lbl:'CICG'},
     'VZZR': {id:'sVZZR', lbl:'VZZR'}
   };
+
+  console.log('LJSE skript ' + VER + ' naložen');
 
   function show(id, lbl, price, chg) {
     var el = document.getElementById(id);
@@ -196,30 +192,21 @@ onload="myOnLoad()">
     Object.keys(WANT).forEach(function(s){ if (!found[s]) na(WANT[s].id, WANT[s].lbl); });
   }
 
-  function tryProxy(idx) {
-    if (idx >= PROXIES.length) {
-      console.warn('LJSE: vsi proxiji neuspešni');
-      Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); });
-      return;
-    }
-    var url = PROXIES[idx] ? PROXIES[idx] + encodeURIComponent(LJSE_URL) : LJSE_URL;
-    console.log('LJSE: poskus ' + idx + ':', url);
-    fetch(url)
+  function fetchStocks() {
+    fetch('ljse-data.json?_=' + Date.now())
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       })
       .then(function(data) {
-        console.log('LJSE: OK (proxy ' + idx + ')');
+        console.log('LJSE: OK (lokalna datoteka)');
         parseData(data);
       })
       .catch(function(e) {
-        console.warn('LJSE: proxy ' + idx + ' napaka:', e.message);
-        tryProxy(idx + 1);
+        console.warn('LJSE: napaka pri branju ljse-data.json:', e.message);
+        Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); });
       });
   }
-
-  function fetchStocks() { tryProxy(0); }
 
   fetchStocks();
   setInterval(fetchStocks, 5*60*1000);

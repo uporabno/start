@@ -1,0 +1,28 @@
+name: Fetch LJSE data
+
+on:
+  schedule:
+    - cron: '*/10 7-16 * * 1-5'  # vsake 10 min, pon-pet, 7-16 UTC (9-18 CET)
+  workflow_dispatch:              # možnost ročnega zagona
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch LJSE data
+        run: |
+          curl -s -o phone/ljse-data.json \
+            "https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0"
+
+      - name: Commit & push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add phone/ljse-data.json
+          git diff --cached --quiet || git commit -m "LJSE data $(date -u '+%H:%M')"
+          git push
