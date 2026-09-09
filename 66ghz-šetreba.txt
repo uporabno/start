@@ -1,0 +1,24 @@
+KAJ ŠE KAŽE NA 66ghz.com (aktivne datoteke)
+============================================
+Stanje: 09.09.2026
+
+phone/start_dramalj.html:233
+  <a href="http://start.66ghz.com/tauko/ck100">CK100</a>
+  → ck100 ni lokalno, treba preveriti ali obstaja
+
+pages/index.html:106
+  <a href="http://mobilna.66ghz.com">Mobilna</a>
+  → ni lokalno
+
+pages/index.html:108
+  <a href="https://gasilci.66ghz.com">Gasilci</a>
+  → ni lokalno
+
+pages/index.html:110
+  <a href="https://gasilci.66ghz.com/jr">Gasilci Jr.</a>
+  → ni lokalno
+
+ARHIVSKE DATOTEKE (pusti pri miru)
+-----------------------------------
+phone/index---original.html  → shranjeni original s 66ghz.com, ok
+_navodila_/ljse.txt          → dokumentacija, ok
