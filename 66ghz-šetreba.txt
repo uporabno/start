@@ -2,10 +2,6 @@ KAJ ŠE KAŽE NA 66ghz.com (aktivne datoteke)
 ============================================
 Stanje: 09.09.2026
 
-phone/start_dramalj.html:233
-  <a href="http://start.66ghz.com/tauko/ck100">CK100</a>
-  → ck100 ni lokalno, treba preveriti ali obstaja
-
 pages/index.html:106
   <a href="http://mobilna.66ghz.com">Mobilna</a>
   → ni lokalno
