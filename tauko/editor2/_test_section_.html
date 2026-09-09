@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>tab demo</title>
+  <link rel="stylesheet" href="css/bootstrap.css">
+</head>
+<body>
+<textarea class="form-control" id="Text2" cols="40" rows="5"></textarea>
+<button type="button" class="btn btn-default btn-block" onclick="myX()"><span class="glyphicon glyphicon-plus"></span> Test</button>
+<div class="span9">
+    <div class="tabbable"> <!-- Only required for left/right tabs -->
+      <ul class="nav nav-tabs" onclick="">
+        <li onclick="changeTabIndex(1);" class="active"><a href="#tab1" data-toggle="tab">Section 1</a></li>
+        <li onclick="changeTabIndex(2);"><a href="#tab2" data-toggle="tab">Section 2</a></li>
+      </ul>
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab1">
+          <p>I'm in Section 1.</p>
+        </div>
+        <div class="tab-pane" id="tab2">
+          <p>Howdy, I'm in Section 2.</p>
+        </div>
+      </div>
+    </div>
+</div> 
+<script src="js/jquery-1.11.3.min.js"></script>
+<script src="js/bootstrap.js"></script>
+</body>
+</html>
+
+<script>
+var tabIndex =1;
+
+function changeTabIndex(inTabIndex){
+  tabIndex = inTabIndex
+    console.log(tabIndex);
+}
+
+function myX() {
+
+    var x1 = $("ul#lalaTabs li.active");
+    var x2 = x1.attr("id");
+    console.log(x1);
+    document.getElementById("Text2").value = "Run xxxx="+tabIndex;
+   // document.getElementById("Text2").value = "Run x1="+x1+",x2="+x2+",x3="+x3+",x4="+x4+",x5="+x5+',x6='+x6;
+
+    //if (isVisible( document.getElementById("Text1") )) 
+    // Select tab by name
+
+//  $('.nav-pane > .active').next('li').find('a').trigger('click');
+//alert("A");
+
+    //var x1 = document.getElementById("tab1");
+    //var x2 = document.getElementById("tab1").style;
+    //var x3 = document.getElementById("tab1").style.visibility;
+    //var x4 = document.getElementById("tab1").visible;
+    //var x5 = document.getElementById("tab1").hidden;
+    //var x6 = document.getElementById("tab1").active;
+    //var x6 = $('#tab1:visible').visible();
+
+   
+}
+</script>

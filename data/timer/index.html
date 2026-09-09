@@ -1,0 +1,311 @@
+﻿<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.7">
+    <title>Rubikov števec</title>
+    <link rel="icon" href="cube16.png">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>  
+</head>
+
+<body>
+
+<br/>
+
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-sm-12">
+
+
+<!-- Timer  -->
+<div id="id_timer" class="card text-center" style="width: 27rem;">
+  <div id="id_card_timer" class="card-header text-bg-danger text-center">
+    Timer
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+
+    <h1 id="urca" class="display-1 text-center" style="font-family: monospace;">00:00.00</h1>
+
+    </li>
+  </ul>
+  <div class="card-footer">
+    <small><small><span style="color:gray;"><i>Pritisni presledek za 1 sekundo, da se timer lahko zažene.</i></span></small></small>
+    <br/>
+    <small><small><span style="color:gray;"><i>Ko se obarva rumeno, lahko spustiš.</i></span></small></small>
+  </div>
+</div>
+
+
+    </div>
+  </div>
+
+  <br/>
+  <div class="row">
+
+  
+
+  
+  
+    <div class="col-sm-12">
+   
+    
+<!-- Povprečje  -->
+<div class="card text-center align-items-center border-0" style="width: 27rem;">
+<div class="card" style="width: 13rem;">
+  <div class="card-header text-bg-secondary text-center">
+    Statistika
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+
+<table class="table table-sm" style="width: 10rem;">
+  <tbody>
+    <tr>
+      <td>Najhitreje</td>
+      <td class="text-end">12.00</td>
+    </tr>
+    <tr>
+      <td>Najpočasneje</td>
+      <td class="text-end">1.00</td>
+    </tr>
+    <tr>
+      <td>Povprečje</td>
+      <td class="text-end">0.00</td>
+    </tr>
+    <tr>
+      <td>Najboljši 3 of 5</td>
+      <td class="text-end">0.00</td>
+    </tr>
+  </tbody>
+</table>
+
+    
+</div>
+</div>
+
+    </div>
+
+  </div>
+  
+  <br/>
+  
+  <div class="row">
+    <div class="col-sm-12">
+<!-- Rezultati  -->
+<div class="card" style="width: 27rem;">
+  <div class="card-header text-bg-secondary text-center">
+    Rezultati
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+<pre>
+<span style="color:white;">&#10008;</span><span style="color:blue;">              <small>        <small><small>   Cross       F2L       OLL       PLL</small></small></small></span>
+<span style="color:red;">&#10008;</span><span style="color:gray;"> 1. <span style="color:black;">00:00.00 </span> <small>+2 DNF  <small><small>00:00.00  00:00.00  00:00.00  00:00.00</small></small></small> &#128526;
+<span style="color:red;">&#10008;</span><span style="color:gray;"> 2. <span style="color:black;">00:00.00 </span> <small>+2 DNF  <small><small>00:00.00  00:00.00  00:00.00  00:00.00</small></small></small>
+<span style="color:red;">&#10008;</span><span style="color:gray;"> 3. <span style="color:black;">00:00.00 </span> <small>+2 DNF  <small><small>00:00.00  00:00.00  00:00.00  00:00.00</small></small></small> &#129324;
+</pre>
+    </li>
+  </ul>
+</div>
+
+    </div>
+    <div class="col-sm-4">
+
+
+
+    </li>
+  </ul>
+</div>
+
+    </div>
+    <div class="col-sm-2"></div>
+
+  </div>
+</div>  
+  
+  
+
+
+
+  </div>
+</body>
+
+
+
+<script>
+const 
+  segmenti_imena = ["Cross", "F2L", "OLL", "PLL"];
+var
+  pritisnjena_tipka = false;
+  pritisnjena_tipka_cas_start = 0;
+
+  stoparica_dela = false;
+  cas_start = 0;
+  cas_konec = 0;
+  cas_segmenti = [0, 0, 0, 0];
+  segment = 0;
+
+document.getElementById("id_timer").onmousedown = function(event) {
+    if      (event.which == 1) myKeyDown(-1001); //left
+    else if (event.which == 2) myKeyDown(-1002); //middle
+    else if (event.which == 3) myKeyDown(-1003); //right
+}
+
+document.getElementById("id_timer").onmouseup = function(event) {
+    if      (event.which == 1) myKeyUp(-1001); //left
+    else if (event.which == 2) myKeyUp(-1002); //middle
+    else if (event.which == 3) myKeyUp(-1003); //right
+}
+
+document.addEventListener("keydown", function(event) {
+  myKeyDown(event.keyCode);
+});
+
+document.addEventListener("keyup", function(event) {
+  myKeyUp(event.keyCode);
+});
+
+function myKeyDown(keyCode) {
+  console.log("Down");
+  if ( (keyCode === 32) || (keyCode === 13) || (keyCode === -1001) || (keyCode === -1002) ) {
+    if (pritisnjena_tipka == false) {
+      izpis_trenutno(0);
+      pritisnjena_tipka = true;
+      pritisnjena_tipka_cas_start = Date.now();
+      console.log('Reset');
+      if (stoparica_dela == false) {
+        if ( (keyCode === -1001) || (keyCode === -1002) ) {
+          console.log('Rumeno mouse');
+          window.document.getElementById("id_card_timer").setAttribute("class", "card-header text-bg-warning");
+        }
+      }
+    }
+    else {
+      pritisnjena_tipka_cas_trenutno = Date.now();
+      razlika = pritisnjena_tipka_cas_trenutno - pritisnjena_tipka_cas_start;
+      if (razlika > 1*1000) {
+        console.log('Rumeno');
+        window.document.getElementById("id_card_timer").setAttribute("class", "card-header text-bg-warning");
+      }
+    }
+  }
+  else {
+    pritisnjena_tipka = false;
+    pritisnjena_tipka_cas_start = 0;
+    console.log("Tišči se napačna tipka."); 
+  }
+}
+
+function myKeyUp(keyCode) {
+  // koliko časa je bila pritisnjena tipka
+  tipka_pristisnjena_zadosti_doglo = false;
+  if (stoparica_dela == false) {
+      pritisnjena_tipka_cas_trenutno = Date.now();
+      razlika = pritisnjena_tipka_cas_trenutno - pritisnjena_tipka_cas_start;
+      if (razlika > 1*1000) {
+        tipka_pristisnjena_zadosti_doglo = true;
+      }
+      if ( (keyCode === -1001) ) {
+        tipka_pristisnjena_zadosti_doglo = true;
+      }
+      if ( (keyCode === -1002) ) {
+        tipka_pristisnjena_zadosti_doglo = true;
+      }
+  }
+  pritisnjena_tipka = false;
+  konec_segmentov = false;
+  if ( (keyCode === 13) || ((keyCode === -1002)) ) {
+    merjenje_segment();
+  }
+  if ( (keyCode === 32) || (keyCode === -1001) || konec_segmentov ) {
+    console.log("Presledek je bil pritisnjen!");
+    if ( (stoparica_dela == false) && (tipka_pristisnjena_zadosti_doglo) ) {
+      // preveri ali je dost časa bilo pritisnjeno
+
+      merjenje_start();
+    } else if (stoparica_dela == true) {
+      merjenje_konec();
+    }
+  }
+  else {
+    console.log("Ni presledek!"); 
+  }
+}
+
+function merjenje_start() {
+  segment = 0;
+  cas_segmenti = [0, 0, 0, 0];
+  cas_start = Date.now();
+  stoparica_dela = true;
+  console.log("--> Začetek merjenja!");
+        window.document.getElementById("id_card_timer").setAttribute("class", "card-header text-bg-success");
+}
+
+function merjenje_segment() {
+  // segmenti
+  if (segment <= 4) {
+    cas_trenutno = Date.now();
+    cas_segmenti[segment] = cas_trenutno - cas_start;
+    console.log("  Segmeniti: " + cas_segmenti);
+    segment = segment + 1;
+  }
+  if (segment > 3) { 
+    konec_segmentov = true;
+    console.log("Konec");
+  }
+}
+
+function merjenje_konec() {
+  cas_konec = Date.now();
+  razlika = cas_konec - cas_start;
+  izpis_trenutno(razlika);
+  stoparica_dela = false;
+  console.log("--> Konec merjenja!");
+  console.log("    Segmeniti: " + cas_segmenti);
+        window.document.getElementById("id_card_timer").setAttribute("class", "card-header text-bg-danger");
+}
+
+function izpis_trenutno(cas) {
+  t = formatiraj_cas(cas, 2);
+  window.document.getElementById("urca").innerText = t;
+}
+
+function lpad(text, znak, dolzina) {
+  t = "";
+  for (let i = 0; i < dolzina; i++) 
+    t = znak + t;
+  t = t + text;
+  t = t.substring(t.length-dolzina);
+  return t;
+}
+
+function formatiraj_cas(cas, decimalke) {
+  s = Math.trunc(cas/1000);
+  m = Math.trunc(s/60);
+  tm = m.toString().substring(0,2);
+  tm = lpad(tm, "0", 2);
+  ts = s - (60*m);
+  ts = lpad(ts, "0", 2);
+  d = lpad(cas-(s*1000), "0", 3);
+  td = d.substring(0, decimalke);
+  t = tm + ":" + ts + "." + td;
+  return t;
+}
+
+setInterval(function() {
+  //console.log("*");
+  if (stoparica_dela) {
+    cas_trenutno = Date.now();
+    razlika = cas_trenutno - cas_start;
+    izpis = razlika
+    izpis = formatiraj_cas(razlika, 2);
+    window.document.getElementById("urca").innerText = izpis;
+    //console.log( "Teče=" + izpis);
+  }
+}, 1000/10000); // update about every second/10000
+
+</script>
+
+</html>

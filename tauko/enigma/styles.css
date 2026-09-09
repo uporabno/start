@@ -1,0 +1,205 @@
+body {
+  font-family: arial;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+@media (min-width: 768px) {
+  .container {
+    display: grid;
+    grid-template-columns: 480px 1fr 1px;
+    grid-template-rows: auto 1fr auto;
+  }
+}
+
+header {
+  grid-column: span 3;
+  padding: 8px;
+  text-align: center;
+  font-size: 2.2em;
+  background-color: #369;
+  color: white;
+}
+
+headerlabel {
+  vertical-align: text-top;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+}
+
+nav {
+  background-color: #f90;
+  padding: 20px;
+}
+ 
+aside {
+  padding: 20px;
+  background-color: #936;
+}
+
+footer {
+  grid-column: span 3;
+  padding: 8px;
+  text-align: center;
+  font-size: 0.75em;
+  background-color: #369;
+  color: silver;
+}
+
+h1 {
+  margin-bottom: 1em;
+  font-size: 1.3em;
+  font-weight: bold;
+}
+
+p_rez {
+  margin-bottom: 0em;
+  font-size: 0.75em;
+  font-weight: bold;
+  padding: 0.4em;
+  color: gray;
+}
+
+.myForm > * {
+  font: 1.0em 'Unkempt', sans-serif; 
+}
+.myForm {
+  display: grid;
+  grid-template-columns: [labels] auto [controls] 1fr;
+  grid-auto-flow: row;
+  grid-gap: .8em .5em;
+  background: #fa0;
+  padding: 1.0em;
+  width: 1fr;
+  border-radius: 25px;
+}
+.myForm > label {
+  grid-column: span 1;
+  grid-row: auto;
+  padding: 0.5em;
+}
+.myForm > fieldset {
+  grid-column: labels;
+  grid-row: auto;
+}
+.myForm > labeltop  {
+  grid-column: span 2;
+  grid-row: auto;
+  font-weight: bold;
+  background: #fb0;
+  padding: 0.5em;
+  width: 100%;
+  border-radius: 25px;
+  border: 2px solid rgb(110, 0, 210);
+  border-color: white;
+}
+.myForm > labelright  {
+  grid-column: controls;
+  grid-row: auto;
+}
+.myForm > input {
+  grid-column: controls;
+  grid-row: auto;
+  padding: .4em;
+  border: 1;
+  font-family: "Courier";
+}
+.myForm > select,
+.myForm > textarea {
+  grid-column: controls;
+  grid-row: auto;
+  padding: 0.4em;
+  border: 0;
+}
+.myForm > button {
+  grid-column: controls;
+  grid-row: auto;
+  padding: 0.4em;
+  border: 0;
+  background: darkkhaki;
+  color: white;
+}
+.myForm > buttonr {
+  grid-column: 0;
+  grid-row: auto;
+  border: 4;
+  padding: 1.4em;
+  
+  background: darkkhaki;
+}
+.myForm > fieldset {
+  grid-column: span 2;
+}  
+.myForm > fieldsetright {
+  grid-column: controls;
+}  
+
+.myForm > textarea {
+  min-height: 3em;
+}
+
+
+
+
+.myFormTransparent > * {
+  font: 1.0em 'Unkempt', sans-serif; 
+}
+.myFormTransparent {
+  display: grid;
+  grid-template-columns: [labels] auto [controls] 1fr;
+  grid-auto-flow: row;
+  grid-gap: .8em .5em;
+  padding: 1.0em;
+  width: 1fr;
+}
+.myFormTransparent > labelright  {
+  grid-column: controls;
+  grid-row: auto;
+  margin-bottom: -2em;
+}
+.myFormTransparent > labelcenter  {
+  grid-column: controls;
+  grid-row: auto;
+  margin-bottom: -2em;
+  text-align: center;
+}
+
+
+
+#table_rezultati {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#table_rezultati td, #table_rezultati th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#table_rezultati tr:nth-child(even){
+  background-color: #f2f2f2;
+}
+
+#table_rezultati tr:hover {
+  background-color: #ddd;
+}
+
+#table_rezultati th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #369;
+  color: white;
+}
+
+
+
+

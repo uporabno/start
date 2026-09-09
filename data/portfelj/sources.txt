@@ -1,0 +1,53 @@
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+19.04.2025
+https://pro.coincap.io/signup
+tauko@h
+bliblablu
+
+from api.coincap.io/v2/ to: rest.coincap.io/v3/
+	https://api.coincap.io/v2/assets
+	->
+	https://rest.coincap.io/v3/assets?apiKey=ca43d54bbf5881144648ee95c47cb9b25f282fe91d5dae2cd41737eb139802f7 (New Api)
+
+14.07.2026
+https://pro.coincap.io/signup
+tauko.develop@gmail.com
+bliblablu
+ključ: 9c5023610bf234a9352fb84a68b0d8941e7405ae6e923f80bde6e91f809d6954
+
+Delata oba samo en klic porabi 20/500 tokenov...
+
+Dodatno je še alterantive.me, kjer ni ključev
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+To ne dela več:
+	https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest
+	https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=EUR&limit=300
+	X-CMC_PRO_API_KEY
+	5e0a05ec-1654-491d-81d6-106e18e4e732
+	free ključ dobil na mail.
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+To preveri pri excelu... so notri verjetno navodila
+Excel:
+	Data -> New Query -> From Other Sources -> From Web -> Advanced
+	    URL: https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?convert=EUR&limit=300
+	    Header: X-CMC_PRO_API_KEY
+	    Header value: 5e0a05ec-1654-491d-81d6-106e18e4e732
+	OK
+
+	Data List -> desni gumb Drill down
+	To Table -> OK
+	Pri Column 1 in vrednostih Record imaš na vrhu ikono s puščicami levo in desno.
+	Expandaš in izbereš polja name, symbol in quote
+	Expandaš še quote z EUR
+	Expandaš še EUR z price
+	Na koncu daš ikono Close & Load
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+

@@ -1,0 +1,78 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Besede tete Line</title>
+	<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+	<script src="besede-utf8.js"></script>
+</head>
+
+<body>
+	<form>
+	  <div>Črke:&nbsp;<input type="text" id="crke" value="KAKOPŠ">
+	  <br/>
+	  Dolžina:
+		  <select id="dolzine">
+			<option value="3">3 črke</option>
+			<option value="4">4 črke</option>
+			<option value="5">5 črk</option>
+			<option value="6">6 črk</option>
+			<option value="7">7 črk</option>
+		  </select>
+	  </div>	  
+	  <button type="button" onclick="mySearch()">Išči</button>
+	</form>
+	<p id="rezultati"><p>
+
+<script>
+
+function mySearch() {
+    var crke = document.getElementById("crke").value.toUpperCase();
+	var dolzina = Number(document.getElementById('dolzine').value);
+	var rezultatov = 0;
+	document.getElementById("rezultati").innerHTML = "";
+	console.log('Start');
+	//console.log('Črke='+crke);
+	//console.log('Dolžina='+dolzina);
+	//console.log('Besed='+besede.length);
+	var b = "";
+	for (i=0; i<besede.length; i++) {
+	    if (besede[i].length == dolzina) {
+		    b = besede[i].toUpperCase();
+		    for (j=0; j<crke.length; j++) {
+			    b = b.replace(crke[j], "");
+			}
+			if (b == "") {
+			    ++rezultatov;
+				if (rezultatov != 1) 
+				    document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>";
+			    document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + besede[i];
+			}
+		}
+	}
+	document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>" + "-- končano --";
+	//http://bos.zrc-sazu.si/besede.html  
+	console.log('Konec');
+/*
+  EditCrke.Text := AnsiUpperCase(EditCrke.Text);
+  for i := 0 to besede.Count-1 do begin
+    if Length(besede[i]) = StrToInt(ComboBox1.Text) then begin
+      b := AnsiUpperCase(besede[i]);
+      for j := 1 to Length(EditCrke.Text) do begin
+        b := StringReplace(b, EditCrke.Text[j], '', []);
+      end;
+      if b = '' then
+        Memo1.Lines.Add(AnsiUpperCase(besede[i]));
+    end;
+  end;
+  Memo1.Lines.Add('--Konèano--');*/	
+}
+
+//  document.write('<div>');
+//  document.write(besede[7]);
+//  document.write('<div>');
+//document.getElementById("rezultati").value = "kcrke";
+</script>
+
+</body>
+</html>

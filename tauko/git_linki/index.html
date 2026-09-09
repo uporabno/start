@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Git</title>
+    <link rel="icon" href="img/git-16.png">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap-sm.css" rel="stylesheet">
+
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <script src="js/tether.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>    
+    
+    <script type="text/javascript" src="povezave.js"></script>
+
+    <script type = "text/javascript">
+    max_w = 250+100
+    min_w = 40
+    delta = 3;
+    speed = 15;
+    function startTimer() {
+        var img = document.getElementById("slikaspodaj");
+        if(img && img.style)
+            img.style.width = max_w + "px";
+        setInterval(changeImage, speed);
+    }
+    function changeImage() {
+        var img = document.getElementById("slikaspodaj");
+        if(img && img.style) {
+            //img.style.width = Math.random()*200 + "px";
+            w = img.style.width;
+            w = w.slice(0, -2);
+            w = w - delta;
+            if (w <= min_w) {
+                delta = -delta;
+            }
+            if (w > max_w) {
+                w = max_w;
+                delta = -delta;
+            }
+            img.style.width = w + "px";
+            //console.log("Width=" + img.style.width);
+        }
+    }
+    </script>
+</head>
+
+<body onload = "startTimer()">
+  <div class="container-fluid">
+    <div class="card card-greenDark" style="width: 50.2rem;"> <!--prej 35rem-->
+        <div align="center">
+            <img src="img/Genisgitlong28.png" height="28">
+        </div>
+        <a target="Košček Editorja" href="file:///R:/SlavkoMervar/Tools/Konstante/Konstante.html" style="position: absolute; right: 10px; text-decoration: none; font-size: 18px;
+          font-weight: bold; color: MediumSeaGreen;">E</a>
+    </div>
+    <script>
+        console.log(data);
+        for(var i=0; i< data.povezave.length; i++){
+            //
+            // sklop
+            //
+            if (data.povezave[i].tip == 'Card') {
+                // novi card
+                // glava novega carda
+                document.write('    <br/>');
+                document.write('    <div class="card" style="width: 50.2rem;">'); // prej 32rem;
+                document.write('      <h3 class="card-header card-' + data.povezave[i].barva + '">' 
+                                                                    + '<img src="img/'+data.povezave[i].img+'" width="24" height="24">'
+                                                                    + '&nbsp;'
+                                                                    + data.povezave[i].text
+                                                                    + '</h3>');
+                document.write('      <div class="card-block">');
+                document.write('        <div class="row">');
+                document.write('          <div class="col-sm-12">');
+            }
+            if (data.povezave[i].tip == 'CardEnd') {
+                // zaključi prejšnji card in še prej podsklop
+                document.write('          </div>');
+                document.write('        </div>');
+                document.write('     </div>');
+                document.write('   </div>');
+            }
+            //
+            // povezava
+            //
+            if (data.povezave[i].tip == 'Btn') {
+                var isDisabled = data.povezave[i].disabled == 'true';
+                //document.write('              <a target="_blank" href="' + data.povezave[i].link + '">');
+                //document.write('              <a target="povezava" href="' + data.povezave[i].link + '">');
+                if (isDisabled) {
+                    document.write('              <a style="pointer-events:none;">');
+                } else {
+                    document.write('              <a target="' + data.povezave[i].link + '" href="' + data.povezave[i].link + '">');
+                }
+                //var btnText  = isDisabled ? '<s>' + data.povezave[i].text + '</s>' : data.povezave[i].text;
+                //document.write('              <button type="button" class="btn btn-' + data.povezave[i].barva + ' btn-sm">' + data.povezave[i].text + '</button>');
+                var btnBarva = isDisabled ? 'secondary' : data.povezave[i].barva;
+                var btnText  = isDisabled ? '<s style="opacity:0.2;">' + data.povezave[i].text + '</s>' : data.povezave[i].text;
+                // brez texta: 
+                document.write('              <button type="button" class="btn btn-' + btnBarva + ' btn-sm"' + (isDisabled ? ' disabled' : '') + '>' + btnText + '</button>');
+                // brez gumba
+                //document.write('              <button type="button" class="btn btn-' + btnBarva + ' btn-sm"' + (isDisabled ? ' disabled style="border-color:transparent;"' : '') + '>' + btnText + '</button>');
+                document.write('              </a>');
+                if (data.povezave[i].opis) {
+                    document.write('              <font color="gray">');
+                    document.write('              <span>' + data.povezave[i].opis + '</span>');
+                    document.write('              </font>');
+                }
+            }
+            //
+            // NL
+            //
+            if (data.povezave[i].tip=='NL') {
+                document.write('<div style="line-height:0;"><small style="font-size:0;">&#8203;</small></div>');
+            }
+        }
+    </script>
+    <br/>
+    <div class="card card-greenDark" style="width: 50.2rem;">
+        <div align="center">
+            <img id="slikaspodaj" src="img/Genisgitlong28-roka.png" width="25%" height="28">
+        </div>
+    </div>
+  </div>    
+</body>
+</html>

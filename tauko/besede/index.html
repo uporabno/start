@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <title>Besede tete Line</title>
+  <link rel="icon" href="besede.png">
+
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="besede-utf8.js"></script>
+    <style>
+    .button {
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 15px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      cursor: pointer;
+    }
+
+    .button2 {background-color: #008CBA;} /* Blue */
+    .button3 {background-color: #f44336;} /* Red */ 
+    .button4 {background-color: #e7e7e7; color: black;} /* Gray */ 
+    .button5 {background-color: #555555;} /* Black */
+	.button6 {background-color: DarkSalmon;} /* Black */
+    
+input[type=text] {
+  border: 2px solid lightblue;
+  border-radius: 4px;
+  
+  width: 140px;
+  height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  
+  margin: 2px;
+}
+input[type=text]:focus {
+  background-color: lightblue;
+}
+
+input[type=search] {
+  border: 2px solid lightblue;
+  border-radius: 4px;
+  
+  width: 160px;
+  height: 30px;
+  padding-left: 10px;
+  padding-right: 10px;
+  
+  margin: 2px;
+  
+  letter-spacing: 0.25em;
+}
+input[type=search]:focus {
+  background-color: lightblue;
+}
+
+select{
+  border: 2px solid lightblue;
+  height: 30px;
+  padding: 2px;
+  color: #008CBA;
+  border-radius: 4px;
+  
+  margin: 2px;
+}
+select option { color: black; }
+select option:first-child{
+  color: green;
+}
+
+form  { display: table;      }
+p     { display: table-row;  }
+label { display: table-cell; }
+input { display: table-cell; }
+select { display: table-cell; }
+
+label { text-align:right; 
+        color: gray;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+    </style>
+</head>
+
+<body style="background-color:#DFCFBE";>
+  <form>
+    <div>
+      <!--Črke:&nbsp;-->
+      <p>
+        <label for="crke">Črke:</label>
+        <input type="search" id="crke" style="text-transform:uppercase" value="IZJOAEP">
+      </p>
+      <p>
+        <label for="dolzine">Dolžina:</label>
+        <select id="dolzine">
+          <option value="3">3 črke</option>
+          <option value="4">4 črke</option>
+          <option value="5">5 črk</option>
+          <option value="6">6 črk</option>
+          <option value="7">7 črk</option>
+        </select>
+      </p>
+    </div>    
+    <button class="button button2" type="button" onclick="mySearch()">Išči</button>
+    <button class="button" type="button" onclick="myAnalize()">Analiziraj</button>
+    <button class="button button6" type="button" onclick="mySearchPalindromi()">Palindromi</button>
+  </form>
+  <br/>
+  <p id="rezultati"><p>
+
+<script>
+
+function mySearch() {
+  var crke = document.getElementById("crke").value.toUpperCase();
+  var dolzina = Number(document.getElementById('dolzine').value);
+  var rezultatov = 0;
+  document.getElementById("rezultati").innerHTML = "";
+  console.log('Start');
+  //console.log('Črke='+crke);
+  //console.log('Dolžina='+dolzina);
+  //console.log('Besed='+besede.length);
+  document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<b>Dolžina " + dolzina + ":</b><br/>";
+  var b = "";
+  for (i=0; i<besede.length; i++) {
+    if (besede[i].length == dolzina) {
+      b = besede[i].toUpperCase();
+      for (j=0; j<crke.length; j++) {
+        b = b.replace(crke[j], "");
+      }
+      if (b == "") {
+        ++rezultatov;
+        if (rezultatov != 1) 
+          document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>";
+        document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + '<code>' + besede[i] + '</code>';
+      }
+    }
+  }
+  document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>" + "<font color='silver'><small>-- <i>končano</i> --</small></font>";
+  //http://bos.zrc-sazu.si/besede.html  
+  console.log('Konec');
+/*
+  EditCrke.Text := AnsiUpperCase(EditCrke.Text);
+  for i := 0 to besede.Count-1 do begin
+    if Length(besede[i]) = StrToInt(ComboBox1.Text) then begin
+      b := AnsiUpperCase(besede[i]);
+      for j := 1 to Length(EditCrke.Text) do begin
+        b := StringReplace(b, EditCrke.Text[j], '', []);
+      end;
+      if b = '' then
+        Memo1.Lines.Add(AnsiUpperCase(besede[i]));
+    end;
+  end;
+  Memo1.Lines.Add('--Konèano--');*/  
+}
+
+function reverseString(str) {
+  return str.split("").reverse().join("");
+}
+
+function mySearchPalindromi() {
+  document.getElementById("rezultati").innerHTML = "";
+  document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<b>Palindromi:</b><br/>";
+  console.log('Start');
+  var b = "";
+  for (i=0; i<besede.length/*-350907*/; i++) {
+    b = besede[i].toUpperCase();
+    if (b == (reverseString(b))) {
+      document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + '<code>' + b.toLowerCase() + "</code><br/>";            
+    }
+  }
+  document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "" + "<font color='silver'><small>-- <i>končano</i> --</small></font>";
+  console.log('Konec');
+}
+
+function myAnalize() {
+  console.log('Start analiza');
+  document.getElementById("rezultati").innerHTML = "";
+  var crke = document.getElementById("crke").value.toUpperCase();
+  //var dolzina = Number(document.getElementById('dolzine').value);
+  for (dolzina=crke.length; dolzina>2; dolzina--) {
+    if ( (dolzina != crke.length) && (rezultatov != 0))
+       document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/><br/>";  
+    if ( (dolzina != crke.length) && (rezultatov == 0))
+      document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>";  
+    document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<b>Dolžina " + dolzina + ":</b><br/>";
+    var rezultatov = 0;
+    var b = "";
+    for (i=0; i<besede.length; i++) {
+      if (besede[i].length == dolzina) {
+        b = besede[i].toUpperCase();
+        for (j=0; j<crke.length; j++) {
+          b = b.replace(crke[j], "");
+        }
+        if (b == "") {
+          ++rezultatov;
+          if (rezultatov != 1) 
+            document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>";
+          document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + '&nbsp;&nbsp;<code>' + besede[i] + '</code>';
+        }
+      }
+    }
+  }
+  document.getElementById("rezultati").innerHTML = document.getElementById("rezultati").innerHTML + "<br/>" + "<font color='silver'><small>-- <i>končano</i> --</small></font>";
+  console.log('Konec');
+}
+</script>
+
+</body>
+</html>

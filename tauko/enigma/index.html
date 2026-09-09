@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Enigma (optimizirano)</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="enigma.ico" type="image/gif" sizes="16x16">
+    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="styles.css">
+    <script type="text/javascript" src="enigma.json"></script>
+  </head>
+  <body class="container" id="my_body">
+    <header>
+      <table width=100%>
+        <tr>
+          <td width=33% align="left">
+            &nbsp;<img src="logo_low.png" alt="Enigma" >
+          </td>
+          <td><headerlabel>Enigma</headerlabel>
+          </td>
+          <td width=33% align="right">
+            <img src="logo_low.png" alt="Enigma" >&nbsp;
+          </td>
+        </tr>
+      </table>
+    </header>
+    <nav>
+      <h1>
+        <table width=100%>
+          <tr>
+            <td>Iskanje</td>
+            <td width="100%" align="right">
+              <button onclick="myBtnFiltriPomoc()"   ><img src="icon_help.png"     alt="Pomoč"    title="Pomoč"            height="22" width="22"> </button>
+              <button onclick="myBtnFiltriPoGeslu()" ><img src="icon_filters1.png" alt="Po geslu" title="Iskanje po geslu" height="22" width="22"> </button>
+              <button onclick="myBtnFiltriPoOpisu()" ><img src="icon_filters2.png" alt="Po opisu" title="Iskanje po opisu" height="22" width="22"> </button>
+              <button onclick="myBtnFiltriPocisti()" ><img src="icon_clear.png"    alt="Počisti"  title="Počisti filtre"   height="22" width="22"> </button>
+              <button onclick="myBtnFiltriIskanje()" ><img src="icon_search.png"   alt="Iskanje"  title="Iskanje"          height="22" width="22"> </button>
+            </td>
+          </tr>
+        </table>
+      </h1>
+      <form class="myForm">
+        <labeltop>
+          <input type="checkbox" name="extras" id="chk_po_geslu" value="IskanjePoGeslu" checked> Iskanje po znanih črkah
+          <img align="right" onclick="myBtnFiltriZvezdica()" src="icon_key2.png" alt="Zvezdica" title="Dodaj *" height="22" width="24">
+          <img align="right" onclick="myBtnFiltriVprasaj()"  src="icon_key1.png" alt="Vprašaj"  title="Dodaj ?" height="22" width="24">
+        </labeltop>
+        <label for="txt_geslo">Geslo:&nbsp;&nbsp;</label>
+        <input type="text" name="txt_geslo" id="txt_geslo" placeholder="E.ig.a" oninput="this.value = this.value.toUpperCase()" onBlur="setId(this.id)">
+        <labelright> <input type="checkbox" name="chk_dolzina_gesla_poljubno" id="chk_dolzina_gesla_poljubno" value="DolzinaPoljubno" checked> Dolžina gesla poljubno</labelright>
+      </form>
+      <br/>
+      <form class="myForm">
+        <labeltop>
+          <input type="checkbox" name="extras" id="chk_po_opisu" value="IskanjePoOpisu"> Iskanje po podnizih
+          <img align="right" onclick="myBtnFiltriZvezdica()" src="icon_key2.png" alt="Zvezdica" title="Dodaj *" height="22" width="24">
+          <img align="right" onclick="myBtnFiltriVprasaj()"  src="icon_key1.png" alt="Vprašaj"  title="Dodaj ?" height="22" width="24">
+        </labeltop>
+        <label for="txt_podniz_1">Podnizi:</label>
+        <input type="text" name="txt_podniz_1" id="txt_podniz_1" onBlur="setId(this.id)">
+        <label for="txt_podniz_2"></label>
+        <input type="text" name="txt_podniz_2" id="txt_podniz_2" onBlur="setId(this.id)">
+        <label for="txt_podniz_3"></label>
+        <input type="text" name="txt_podniz_3" id="txt_podniz_3" onBlur="setId(this.id)">
+        <label for="taxi"></label>
+        <fieldsetright>
+          <legend>Med podnizi:
+            <label> <input type="radio" name="radio_operator" id="radio_operator_and" required value="and" checked>IN</label>
+            <label> <input type="radio" name="radio_operator" id="radio_operator_or"  required value="or">ALI</label>
+          </legend>
+        </fieldsetright>
+        <labelright> <input type="checkbox" name="chk_iskanje_podnizov_tudi_pri_geslu" id="chk_iskanje_podnizov_tudi_pri_geslu" value="IskanjePodnizovTudiPriGeslu" checked> Išči tudi pri geslu</labelright>
+      </form>
+      <form class="myFormTransparent">
+        <labelcenter><input type="checkbox" name="chk_pocisti_po_iskanju" id="chk_pocisti_po_iskanju" value="PocistiFiltrePoIskanju" checked> Počisti filtre po iskanju</labelcenter>
+      </form>
+    </nav>
+    <main>
+      <h1>
+        <table width=100%>
+          <tr>
+            <td id="title_rezultati">Rezultati</td>
+            <td align="right">
+              <button onclick="myBtnFiltriSlovarji()" disabled ><img src="icon_books.png" alt="Slovarji"     title="Slovarji"     height="22" width="22" style="filter: grayscale(100%);"></button>
+              <button onclick="myBtnRezultatiVnosFiltrov()"    ><img src="icon_back.png"  alt="Vnos filtorv" title="Vnos filtrov" height="22" width="22"> </button>
+            </td>
+          </tr>
+        </table>
+      </h1>
+      <p style="font-size: 0.75em; color: silver;">Št. zapisov: <span id="txt_stv_zapisov">0</span></p>
+      <br/>
+
+      <table id="table_rezultati">
+        <tr>
+          <th width="20%">Geslo</th>
+          <th width="80%">Opis</th>
+        </tr>
+        <tr>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+
+      <p_rez>
+        <table width=100%>
+          <tr>
+            <td id="title_rezultati"><span id="txt_stv_zapisov2"></td>
+            <td align="right">
+              <button onclick="myBtnRezultatiVnosFiltrov()">    <img src="icon_back.png"  alt="Vnos filtorv" title="Vnos filtrov" height="22" width="22"> </button>
+            </td>
+          </tr>
+        </table>
+      </p_rez>
+
+    </main>
+    <!--<aside>Related links</aside>-->
+    <footer>Copyriht © 1999-2019 Tauko</footer>
+  </body>
+</html>
+
+<script>
+
+//
+// OPTIMIZACIJA 1: predprocesiraj uppercase enkrat ob nalaganju
+//
+var gesla_up = null;
+var opisi_up = null;
+
+document.addEventListener('DOMContentLoaded', function() {
+  var n = data_gesla.gesla.length;
+  gesla_up = new Array(n);
+  opisi_up = new Array(n);
+  for (var i = 0; i < n; i++) {
+    gesla_up[i] = data_gesla.gesla[i].ges_geslo.toUpperCase();
+    opisi_up[i] = data_gesla.gesla[i].ges_opis.toUpperCase();
+  }
+});
+
+//
+// sistemsko
+//
+
+var cur_id;
+function setId(id) {
+  cur_id = id;
+}
+
+//
+// gumbi
+//
+
+function myBtnFiltriVprasaj() {
+  if ( (cur_id == 'txt_geslo') ||
+       (cur_id == 'txt_podniz_1') ||
+     (cur_id == 'txt_podniz_2') ||
+     (cur_id == 'txt_podniz_3')) {
+    var txt =  document.getElementById(cur_id).value;
+    var startPos = document.getElementById(cur_id).selectionStart;
+    var endPos = document.getElementById(cur_id).selectionEnd;
+    txt = txt.slice(0,startPos) + '?' + txt.slice(endPos);
+    document.getElementById(cur_id).value = txt;
+    document.getElementById(cur_id).selectionStart = startPos+1;
+    document.getElementById(cur_id).selectionEnd = startPos+1;
+    document.getElementById(cur_id).focus();
+  }
+}
+
+function myBtnFiltriZvezdica() {
+  if ( (cur_id == 'txt_geslo') ||
+       (cur_id == 'txt_podniz_1') ||
+     (cur_id == 'txt_podniz_2') ||
+     (cur_id == 'txt_podniz_3')) {
+    var txt =  document.getElementById(cur_id).value;
+    var startPos = document.getElementById(cur_id).selectionStart;
+    var endPos = document.getElementById(cur_id).selectionEnd;
+    txt = txt.slice(0,startPos) + '*' + txt.slice(endPos);
+    document.getElementById(cur_id).value = txt;
+    document.getElementById(cur_id).selectionStart = startPos+1;
+    document.getElementById(cur_id).selectionEnd = startPos+1;
+    document.getElementById(cur_id).focus();
+  }
+}
+
+function myBtnFiltriPomoc() {
+  window.open("help.html");
+}
+
+function myBtnFiltriSlovarji() {
+  alert("Todo");
+}
+
+function myBtnFiltriPoGeslu() {
+  document.getElementById("chk_po_geslu").checked = true;
+  document.getElementById("chk_po_opisu").checked = false;
+  if (document.getElementById("chk_pocisti_po_iskanju").checked == true) {
+    document.getElementById("txt_geslo").value = '';
+    document.getElementById("txt_podniz_1").value = '';
+    document.getElementById("txt_podniz_2").value = '';
+    document.getElementById("txt_podniz_3").value = '';
+  }
+  document.getElementById("txt_geslo").focus();
+}
+
+function myBtnFiltriPoOpisu() {
+  document.getElementById("chk_po_geslu").checked = false;
+  document.getElementById("chk_po_opisu").checked = true;
+  document.getElementById("chk_iskanje_podnizov_tudi_pri_geslu").checked = true;
+  if (document.getElementById("chk_pocisti_po_iskanju").checked == true) {
+    document.getElementById("txt_geslo").value = '';
+    document.getElementById("txt_podniz_1").value = '';
+    document.getElementById("txt_podniz_2").value = '';
+    document.getElementById("txt_podniz_3").value = '';
+  }
+  document.getElementById("txt_podniz_1").focus();
+}
+
+function myBtnFiltriPocisti() {
+    document.getElementById("txt_geslo").value = '';
+    document.getElementById("txt_podniz_1").value = '';
+    document.getElementById("txt_podniz_2").value = '';
+    document.getElementById("txt_podniz_3").value = '';
+    if (document.getElementById("chk_po_geslu").checked == true) {
+      document.getElementById("txt_geslo").focus();
+    }
+    else if (document.getElementById("chk_po_opisu").checked == true) {
+      document.getElementById("txt_podniz_1").focus();
+    }
+    else {
+      document.getElementById("chk_po_geslu").checked = true;
+      document.getElementById("txt_geslo").focus();
+    }
+}
+
+function myBtnRezultatiVnosFiltrov() {
+  if (document.getElementById("chk_po_geslu").checked == true) {
+    document.getElementById("txt_geslo").focus();
+  }
+  else if (document.getElementById("chk_po_opisu").checked == true) {
+    document.getElementById("txt_podniz_1").focus();
+  }
+  else {
+    document.getElementById("chk_po_geslu").checked = true;
+    document.getElementById("txt_geslo").focus();
+  }
+}
+
+function myBtnFiltriIskanje() {
+  document.getElementById("table_rezultati").innerHTML = '';
+
+  var time_start = new Date().getTime();
+  // po geslu
+  var p_ind_po_geslu = document.getElementById("chk_po_geslu").checked;
+  var p_geslo = '';
+  if (p_ind_po_geslu) p_geslo = document.getElementById("txt_geslo").value;
+  var p_ind_dolzina_gesla_poljubno = document.getElementById("chk_dolzina_gesla_poljubno").checked;
+  if (p_ind_dolzina_gesla_poljubno == true) p_geslo = p_geslo + '*';
+  // po opisu
+  var p_ind_po_opisu = document.getElementById("chk_po_opisu").checked;
+  var p_podniz_1 = '';
+  var p_podniz_2 = '';
+  var p_podniz_3 = '';
+  var p_operator = '';
+  if (p_ind_po_opisu) {
+    p_podniz_1 = document.getElementById("txt_podniz_1").value.toUpperCase();
+    p_podniz_2 = document.getElementById("txt_podniz_2").value.toUpperCase();
+    p_podniz_3 = document.getElementById("txt_podniz_3").value.toUpperCase();
+    if (p_podniz_1 == '') {
+      p_podniz_1 = p_podniz_2;
+      p_podniz_2 = p_podniz_3;
+      p_podniz_3 = '';
+    }
+    if (p_podniz_1 == '') {
+      p_podniz_1 = p_podniz_2;
+      p_podniz_2 = p_podniz_3;
+      p_podniz_3 = '';
+    }
+    if (p_podniz_2 == '') {
+      p_podniz_2 = p_podniz_3;
+      p_podniz_3 = '';
+    }
+    if (p_podniz_1) p_podniz_1 = '*' + p_podniz_1 + '*';
+    if (p_podniz_2) p_podniz_2 = '*' + p_podniz_2 + '*';
+    if (p_podniz_3) p_podniz_3 = '*' + p_podniz_3 + '*';
+    if (document.getElementById("radio_operator_and").checked) p_operator = 'AND';
+    if (document.getElementById("radio_operator_or").checked) p_operator = 'OR';
+  }
+  var p_ind_iskanje_podnizov_tudi_pri_geslu = document.getElementById("chk_iskanje_podnizov_tudi_pri_geslu").checked;
+  var p_ind_pocisti_po_iskanju = document.getElementById("chk_pocisti_po_iskanju").checked;
+
+  p_geslo   = myReplaceAll(p_geslo,   '?', '.'); p_geslo   = myReplaceAll(p_geslo,   '_', '.'); p_geslo   = myReplaceAll(p_geslo,   '%', '*');
+  p_podniz_1 = myReplaceAll(p_podniz_1, '?', '.'); p_podniz_1 = myReplaceAll(p_podniz_1, '_', '.'); p_podniz_1 = myReplaceAll(p_podniz_1, '%', '*');
+  p_podniz_2 = myReplaceAll(p_podniz_2, '?', '.'); p_podniz_2 = myReplaceAll(p_podniz_2, '_', '.'); p_podniz_2 = myReplaceAll(p_podniz_2, '%', '*');
+  p_podniz_3 = myReplaceAll(p_podniz_3, '?', '.'); p_podniz_3 = myReplaceAll(p_podniz_3, '_', '.'); p_podniz_3 = myReplaceAll(p_podniz_3, '%', '*');
+
+  var iskalni_parametri = '';
+  if (p_ind_po_geslu) {
+    iskalni_parametri = 'Geslo: "' + '<font color="red">' + p_geslo + '</font>' +'"; ';
+  }
+  if ((p_ind_po_opisu) && (p_podniz_1 || p_podniz_2 || p_podniz_3)) {
+    iskalni_parametri = iskalni_parametri + 'Podnizi: ';
+    if (p_podniz_1) iskalni_parametri = iskalni_parametri + '"' + '<font color="red">' + p_podniz_1 + '</font>' + '"';
+    if (p_podniz_2) iskalni_parametri = iskalni_parametri + ' '+p_operator+' ' + '"' + '<font color="red">' + p_podniz_2 + '</font>' + '"';
+    if (p_podniz_3) iskalni_parametri = iskalni_parametri + ' '+p_operator+' ' + '"' + '<font color="red">' + p_podniz_3 + '</font>' + '"';
+    if (p_ind_pocisti_po_iskanju == true) iskalni_parametri = iskalni_parametri + ' (išči tudi po geslu)';
+  }
+  document.getElementById("txt_stv_zapisov2").innerHTML = 'Iskalni parametri: ' + iskalni_parametri;
+
+  document.getElementById("title_rezultati").focus();
+  document.getElementById("txt_stv_zapisov").innerHTML = 'Iščem';
+
+  // OPTIMIZACIJA 2: sestavimo matcherje ENKRAT pred zanko
+  var matcher_geslo   = p_ind_po_geslu  && p_geslo    ? buildMatcher(p_geslo)    : null;
+  var matcher_podniz1 = p_ind_po_opisu  && p_podniz_1 ? buildMatcher(p_podniz_1) : null;
+  var matcher_podniz2 = p_ind_po_opisu  && p_podniz_2 ? buildMatcher(p_podniz_2) : null;
+  var matcher_podniz3 = p_ind_po_opisu  && p_podniz_3 ? buildMatcher(p_podniz_3) : null;
+
+  // OPTIMIZACIJA 4: HTML gradimo z arrayem, ne z nizovnim seštevanjem
+  var rows = [];
+  rows.push('<tr>');
+  rows.push('  <th width="20%">Geslo</th>');
+  rows.push('  <th width="60%">Opis</th>');
+  rows.push('</tr>');
+
+  var i_ok = 0;
+  var i_tab = 0;
+  var n = data_gesla.gesla.length;
+
+  for (var i = 0; i < n; i++) {
+    // OPTIMIZACIJA 1: uporabimo predprocesirane uppercase vrednosti
+    var gu = gesla_up[i];
+    var ou = opisi_up[i];
+
+    var zapis_ustrezen = false;
+    var zapis_ustrezen_geslo = false;
+    var zapis_ustrezen_podniz = false;
+
+    // po geslu
+    if (p_ind_po_geslu == true) {
+      zapis_ustrezen_geslo = matcher_geslo ? matcher_geslo(gu) : false;
+    }
+
+    if (p_ind_po_opisu == true) {
+      var zapis_ustrezen_podniz_1 = (p_operator == 'AND');
+      var zapis_ustrezen_podniz_2 = (p_operator == 'AND');
+      var zapis_ustrezen_podniz_3 = (p_operator == 'AND');
+
+      if (matcher_podniz1) {
+        zapis_ustrezen_podniz_1 = matcher_podniz1(ou);
+        if (p_ind_iskanje_podnizov_tudi_pri_geslu) zapis_ustrezen_podniz_1 = zapis_ustrezen_podniz_1 || matcher_podniz1(gu);
+      }
+      if (matcher_podniz2) {
+        zapis_ustrezen_podniz_2 = matcher_podniz2(ou);
+        if (p_ind_iskanje_podnizov_tudi_pri_geslu) zapis_ustrezen_podniz_2 = zapis_ustrezen_podniz_2 || matcher_podniz2(gu);
+      }
+      if (matcher_podniz3) {
+        zapis_ustrezen_podniz_3 = matcher_podniz3(ou);
+        if (p_ind_iskanje_podnizov_tudi_pri_geslu) zapis_ustrezen_podniz_3 = zapis_ustrezen_podniz_3 || matcher_podniz3(gu);
+      }
+
+      if (p_operator == 'AND') {
+        zapis_ustrezen_podniz = zapis_ustrezen_podniz_1 && zapis_ustrezen_podniz_2 && zapis_ustrezen_podniz_3;
+      } else {
+        zapis_ustrezen_podniz = zapis_ustrezen_podniz_1 || zapis_ustrezen_podniz_2 || zapis_ustrezen_podniz_3;
+      }
+    }
+
+    if ((p_ind_po_geslu == true) && (p_ind_po_opisu == true)) {
+      zapis_ustrezen = zapis_ustrezen_geslo && zapis_ustrezen_podniz;
+    } else {
+      zapis_ustrezen = zapis_ustrezen_geslo || zapis_ustrezen_podniz;
+    }
+
+    if (zapis_ustrezen == true) {
+      if (i_ok <= 2000) {
+        rows.push('<tr>');
+        rows.push('  <td>' + gu + '</td>');
+        rows.push('  <td>' + ou + '</td>');
+        rows.push('</tr>');
+        i_tab = i_tab + 1;
+      }
+      if (i_ok == 2001) {
+        rows.push('<tr><td>...</td><td>...</td></tr>');
+      }
+      i_ok = i_ok + 1;
+    }
+  }
+
+  var time_end = new Date().getTime();
+
+  if (i_tab == i_ok) {
+    document.getElementById("txt_stv_zapisov").innerHTML = i_ok;
+  }
+  else {
+    document.getElementById("txt_stv_zapisov").innerHTML = i_tab + ' / ' + i_ok;
+  }
+
+  document.getElementById("txt_stv_zapisov").innerHTML = document.getElementById("txt_stv_zapisov").innerHTML +
+                                                         '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(čas: ' + (time_end-time_start)/1000 +  ' sekund)';
+
+  document.getElementById("table_rezultati").innerHTML = rows.join('');
+}
+
+//
+// util
+//
+
+// OPTIMIZACIJA 2 (fix): pravilna zamenjava vseh pojavitev
+function myReplaceAll(p_source, p_old, p_new) {
+  return p_source.split(p_old).join(p_new);
+}
+
+// OPTIMIZACIJA 2: sestavi matcher ENKRAT - vrne funkcijo za testiranje
+// OPTIMIZACIJA 3: za podnize brez wildcardov uporabi indexOf (hitrejše od regex)
+function buildMatcher(pattern) {
+  // pattern ima že: '.' za en znak, '*' za poljubno mnogo znakov
+
+  // Točka 3: če je vzorec oblike *beseda* brez wildcardov v sredini → indexOf
+  if (pattern.length >= 2 && pattern[0] === '*' && pattern[pattern.length - 1] === '*') {
+    var inner = pattern.slice(1, -1);
+    if (inner.length > 0 && inner.indexOf('*') < 0 && inner.indexOf('.') < 0) {
+      return function(s) { return s.indexOf(inner) >= 0; };
+    }
+  }
+
+  // Splošni primer: pretvori v regex (enkrat!)
+  var s = pattern.split('*').join('\x00');         // * → placeholder
+  var anchor = (s[0] === '\x00') ? '' : '^';       // ni ^ če začne z *
+  s = anchor + s + '$';
+  s = s.split('\x00').join('.*');                  // placeholder → .*
+  var re = new RegExp(s);
+  return function(s) { return re.test(s); };
+}
+
+function myLikeTest() {
+  var s = document.getElementById("txtText").value;
+  var l = document.getElementById("txtLike").value;
+  var v = myLike(s, l);
+  document.getElementById("txtR").value = v;
+}
+
+function myLike(stringSource, stringLike) {
+  myStringLike = stringLike;
+  for (i = 0; i < 20; i++)
+    myStringLike = myStringLike.replace('*', '%');
+
+  if (myStringLike.substring(0, 1) == '%')
+    myStringLike = myStringLike;
+  else
+    myStringLike = '^' + myStringLike;
+  myStringLike = myStringLike + '$';
+  for (i = 0; i < 20; i++) myStringLike = myStringLike.replace('_', '.');
+  for (i = 0; i < 20; i++) myStringLike = myStringLike.replace('%', '.*');
+
+  var regex1 = RegExp(myStringLike);
+  return regex1.test(stringSource);
+}
+
+
+
+</script>

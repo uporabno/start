@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Povezave za nakup</title>
+    <link rel="icon" href="img/notes-16.png">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    
+    <script type="text/javascript" src="portfelj.json"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>    
+    
+    <script type="text/javascript" src="povezave.js"></script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <br/>
+
+
+    <script>
+        console.log(data);
+    
+        var tmpSklop = "";
+        var tmpPodsklop = "";
+        var sklopZamenjan = false;
+        var podsklopZamenjan = false;
+        for(var i=0; i< data.povezave.length; i++){
+            //
+            // sklop
+            //
+            if (data.povezave[i].sklop != tmpSklop) {
+                // novi card
+                sklopZamenjan = true;
+                if (i!=0) {
+                    // zaključi prejšnji card in še prej podsklop
+                    document.write('            </p>');
+                    document.write('          </div>');
+                    document.write('        </div>');
+                    document.write('     </div>');
+                    document.write('   </div>');
+                }
+                // glava novega carda
+                document.write('    <div class="card" style="width: 35rem;">'); // prej 32rem;
+                document.write('      <h3 class="card-header card-' + data.povezave[i].barva_sklopa + '">' + data.povezave[i].sklop + '</h3>');
+                document.write('      <div class="card-block">');
+                document.write('        <div class="row">');
+                document.write('          <div class="col-sm-12">');
+
+                tmpSklop = data.povezave[i].sklop;
+            }
+            //
+            // podsklop
+            //
+            if (data.povezave[i].podsklop != tmpPodsklop) {
+                podsklopZamenjan = true;
+                if (sklopZamenjan == false) {
+                    // zaključi text prejšnjega podsklopa
+                    document.write('            </p>');
+                }
+                // text novega podsklopa
+                tmpPodsklop = data.povezave[i].podsklop;                    
+                document.write('              <p><b>' + data.povezave[i].podsklop + ': </b>');
+            }          
+            //
+            // povezava
+            //
+            // document.write('              <button onclick="parent.open(' + "'" + data.povezave[i].link + "'" + ')" type="button" class="btn btn-' + data.povezave[i].barva_gumba + ' btn-sm">' + data.povezave[i].ime_povezave + '</button>');
+            document.write('              <a target="_blank" href="' + data.povezave[i].link + '">');
+            document.write('              <button type="button" class="btn btn-' + data.povezave[i].barva_gumba + ' btn-sm">' + data.povezave[i].ime_povezave + '</button>');
+            document.write('              </a>');
+            if (data.povezave[i].opis) {
+                document.write('              <font color="gray">');
+                document.write('              <span>' + data.povezave[i].opis + '</span>');
+                document.write('              </font>');
+            }
+            //
+            sklopZamenjan = false;
+            podsklopZamenjan = false;
+        }
+        // zaključi prejšnji card in še prej podsklop
+        document.write('            </p>');
+        document.write('          </div>');
+        document.write('        </div>');
+        document.write('     </div>');
+        document.write('   </div>');
+    </script>
+    <!-- primer
+    <div class="card" style="width: 35rem;">
+      <h3 class="card-header card-success"><img src="img/clipboard-32.png" height="32" width="32"> Clipboard</h3>
+      <div class="card-block">
+        <div class="row">
+          <div class="col-sm-12">
+            <p><b>Mail: </b>
+              <button onclick="myCopyMailX()" type="button" class="btn btn-success btn-sm">...@gmail</button>
+              <button onclick="myCopyMailHotmail()" type="button" class="btn btn-success btn-sm">...@hotmail</button>
+              <button onclick="myCopyMailGmail()"   type="button" class="btn btn-success btn-sm">...@gmail</button>
+            </p>
+            <p><b>Twitter: </b>
+              <button onclick="myCopyUserX()"      type="button" class="btn btn-success btn-sm">...</button>
+              <button onclick="myCopyUserX()"  type="button" class="btn btn-success btn-sm">@...</button>
+            </p>
+            <p><b>Telegram: </b>
+              <button onclick="myCopyUserSmkripto()"     type="button" class="btn btn-success btn-sm">...</button>
+              <button onclick="myCopyUserSmkriptoAfna()" type="button" class="btn btn-success btn-sm">@...</button>
+            </p>
+            <p><b>Telegram: </b>
+              <button onclick="myCopyUserFacebook()"     type="button" class="btn btn-success btn-sm">...</button>
+            </p>
+            <p><b>Fake imena: </b>
+              <button onclick="myCopyNameJack()"         type="button" class="btn btn-success btn-sm">Jack</button>
+              <button onclick="myCopyNameJackSmith()"    type="button" class="btn btn-success btn-sm">Jack Smith</button>
+              <button onclick="myCopyNameSmith()"        type="button" class="btn btn-success btn-sm">Smith</button>
+            </p>
+            <span><b>Imena: </b>
+              <button onclick="myCopyNameX()"       type="button" class="btn btn-success btn-sm">X</button>
+              <button onclick="myCopyNameXY()" type="button" class="btn btn-success btn-sm">X Y</button>
+              <button onclick="myCopyNameY()"       type="button" class="btn btn-success btn-sm">Y</button>
+            </span>
+          </div>          
+        </div>
+      </div>
+    </div>
+    -->
+  </div>    
+</body>
+
+</html>

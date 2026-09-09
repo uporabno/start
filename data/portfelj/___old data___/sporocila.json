@@ -1,0 +1,17 @@
+﻿var obvestila = {
+"alarm":[
+    {"valuta":"DEMO", "vrednostVisjaOd": "12345", "sporocilo":"DemoZapis"},
+    // dodaj svoje alarme tu:    
+    {"valuta":"BTC", "vrednostVisjaOd": "12000", "sporocilo":"Sporocilo1!"},
+    {"valuta":"EMB", "vrednostVisjaOd": "0.01", "sporocilo":"Sporocilo2!"}
+    //
+    {"valuta":"DEMO", "vrednostVisjaOd": "12345", "sporocilo":"DemoZapis"}
+],
+"todo":[
+    {"datum":"11.01.2017", "sporocilo":"DemoZapis"},
+    // dodaj svoje todoje tu:
+    
+    //
+    {"datum":"11.01.2017", "sporocilo":"DemoZapis"}
+]
+};

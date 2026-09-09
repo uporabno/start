@@ -1,0 +1,145 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Top 10 sprememb</title>
+    <link rel="icon" href="img/top10.png">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+    
+    <script src="js/tether.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>    
+    <script src="top10-alternativeme.js"></script>
+<style>
+p.small {
+    line-height: 0.35;
+}
+p.big {
+    line-height: 2;
+}
+p.doubleHeight {
+    -webkit-transform: scaleY(2);
+    -moz-transform: scaleY(2);
+}
+h4.doubleHeight {
+    -webkit-transform: scaleY(2);
+    -moz-transform: scaleY(2);
+}
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+</style>    
+</head>
+
+<body>
+  <div class="container-fluid">
+    <!--<br/>-->
+    <script>
+        document.write('<div style="width:35rem;font-size:11px;color:gray;padding:2px 4px;display:flex;justify-content:space-between;">');
+        document.write('  <span>Vir: Alternative.me</span>');
+        //document.write('  <a href="index-coincap1.html" style="color:gray;">&#x27A1; Odpri na CoinCap1</a>');
+        //document.write('  <a href="index-coincap2.html" style="color:gray;">&#x27A1; Odpri na CoinCap2</a>');
+        //document.write('  <a href="index-alternativeme.html" style="color:gray;">&#x27A1; Odpri na Alternative.me</a>');
+        document.write('</div>');
+        ////////////
+        // top 1h //
+        ////////////
+        document.write('<div class="card" style="width: 32rem;">');
+        document.write('  <h3 class="card-header card-success">' + getImgLokacija('top1h') + 'Top 1h' + '</h3>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj</th>');
+        document.write('          <th class="text-right">1h<br/></th>');
+        document.write('          <th class="text-right">24h<br/></th>');
+        document.write('          <th class="text-right">7d<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<100; i++){
+            document.write('        <tr>');
+            document.write('          <td id="top1h_valuta_v' + i + '">' + '</td>');
+            document.write('          <td id="top1h_tecaj_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top1h_spr1h_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top1h_spr24h_v' + i + '" align="right">' + '</td>');
+            document.write('          <td id="top1h_spr7d_v'  + i + '" align="right">' + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        /////////////
+        // top 24h //
+        /////////////
+        document.write('<div class="card" style="width: 32rem;">');
+        document.write('  <h3 class="card-header card-success">' + getImgLokacija('top24h') + 'Top 24h' + '</h3>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj</th>');
+        document.write('          <th class="text-right">1h<br/></th>');
+        document.write('          <th class="text-right">24h<br/></th>');
+        document.write('          <th class="text-right">7d<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<100; i++){
+            document.write('        <tr>');
+            document.write('          <td id="top24h_valuta_v' + i + '">' + '</td>');
+            document.write('          <td id="top24h_tecaj_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top24h_spr1h_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top24h_spr24h_v' + i + '" align="right">' + '</td>');
+            document.write('          <td id="top24h_spr7d_v'  + i + '" align="right">' + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        ////////////
+        // top 7d //
+        ////////////
+        document.write('<div class="card" style="width: 32rem;">');
+        document.write('  <h3 class="card-header card-success">' + getImgLokacija('top7d') + 'Top 7d' + '</h3>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj</th>');
+        document.write('          <th class="text-right">1h<br/></th>');
+        document.write('          <th class="text-right">24h<br/></th>');
+        document.write('          <th class="text-right">7d<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<100; i++){
+            document.write('        <tr>');
+            document.write('          <td id="top7d_valuta_v' + i + '">' + '</td>');
+            document.write('          <td id="top7d_tecaj_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top7d_spr1h_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top7d_spr24h_v' + i + '" align="right">' + '</td>');
+            document.write('          <td id="top7d_spr7d_v'  + i + '" align="right">' + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        pridobiPodatke();
+    </script>
+  </div>
+</body>
+</html>

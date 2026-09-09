@@ -1,0 +1,191 @@
+﻿var portfelj = {
+"valute":[
+    {"lokacija":"Ledger Nano S",      "sort": "101", "valuta":"BTC",   "povprecna_nabavna_cena": "4282.06055305376" ,  "znesek":"0.18"},
+    {"lokacija":"Ledger Nano S",      "sort": "102", "valuta":"ETH",   "povprecna_nabavna_cena": "1289.85049655631" ,  "znesek":"0.7"},
+    {"lokacija":"Ledger Nano S",      "sort": "103", "valuta":"XRP",   "povprecna_nabavna_cena": "0.71439286066311" ,  "znesek":"2.01110900000003"},
+
+
+    {"lokacija":"Bitstamp",      "sort": "201", "valuta":"BTC",   "povprecna_nabavna_cena": "4282.06055305376" ,  "znesek":"0.055729226"},
+    {"lokacija":"Bitstamp",      "sort": "202", "valuta":"ETH",   "povprecna_nabavna_cena": "1289.85049655631" ,  "znesek":"0.808200352"},
+    {"lokacija":"Bitstamp",      "sort": "203", "valuta":"XRP",   "povprecna_nabavna_cena": "0.71439286066311" ,  "znesek":"7.7000072451483E-08"},
+
+    {"lokacija":"Bitstamp",      "sort": "205", "valuta":"ALGO",   "povprecna_nabavna_cena": "1.56814462211081" ,  "znesek":"12.753608129"},
+
+    {"lokacija":"Bitstamp",      "sort": "207", "valuta":"FLR",   "povprecna_nabavna_cena": "0" ,  "znesek":"249.0128"},
+    {"lokacija":"Bitstamp",      "sort": "298", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"0.00161599999999567"},
+    {"lokacija":"Bitstamp",      "sort": "299", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"-7699.798384"},
+
+    {"lokacija":"Iconomi",      "sort": "801", "valuta":"BTC",   "povprecna_nabavna_cena": "4282.06055305376" ,  "znesek":"0.000945"},
+
+
+
+
+
+
+
+
+
+    {"lokacija":"Coinomi Wallet",      "sort": "830", "valuta":"LCC",   "povprecna_nabavna_cena": "0" ,  "znesek":"7.79302066"},
+
+    {"lokacija":"MewMalePare Wallet",      "sort": "840", "valuta":"WPR",   "povprecna_nabavna_cena": "0" ,  "znesek":"5"},
+
+    {"lokacija":"Binance",      "sort": "289", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"44"},
+    {"lokacija":"Binance",      "sort": "290", "valuta":"BTC",   "povprecna_nabavna_cena": "4282.06055305376" ,  "znesek":"0.026438"},
+    {"lokacija":"Binance",      "sort": "291", "valuta":"ETH",   "povprecna_nabavna_cena": "1289.85049655631" ,  "znesek":"0.0050565"},
+    {"lokacija":"Binance",      "sort": "292", "valuta":"XRP",   "povprecna_nabavna_cena": "0.71439286066311" ,  "znesek":"1582.9803016"},
+
+    {"lokacija":"Binance",      "sort": "294", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"0"},
+
+
+    {"lokacija":"Binance",      "sort": "112", "valuta":"ADA",   "povprecna_nabavna_cena": "0.37688959773844" ,  "znesek":"1100.0902"},
+    {"lokacija":"Binance",      "sort": "303", "valuta":"XLM",   "povprecna_nabavna_cena": "0.35169918134775" ,  "znesek":"222.2"},
+    {"lokacija":"Binance",      "sort": "304", "valuta":"NEO",   "povprecna_nabavna_cena": "39.474963124219" ,  "znesek":"0.70055"},
+
+    {"lokacija":"Binance",      "sort": "306", "valuta":"XVG",   "povprecna_nabavna_cena": "0.0226244022455846" ,  "znesek":"500.0925"},
+
+
+
+    {"lokacija":"Binance",      "sort": "117", "valuta":"TRX",   "povprecna_nabavna_cena": "-0.0322582933411428" ,  "znesek":"900.051823897"},
+
+    {"lokacija":"Binance",      "sort": "312", "valuta":"OMG",   "povprecna_nabavna_cena": "6.77225878296658" ,  "znesek":"2.503596"},
+
+    {"lokacija":"Binance",      "sort": "314", "valuta":"ZRX",   "povprecna_nabavna_cena": "-0.337766753" ,  "znesek":"10"},
+    {"lokacija":"Binance",      "sort": "122", "valuta":"ENJ",   "povprecna_nabavna_cena": "0.0958275348519251" ,  "znesek":"32.7672"},
+    {"lokacija":"Binance",      "sort": "115", "valuta":"LINK",   "povprecna_nabavna_cena": "0.324035375581767" ,  "znesek":"9.6903"},
+
+
+    {"lokacija":"Binance",      "sort": "116", "valuta":"AAVE",   "povprecna_nabavna_cena": "12.9230626300223" ,  "znesek":"0.843605"},
+
+
+
+    {"lokacija":"Binance",      "sort": "323", "valuta":"VET",   "povprecna_nabavna_cena": "0.08403944" ,  "znesek":"1000"},
+
+    {"lokacija":"Binance",      "sort": "112", "valuta":"BNB",   "povprecna_nabavna_cena": "160.853733910355" ,  "znesek":"1.604276812"},
+
+
+    {"lokacija":"Binance",      "sort": "328", "valuta":"NULS",   "povprecna_nabavna_cena": "1.99805594406611" ,  "znesek":"60"},
+
+
+    {"lokacija":"Binance",      "sort": "331", "valuta":"LRC",   "povprecna_nabavna_cena": "-1.50059259066667" ,  "znesek":"15"},
+    {"lokacija":"Binance",      "sort": "332", "valuta":"ZIL",   "povprecna_nabavna_cena": "0.0394592307692308" ,  "znesek":"520"},
+
+
+
+
+
+
+    {"lokacija":"Binance",      "sort": "338", "valuta":"BTT",   "povprecna_nabavna_cena": "0.000591647830933609" ,  "znesek":"3359.921047734"},
+
+    {"lokacija":"Binance",      "sort": "340", "valuta":"BAND",   "povprecna_nabavna_cena": "8.5561875" ,  "znesek":"0.8"},
+    {"lokacija":"Binance",      "sort": "341", "valuta":"KAVA",   "povprecna_nabavna_cena": "2.46221531527836" ,  "znesek":"4.007366837"},
+
+    {"lokacija":"Binance",      "sort": "343", "valuta":"SXP",   "povprecna_nabavna_cena": "1.88218998811617" ,  "znesek":"15.109633023"},
+    {"lokacija":"Binance",      "sort": "111", "valuta":"DOT",   "povprecna_nabavna_cena": "7.28411466666667" ,  "znesek":"30"},
+    {"lokacija":"Binance",      "sort": "345", "valuta":"BZRX",   "povprecna_nabavna_cena": "0.517386666666667" ,  "znesek":"7.5"},
+    {"lokacija":"Binance",      "sort": "346", "valuta":"DIA",   "povprecna_nabavna_cena": "1.84874375617393" ,  "znesek":"2.704539222"},
+    {"lokacija":"Binance",      "sort": "347", "valuta":"KSM",   "povprecna_nabavna_cena": "30" ,  "znesek":"0.3"},
+    {"lokacija":"Binance",      "sort": "348", "valuta":"VGX",   "povprecna_nabavna_cena": "0" ,  "znesek":"2.30926389122033E-15"},
+    {"lokacija":"Binance",      "sort": "349", "valuta":"UNI",   "povprecna_nabavna_cena": "19.09167" ,  "znesek":"1"},
+    {"lokacija":"Binance",      "sort": "350", "valuta":"RSR",   "povprecna_nabavna_cena": "0.04875" ,  "znesek":"250"},
+    {"lokacija":"Binance",      "sort": "351", "valuta":"1INCH",   "povprecna_nabavna_cena": "4.54467" ,  "znesek":"5"},
+    {"lokacija":"Binance",      "sort": "352", "valuta":"GRT",   "povprecna_nabavna_cena": "1.92393125" ,  "znesek":"20"},
+    {"lokacija":"Binance",      "sort": "352", "valuta":"DOGE",   "povprecna_nabavna_cena": "-0.00483943499999998" ,  "znesek":"100"},
+    {"lokacija":"Binance",      "sort": "353", "valuta":"POND",   "povprecna_nabavna_cena": "0.19048875" ,  "znesek":"100"},
+    {"lokacija":"Binance",      "sort": "354", "valuta":"HOT",   "povprecna_nabavna_cena": "0.016388" ,  "znesek":"500"},
+    {"lokacija":"Binance",      "sort": "355", "valuta":"TROY",   "povprecna_nabavna_cena": "0.02387459" ,  "znesek":"222.2"},
+    {"lokacija":"Binance",      "sort": "356", "valuta":"MFT",   "povprecna_nabavna_cena": "0.024072" ,  "znesek":"123.4"},
+    {"lokacija":"Binance",      "sort": "357", "valuta":"REEF",   "povprecna_nabavna_cena": "0.03301805" ,  "znesek":"123.4"},
+    {"lokacija":"Binance",      "sort": "358", "valuta":"CKB",   "povprecna_nabavna_cena": "0.0304782" ,  "znesek":"100"},
+    {"lokacija":"Binance",      "sort": "359", "valuta":"PUNDIX",   "povprecna_nabavna_cena": "6.205" ,  "znesek":"1"},
+    {"lokacija":"Binance",      "sort": "360", "valuta":"NCASH",   "povprecna_nabavna_cena": "0" ,  "znesek":"0"},
+    {"lokacija":"Binance",      "sort": "361", "valuta":"LTO",   "povprecna_nabavna_cena": "0.69380388" ,  "znesek":"6.6"},
+    {"lokacija":"Binance",      "sort": "121", "valuta":"AVAX",   "povprecna_nabavna_cena": "38.037164273" ,  "znesek":"2"},
+    {"lokacija":"Binance",      "sort": "363", "valuta":"RAMP",   "povprecna_nabavna_cena": "0.551304" ,  "znesek":"100"},
+    {"lokacija":"Binance",      "sort": "114", "valuta":"MATIC",   "povprecna_nabavna_cena": "0.940891973401969" ,  "znesek":"200.09"},
+    {"lokacija":"Binance",      "sort": "365", "valuta":"SHIB",   "povprecna_nabavna_cena": "3.55211695496848E-05" ,  "znesek":"1415638.875"},
+    {"lokacija":"Binance",      "sort": "366", "valuta":"HNT",   "povprecna_nabavna_cena": "8.33792" ,  "znesek":"2"},
+    {"lokacija":"Binance",      "sort": "113", "valuta":"SOL",   "povprecna_nabavna_cena": "81.19377655" ,  "znesek":"4"},
+    {"lokacija":"Binance",      "sort": "119", "valuta":"LUNA",   "povprecna_nabavna_cena": "77.403992785957" ,  "znesek":"0.756180129"},
+    {"lokacija":"Binance",      "sort": "369", "valuta":"MINA",   "povprecna_nabavna_cena": "4.3956" ,  "znesek":"3"},
+    {"lokacija":"Binance",      "sort": "118", "valuta":"FTM",   "povprecna_nabavna_cena": "1.09084494888298" ,  "znesek":"150.4"},
+    {"lokacija":"Binance",      "sort": "371", "valuta":"AXS",   "povprecna_nabavna_cena": "92.4042595041322" ,  "znesek":"0.242"},
+    {"lokacija":"Binance",      "sort": "371", "valuta":"AR",   "povprecna_nabavna_cena": "60.3301831501832" ,  "znesek":"0.273"},
+    {"lokacija":"Binance",      "sort": "120", "valuta":"SAND",   "povprecna_nabavna_cena": "4.07809852945263" ,  "znesek":"19.969155206"},
+    {"lokacija":"Binance",      "sort": "119", "valuta":"MANA",   "povprecna_nabavna_cena": "2.85970606876401" ,  "znesek":"7.469299112"},
+    {"lokacija":"Binance",      "sort": "374", "valuta":"ILV",   "povprecna_nabavna_cena": "1011.36363636364" ,  "znesek":"0.0132"},
+    {"lokacija":"Binance",      "sort": "375", "valuta":"TVK",   "povprecna_nabavna_cena": "0.342307692307692" ,  "znesek":"15.6"},
+
+    {"lokacija":"Binance",      "sort": "120", "valuta":"GALA",   "povprecna_nabavna_cena": "0.28641" ,  "znesek":"75"},
+    {"lokacija":"Binance",      "sort": "376", "valuta":"GLMR",   "povprecna_nabavna_cena": "3.6957354" ,  "znesek":"5"},
+    {"lokacija":"Binance",      "sort": "377", "valuta":"MOVR",   "povprecna_nabavna_cena": "65.4194" ,  "znesek":"0.1439"},
+    {"lokacija":"Binance",      "sort": "378", "valuta":"KDA",   "povprecna_nabavna_cena": "0" ,  "znesek":"15"},
+    {"lokacija":"Binance",      "sort": "379", "valuta":"FET",   "povprecna_nabavna_cena": "0" ,  "znesek":"39.502950648"},
+    {"lokacija":"Binance",      "sort": "380", "valuta":"AGIX",   "povprecna_nabavna_cena": "0" ,  "znesek":"53.100324811"},
+    {"lokacija":"Binance",      "sort": "381", "valuta":"CTXC",   "povprecna_nabavna_cena": "0" ,  "znesek":"43.011940034"},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    {"lokacija":"Kucoin",      "sort": "590", "valuta":"BTC",   "povprecna_nabavna_cena": "4282.06055305376" ,  "znesek":"0"},
+
+    {"lokacija":"Kucoin",      "sort": "592", "valuta":"XRP",   "povprecna_nabavna_cena": "0.71439286066311" ,  "znesek":"5.6843418860808E-15"},
+    {"lokacija":"Kucoin",      "sort": "501", "valuta":"KCS",   "povprecna_nabavna_cena": "19.6967841019844" ,  "znesek":"0.116"},
+
+
+
+
+
+
+
+    {"lokacija":"Kucoin",      "sort": "509", "valuta":"XYO",   "povprecna_nabavna_cena": "0.00608179364391082" ,  "znesek":"601.79615"},
+    {"lokacija":"Kucoin",      "sort": "510", "valuta":"SKEY",   "povprecna_nabavna_cena": "0.252312636037414" ,  "znesek":"21.75872"},
+    {"lokacija":"Kucoin",      "sort": "511", "valuta":"UBX",   "povprecna_nabavna_cena": "0.000998088302978785" ,  "znesek":"2933.60817"},
+    {"lokacija":"Kucoin",      "sort": "512", "valuta":"THETA",   "povprecna_nabavna_cena": "-0.310135258582397" ,  "znesek":"0.52084"},
+    {"lokacija":"Kucoin",      "sort": "513", "valuta":"BEPRO",   "povprecna_nabavna_cena": "0.0187852216118654" ,  "znesek":"276.28101"},
+    {"lokacija":"Kucoin",      "sort": "514", "valuta":"LYXE",   "povprecna_nabavna_cena": "4.72197143620689" ,  "znesek":"0.5"},
+    {"lokacija":"Kucoin",      "sort": "515", "valuta":"DREAMS",   "povprecna_nabavna_cena": "0.476284440571945" ,  "znesek":"20.428031276"},
+
+
+    {"lokacija":"Kucoin",      "sort": "518", "valuta":"NAKA",   "povprecna_nabavna_cena": "3.15197099645572" ,  "znesek":"2.95688"},
+    {"lokacija":"Kucoin",      "sort": "519", "valuta":"CRO",   "povprecna_nabavna_cena": "0.608264467124921" ,  "znesek":"61.28913"},
+    {"lokacija":"Kucoin",      "sort": "520", "valuta":"WILD",   "povprecna_nabavna_cena": "6.16891712999735" ,  "znesek":"1.5108"},
+    {"lokacija":"Kucoin",      "sort": "521", "valuta":"SHIL",   "povprecna_nabavna_cena": "1.35210025272088" ,  "znesek":"6.89298"},
+    {"lokacija":"Kucoin",      "sort": "522", "valuta":"RFOX",   "povprecna_nabavna_cena": "0.216130776744328" ,  "znesek":"21.56102"},
+    {"lokacija":"Kucoin",      "sort": "523", "valuta":"CWAR",   "povprecna_nabavna_cena": "2.73946833151094" ,  "znesek":"1.70106"},
+    {"lokacija":"Kucoin",      "sort": "524", "valuta":"BLOK",   "povprecna_nabavna_cena": "0.125050417757365" ,  "znesek":"223.37368"},
+    {"lokacija":"Kucoin",      "sort": "525", "valuta":"VLX",   "povprecna_nabavna_cena": "0.378826934740096" ,  "znesek":"73.292043025"},
+    {"lokacija":"Kucoin",      "sort": "526", "valuta":"VXV",   "povprecna_nabavna_cena": "0" ,  "znesek":"2.03711"},
+
+
+
+    {"lokacija":"Huobi",      "sort": "690", "valuta":"BTC",   "povprecna_nabavna_cena": "4282.06055305376" ,  "znesek":"0.00000446"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]
+}; // povprecna_nabavna_cena izračunana v XLS

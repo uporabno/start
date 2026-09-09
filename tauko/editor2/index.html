@@ -1,0 +1,744 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Editor 2.0</title>
+    <link rel="icon" href="./images/editor16.ico">
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>-->
+    <script src="js/jquery-1.11.3.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Lined Textarea -->
+	<script src="js/jquery-linedtextarea.js"></script>
+	<link href="css/jquery-linedtextarea.css" type="text/css" rel="stylesheet" />
+    <script>
+    $(function() {
+      //$(".lined").width(window.screen.width);//widht of parent element of textarea
+      //$(".lined").width(  parentWidth(document.getElementById("text1")) );
+      //$(".lined").height(window.screen.height);//height of parent element of textarea
+      $(".lined").linedtextarea(
+            {selectedLine: 1}
+        );
+    });
+    //function parentWidth(elem) {
+    //    return elem.parentElement.clientWidth;
+    //}
+    </script>
+    
+    <!-- Toastr -->
+    <link href="css/toastr.css" rel="stylesheet"/>
+	<script src="js/toastr.js"></script>
+
+    <!-- PouchDB -->    
+    <script src="js/pouchdb-4.0.3.min.js"></script>
+
+    <!-- Local -->    
+    <!--<script src="editor.js"></script>-->
+    <script src="plugins.js"></script>
+    
+
+    
+    <!-- Custom CSS -->
+    
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+      label { padding: 0; marign: 0; display: block; }
+      textarea { width: 100%; border: 1px solid #333; padding: 4px; font-family:Lucida Console}
+      .the-fix { padding-right: 7px; }
+    </style>
+
+    
+  </head>
+<body onload="pluginsPopulateList()">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"> <!--col-sm-2 -->
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+          <ul class="nav nav-pills nav-justified">
+            <li onclick="changeTabNameForTools('tools1')"><a href="#tabTools1" data-toggle="tab"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 1</a></li>
+            <li onclick="changeTabNameForTools('tools2')"><a href="#tabTools2" data-toggle="tab"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 2</a></li>
+            <li onclick="changeTabNameForTools('tools3')"><a href="#tabTools3" data-toggle="tab"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> 3</a></li>
+            <li onclick="changeTabNameForTools('toolsPlugins')" class="active"><a href="#tabToolsPlugins" data-toggle="tab"><img src="./images/plugin.png"</img> P</a></li>
+          </ul>
+          <div class="tab-content">
+            <!--<div class="tab-pane" id="tabTools1">-->
+              
+              <!-- MAIN TOOLS -->
+              <div class="panel panel-default">
+                <div class="panel-heading">Main actions</div>
+                <div class="panel-body">
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default btn-block" onclick="jsBtnMainConcatenateText1Text2()" title="Concatenate Text1 and Text2"><img src="./images/t12.png" width="16" height="16"</img></button>
+                    </div>
+                    <div class="btn-group"> 
+                      <button type="button" class="btn btn-default btn-block" onclick="jsBtnMainConcatenateText2Text1()" title="Concatenate Text2 and Text1"><img src="./images/t21.png" width="16" height="16"</img></button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsSortAsc()" title="Sort ascending"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsSortDesc()" title="Sort descending"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default"  disabled="disabled" onclick="jsBtnMainActionsClear()" title="Clear fields"><span class="glyphicon glyphicon-erase"></span></button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsUndo()" title="Undo (copy from undo text)"><span class="glyphicon glyphicon-step-backward"></span></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            
+            <div class="tab-pane" id="tabTools1">
+              <div class="panel panel-default">
+                <div class="panel-heading">Replace</div>
+                <div class="panel-body">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">What:</span>
+                    <input id="textReplaceWhat" ondblclick="myReplaceSetTextWhatTab()" type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">With:</span>
+                    <input id="textReplaceWith" type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+                  </div>
+                  <button type="button" class="btn btn-default" onclick="myReplaceReplace()"><span class="glyphicon glyphicon-refresh"></span> Replace </button>                    
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Add text in all lines</div>
+                <div class="panel-body">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon11">Begin:</span>
+                    <input id="textAddTextInAllLinesBegin" type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">End:</span>
+                    <input id="textAddTextInAllLinesEnd" type="text" class="form-control" placeholder="" aria-describedby="basic-addon1">
+                  </div>
+                  <button type="button" class="btn btn-default" onclick="myAddTextInAllLines()"><span class="glyphicon glyphicon-plus"></span> Add</button>                    
+                </div>
+              </div>
+             
+              <div class="panel panel-default">
+                <div class="panel-heading">Main actions</div>
+                <div class="panel-body">
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default btn-block" onclick="jsBtnMainConcatenateText1Text2()" title="Concatenate Text1 and Text2"><span class="glyphicon glyphicon-plus"></span> Text 1 + Text 2</button>
+                    </div>
+                  </div>
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group"> 
+                      <button type="button" class="btn btn-default btn-block" onclick="jsBtnMainConcatenateText2Text1()" title="Concatenate Text2 and Text1"><span class="glyphicon glyphicon-plus"></span> Text 2 + Text 1</button>
+                    </div>
+                  </div>
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsSortAsc()" title="Sort ascending"><span class="glyphicon glyphicon-sort-by-alphabet"></span> Sort</button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsSortDesc()" title="Sort descending"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span> Sort</button>
+                    </div>
+                  </div>
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsMoveLeft()" title="Move text left"><span class="glyphicon glyphicon-backward"></span> Move</button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsMoveRight()" title="Move text right"><span class="glyphicon glyphicon-forward"></span> Move</button>
+                    </div>
+                  </div>
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default"  disabled="disabled" onclick="jsBtnMainActionsClear()" title="Clear fields"><span class="glyphicon glyphicon-erase"></span> Clear</button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnMainActionsUndo()" title="Undo (copy from undo text)"><span class="glyphicon glyphicon-step-backward"></span> Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel panel-default">
+                <div class="panel-heading">Demo</div>
+                <div class="panel-body">
+                  <button type="button" class="btn btn-default" onclick="myDemo1()"><span class="glyphicon glyphicon-flash"></span> Demo1</button>
+                  <button type="button" class="btn btn-default" onclick="myDemo2()"><span class="glyphicon glyphicon-flash"></span> Demo2</button>
+                  <button type="button" class="btn btn-default" onclick="myDemo3()"><span class="glyphicon glyphicon-flash"></span> Demo3</button>
+                  <button type="button" class="btn btn-default" onclick="myDemo4()"><span class="glyphicon glyphicon-flash"></span> Demo4</button>
+                  <!--<button type="button" class="btn btn-default" onclick="myDemo5()"><span class="glyphicon glyphicon-flash"></span> Demo5</button>
+                  <button type="button" class="btn btn-default" onclick="myDemo6()"><span class="glyphicon glyphicon-flash"></span> Demo6</button>
+                  -->
+                </div>
+                <!--<div class="panel-footer">Panel footer</div>-->
+              </div>              
+              
+              <div class="panel panel-default">
+                <div class="panel-heading">Change case</div>
+                <div class="panel-body">
+                  <form role="form">
+                    <div class="radio">
+                      <label><input type="radio" name="optradio">Lower Case</label>
+                    </div>
+                    <div class="radio">
+                      <label><input type="radio" name="optradio">Upper Case</label>
+                    </div>
+                    <div class="radio disabled">
+                      <label><input type="radio" name="optradio" disabled>SMS Case</label>
+                    </div>
+                    <button type="button" class="btn btn-default" onclick="myChangeCaseConvert()"><span class="glyphicon glyphicon-text-size"></span> Convert </button>                    
+                  </form>                   
+                </div>
+              </div>
+              
+              
+
+
+              
+            </div>
+            <div class="tab-pane" id="tabTools2">
+              <p>Tools 2 - under construction.</p>
+            </div>
+            <div class="tab-pane" id="tabTools3">
+              <p>Tools 3 - under construction.</p>
+            </div>
+            <div class="tab-pane active" id="tabToolsPlugins">
+              <div class="panel panel-default">
+                <div class="panel-heading">Plugins</div>
+                <div class="panel-body">
+                  <div class="btn-group btn-group-justified" role="group">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnPluginRun()"><span class="glyphicon glyphicon-play"></span> Run plugin</button>
+                    </div>
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-default" onclick="jsBtnPluginInfo()"><span class="glyphicon glyphicon-info-sign"></span> Info</button>
+                    </div>
+                  </div>
+                  <div>
+                    <select class="form-control  show-tick" style="font-size:10px;" id="pluginList" size="33" width="100%" ondblclick="pluginsPrintSource()"></select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>    
+        
+      </div>
+      
+      <!------------------------------------------------------------------------------------------->
+      <!------------------------------------------------------------------------------------------->
+      <!-- Desno ---------------------------------------------------------------------------------->
+      <!------------------------------------------------------------------------------------------->
+      <!------------------------------------------------------------------------------------------->
+      
+      <div class="col-md-10"> <!--col-sm-9    col-xs-4 col-sm-8 col-md-10-->
+
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+          <ul class="nav nav-pills">
+            <li onclick="changeTabNameForText('text1')" class="active"><a href="#tabText1" data-toggle="tab"><img src="./images/t3.png"</img> Text 1</a></li>
+            <li onclick="changeTabNameForText('text2')"><a href="#tabText2" data-toggle="tab"><img src="./images/t2.png"</img> Text 2</a></li>
+            <li onclick="changeTabNameForText('undoTexts')"><a href="#tabUndoTexts" data-toggle="tab"><img src="./images/u.png"</img>  Undo texts</a></li>
+            <li onclick="changeTabNameForText('links')"><a href="#tabLinks" data-toggle="tab"><span class="glyphicon glyphicon-star-empty" aria-hidden="true"></span> Links</a></li>
+            <li onclick="changeTabNameForText('about')"><a href="#tabAbout" data-toggle="tab" title="Copyright © 2015 Tauko"><img src="./images/info.png"</img> About</a></li>
+            <li class="nav nav-pills navbar-right"><a href="">... Copyright © 2015 Tauko ...</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tabText1">
+              <div class="form-group">
+                <!--<textarea class="form-control" id="text1" cols="40" rows="15">Vrstica 1-->
+                <textarea class="lined" id="text1" cols="60" rows="40"></textarea>
+                <!--<br/>-->
+                <!--<label for="Text1Log">Text1Log:</label>-->
+                <!--<textarea class="lined" id="text1Log" cols="60" rows="10"></textarea>-->
+                <!--<label for="TextDemo">TextDemo:</label>-->
+                <!--<textarea class="lined" id="textDemo" cols="60" rows="5"></textarea>-->
+              </div>
+            </div>
+            
+            <div class="tab-pane" id="tabText2">
+              <div class="form-group">
+                <textarea class="form-control" id="text2" cols="60" rows="34"></textarea>
+              </div>
+            </div>
+            <div class="tab-pane" id="tabUndoTexts">
+              
+              <div class="form-group">
+                <label for="text1Undo">Undo text 1:</label>
+                <textarea class="form-control" id="text1Undo" cols="40" rows="15"></textarea>
+                <label for="text2Undo">Undo text 2:</label>
+                <textarea class="form-control" id="text2Undo" cols="40" rows="15"></textarea>
+              </div>
+            </div>
+            <div class="tab-pane" id="tabLinks">
+              <h2>Links</h2>
+              <a href="http://getbootstrap.com/components/" target="_blank" class="alert-link">Bootstrap components</a>
+              <br/>
+              <a href="https://www.google.si/?gws_rd=ssl#q=bootstrap" target="_blank" class="alert-link">Bootstrap google search</a>              
+              <br/>
+              <a href="http://glyphicons.com/" target="_blank" class="alert-link">Glyphicons</a>              
+            </div>
+            <div class="tab-pane" id="tabAbout">
+              <h2><img src="./images/editor.ico"</img> Editor 2.0</h2>
+              <p>Copyright © 2015 Tauko</p>
+              <a href="mailto:slavko.mervar@gmail.com" target="_blank" class="alert-link">slavko.mervar@gmail.com</a>
+              <br/><br/><br/>
+              <p style="color:silver">Remake from Windows version of Editor (Copyright © 2001, 2004-2006, 2010 Tauko).</p>
+              
+            </div>
+      
+          </div>
+        </div>      
+      
+      </div>
+
+    </div>    
+
+  </div>        
+  
+  <div class="navbar-static-bottom" id="footer"></div>&nbsp;Copyright © 2015 Tauko</div>                        
+  <!-- position:fixed; height:50px; width: 100%; left: 0px; bottom: 0px; -->
+  
+</body>
+</html>
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+<script>
+
+var currentTabNameForTools = "toolsPlugins";
+var currentTabNameForText  = "text1";
+
+function changeTabNameForTools(name){
+    currentTabNameForTools = name;
+}
+
+function changeTabNameForText(name){
+    currentTabNameForText = name;
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+function undefinedToEmpty(inStr) {
+    var outStr = inStr;
+    if (outStr == null)
+        outStr = "";
+    return outStr;
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+function toastSuccess(message, title) {
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "positionClass": "toast-bottom-center",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    toastr.success(message, title);
+}
+
+function toastError(message, title) {
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "positionClass": "toast-bottom-center",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    toastr.error(message, title);
+}
+
+function toastWarning(message, title) {
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "positionClass": "toast-bottom-center",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    toastr.warning(message, title);
+}
+
+function toastInfo(message, title) {
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "positionClass": "toast-bottom-center",
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "2000",
+        "timeOut": "10000",
+        "extendedTimeOut": "2000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+    toastr.info(message, title);
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+var pluginNames = [];
+var pluginDescriptions = [];
+var pluginDescriptionsLong = [];
+
+function pluginsPopulateList() {
+    /* demo:
+    var select = document.getElementById("pluginList");
+    var options = ["1", "2", "3", "4", "5"];
+    for (var i = 0; i < options.length; i++) {
+        var opt = options[i];
+        var el = document.createElement("option");
+        el.textContent = opt;
+        el.value = opt;
+        select.appendChild(el);
+    }
+    */
+
+    pluginNames = [];
+    pluginDescriptions = [];
+    pluginDescriptionsLong = [];
+    
+    var strPluginsLines = pluginsNS.getAllFunctions();
+    var functionNames = [];
+    var functionDescriptions = [];
+    var functionDescriptionsLong = [];
+    for (var i=0; i < strPluginsLines.length; i++) {
+        var line = String(strPluginsLines[i]);
+        if (line.substr(0,8)=="function") {
+            // functionName
+            var functionName = line.split("(")[0].split(" ")[1];
+            // functionDescription
+            var functionDescription;
+            if (line.split("\n")[1].split("\n")[0].substr(0,2) == "//")
+                functionDescription = line.split("\n")[1].split("\n")[0].substr(2,60).trim();
+            else
+                functionDescription = "<<No name>>";
+            // functionDescriptionLong
+            var functionDescriptionLong = line.split("*")[1];
+            if (functionDescriptionLong != null) {
+                if (functionDescriptionLong.substr(0,1) == "+") {
+                    functionDescriptionLong = functionDescriptionLong.split("+")[1];
+                }
+            }            
+            // do
+            if (functionName != "getAllFunctions" && functionName != "sample") {
+                functionNames.push(functionName);
+                functionDescriptions.push(functionDescription);
+                functionDescriptionsLong.push(functionDescriptionLong);
+            }
+        } // elsa ni, ker je vse v eni vrstici
+    }
+    var select = document.getElementById("pluginList");
+    select.options.length=0;
+    for (var i = 0; i < functionNames.length; i++) {
+        var el = document.createElement("option");
+        if (functionDescriptions[i] == "Separator") {
+            el.textContent = "------------------------------------------------------------";
+            el.disabled = "true";
+        } else {
+            el.textContent = functionDescriptions[i];
+            //el.style.---<option style="background-image:url(others.png);">others</option>
+            // array
+            pluginNames.push(functionNames[i]);
+            pluginDescriptions.push(functionDescriptions[i]);
+            pluginDescriptionsLong.push(functionDescriptionsLong[i]);
+        }
+        el.value = functionNames[i];
+        select.appendChild(el);
+    }
+    if (select.options.length > 0)
+        select.selectedIndex = 0;
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+function pluginsPrintSource() {
+    var strPluginsLines = pluginsNS.getAllFunctions();
+    for (var i=0; i < strPluginsLines.length; i++) {
+        var line = String(strPluginsLines[i]);
+        if (line.substr(0,8)=="function") {
+            // functionName
+            var functionName = line.split("(")[0].split(" ")[1];
+            if (functionName == document.getElementById("pluginList").value) {
+                //toastInfo(line, 'Source code:');
+                alert("Source code:\n\n" + line);
+            }
+        } // elsa ni, ker je vse v eni vrstici
+    }
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+function jsBtnPluginRun() {
+    var func = document.getElementById("pluginList").value;
+    var desc = document.getElementById("pluginList").options[document.getElementById("pluginList").selectedIndex].text;
+    if (func == "") {
+        alert("Plugin is not selected.");
+    }
+    else {
+        if (currentTabNameForText == "text1" || currentTabNameForText == "text2")
+            try {
+                document.body.style.cursor = "progress";
+                var pluginResult = eval("pluginsNS." + func + "(" + currentTabNameForText + ", " + currentTabNameForText + "Undo)");
+                document.body.style.cursor = "auto";
+                if (func == "Calculate" && pluginResult == false )
+                    ;
+                else 
+                    if (pluginResult == false )
+                        toastWarning(desc, "Plugin canceled");
+                    else
+                        toastSuccess(desc, "Plugin executed");
+                    
+            }
+            catch(err) {
+                toastError(err.message, "Plugin error");
+            }
+        else
+            toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+    }
+}
+
+function jsBtnPluginInfo() {
+    var func = document.getElementById("pluginList").value;
+    var desc = document.getElementById("pluginList").options[document.getElementById("pluginList").selectedIndex].text;
+    var descLong = "";
+    
+    if (func == "") {
+        toastError("Plugin is not selected.");
+    }
+    else {
+        for (var i = 0; i < pluginNames.length; i++) {
+            if (pluginNames[i] == func) {
+                descLong = pluginDescriptionsLong[i];
+            }
+        }
+        if (descLong != null) {
+            toastInfo(descLong, desc);
+        }
+        else {
+            toastInfo("Function name: " + func + "\n", desc);
+        }
+    }
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+function jsBtnMainConcatenateText1Text2() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        var textIn1 = document.getElementById("text1").value;             
+        var textIn2 = document.getElementById("text2").value;             
+        var stringsIn1 = textIn1.replace("\r","").split("\n");
+        var stringsIn2 = textIn2.replace("\r","").split("\n");
+        var stringsOut = [];
+
+        for (var i=0; i < Math.max(stringsIn1.length, stringsIn2.length); i++) {
+            stringsOut.push(  undefinedToEmpty(stringsIn1[i]) + undefinedToEmpty(stringsIn2[i])  );
+        }
+        document.getElementById(currentTabNameForText+"Undo").value = document.getElementById(currentTabNameForText).value;
+        document.getElementById(currentTabNameForText).value = stringsOut.join("\n");
+        toastSuccess("Done", "Text1 + text2");
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+function jsBtnMainConcatenateText2Text1() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        var textIn1 = document.getElementById("text1").value;             
+        var textIn2 = document.getElementById("text2").value;             
+        var stringsIn1 = textIn1.replace("\r","").split("\n");
+        var stringsIn2 = textIn2.replace("\r","").split("\n");
+        var stringsOut = [];
+
+        for (var i=0; i < Math.max(stringsIn1.length, stringsIn2.length); i++) {
+            stringsOut.push(  undefinedToEmpty(stringsIn2[i]) + undefinedToEmpty(stringsIn1[i])  );
+        }
+        document.getElementById(currentTabNameForText+"Undo").value = document.getElementById(currentTabNameForText).value;
+        document.getElementById(currentTabNameForText).value = stringsOut.join("\n");
+        toastSuccess("Done", "Text2 + text1");
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+function jsBtnMainActionsSortAsc() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        var textIn = document.getElementById("text1").value;
+        var stringsIn = textIn.replace("\r","").split("\n");
+
+        stringsIn.sort();
+        document.getElementById(currentTabNameForText+"Undo").value = document.getElementById(currentTabNameForText).value;
+        document.getElementById(currentTabNameForText).value = stringsIn.join("\n");
+        toastSuccess("Done", "Sort ascending");
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+function jsBtnMainActionsSortDesc() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        var textIn = document.getElementById("text1").value;
+        var stringsIn = textIn.replace("\r","").split("\n");
+
+        stringsIn.reverse();
+        document.getElementById(currentTabNameForText+"Undo").value = document.getElementById(currentTabNameForText).value;
+        document.getElementById(currentTabNameForText).value = stringsIn.join("\n");
+        toastSuccess("Done", "Sort descending");
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+function jsBtnMainActionsMoveLeft() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        pluginsNS.Lines_MoveLeft(document.getElementById(currentTabNameForText), document.getElementById(currentTabNameForText + "Undo"));
+        toastSuccess("Done", "Move text left");
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+function jsBtnMainActionsMoveRight() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        pluginsNS.Lines_MoveRight(document.getElementById(currentTabNameForText), document.getElementById(currentTabNameForText + "Undo"));
+        toastSuccess("Done", "Move text right");
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+function jsBtnMainActionsClear() {
+    alert('Under construction.');
+}
+
+function jsBtnMainActionsUndo() {
+    if (currentTabNameForText == "text1" || currentTabNameForText == "text2") {
+        document.getElementById(currentTabNameForText).value = document.getElementById(currentTabNameForText + "Undo").value
+        toastSuccess("Done", "Undo " + currentTabNameForText);
+    }
+    else
+        toastError('Select tab "Text 1" or "Text 2".', "Wrong window");
+}
+
+<!------------------------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------------------------->
+
+function myReplaceSetTextWhatTab() {
+    document.getElementById("textReplaceWhat").value = "\t";
+}
+
+function myDemo1() {
+    document.getElementById("text1").value = "Vrstica 1 A"+"\n"+
+"Vrstica 2 B"+"\n"+
+"Vrstica 3 C"+"\n"+
+"Vrstica 4 DD"+"\n"+
+"Vrstica 5 EEE";
+}
+
+function myDemo2a() {
+    document.getElementById("text1").value = "S01_ID_REG	S03_ID_TDG	S03_SIF_ID	S03_IME_TDG	S03_TDG_SORT"+"\n"+
+"E	11	S03	Entry/change of alien info	50"+"\n"+
+"E	12	S03	Status change alien/diplomat	50"+"\n"+
+"0	01	S03	Določitev EMŠO novorojenčku	50"+"\n"+
+"0	04	S03	PIN change	50"+"\n"+
+"0	05	S03	PIN determination	50"+"\n"+
+"1	02	S03	PIN change	50"+"\n"+
+"1	03	S03	Gender change	50"+"\n"+
+"1	04	S03	Date of birth change	50"+"\n"+
+"1	06	S03	Prohibition according to article 29	50"+"\n"+
+"1	10	S03	Birth-RS citizen	50";
+}
+
+function myDemo3() {
+    //document.getElementById("textAddTextInAllLinesBegin").value = "Smo na: " + currentTabNameForText;
+    //toastr[success]("Message will come here", "Title");
+    // Display an info toast with no title
+    //toastr.info('Are you the 6 fingered man?', 'Title');
+    toastSuccess("Done!", "");
+}
+
+function myDemo4() {
+    var x, text;
+
+    // Get the value of the input field with id="numb"
+    x = document.getElementById("numb").value;
+    
+    // If x is Not a Number or less than one or greater than 10
+    if (isNaN(x) || x < 1 || x > 10) {
+        text = "Input not valid";
+    } else {
+        text = "Input OK";
+    }
+    document.getElementById("demo").innerHTML = text;
+    document.getElementById("textOut").value = x;
+}
+
+function myDemo2() {
+    var textIn = document.getElementById("text1").value;             
+    var stringsIn = textIn.replace("\r","").split("\n");
+    var stringsOut = [];
+
+    var textBegin = document.getElementById("textAddTextInAllLinesBegin").value;
+    var textEnd = document.getElementById("textAddTextInAllLinesEnd").value;
+
+    for (var i=0; i < stringsIn.length; i++) {
+        var cols = stringsIn[i].split("\t");
+        for (var c=0; c < cols.length; c++) {
+          stringsOut[i] = stringsOut[i] + '[' + cols[c] + "]";
+        }
+    }
+    
+    document.getElementById("text1").value = stringsOut.join("\n");
+}
+
+</script>
+

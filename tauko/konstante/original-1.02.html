@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Košček Editorja</title>
+    <!--<link rel="icon" href="sm2.png" type="image/x-icon">-->
+    <link rel="icon" href="data:image/png;base64,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" type="image/x-icon">
+    <style>
+        body {
+            background-color: #f5f5dc; /* Dirty white shade */
+            margin: 0;
+            font-family: Arial, sans-serif; /* Optional: Set default font */
+        }
+    
+        /* Style labels to look like buttons */
+        .styled-label {
+            display: inline-block; /* Makes the label behave like a button */
+            padding: 10px 16px; /* Adds spacing inside the button */
+            background-color: #007bff; /* Button color */
+            color: white; /* Text color */
+            border: none; /* Removes default border */
+            border-radius: 8px; /* Adds rounded corners */
+            text-align: center; /* Centers the text */
+            font-size: 18px; /* Makes the text larger */
+            font-weight: bold; /* Boldens the text */
+            font-family: 'Arial', sans-serif; /* Use a clean, readable font */
+            cursor: pointer; /* Adds a pointer cursor on hover */
+            transition: background-color 0.3s, transform 0.2s; /* Smooth hover effects */
+            width: 98%;
+        }
+
+        /* Hover effect for the button-like label */
+        .styled-label:hover {
+            background-color: #0056b3; /* Darker color on hover */
+            transform: scale(1.05); /* Slight zoom effect */
+        }        
+
+        /* Container for side-by-side layout */
+        .textarea-container {
+            display: flex;
+            gap: 40px; /* Space between the textareas */
+            max-width: 800px;
+            margin: auto; /* Centering */
+        }
+        
+        /* Nicer textarea styling */
+        .styled-textarea {
+            width: 100%;
+            max-width: 400px;
+            height: 350px;
+            padding: 10px;
+            font-size: 10px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+            resize: none;
+            white-space: pre; /* Preserve spaces and line breaks */
+            overflow-x: auto; /* Adds horizontal scroll for long text */
+        }
+
+        /* Centering container */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            justify-content: center; /* Centers horizontally */
+            margin-top: 20px; /* Adds spacing above button */
+        }
+        
+        /* Styled button */
+        .styled-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 18px; /* Larger, more elegant font */
+            font-weight: normal; /* Make it stand out */
+            font-family: 'Arial', sans-serif; /* Use a clean, readable font */
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        /* Hover effect */
+        .styled-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style the icon */
+        .styled-button img {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Styled button with earth tones */
+        .styled-button2 {
+            background-color: #8B4513; /* Saddle Brown (earthy tone) */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        /* Hover effect for the button */
+        .styled-button2:hover {
+            background-color: #B0623D; /*#A0522D;*/ /* Slightly lighter earthy tone */
+            transform: scale(1.05); /* Adds a subtle zoom effect on hover */
+        }
+
+        /* Styled button with brown-gray tones */
+        .styled-button3 {
+            background-color: #6D4C41; /* Brown-gray color */
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        /* Hover effect for the button */
+        .styled-button3:hover {
+            background-color: #8D6E63; /* Slightly lighter brown-gray tone */
+            transform: scale(1.05); /* Subtle zoom effect on hover */
+        }
+
+        /* Toast styling */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745; /* Fresh green */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        /* Toast styling */
+        .toast2 {
+            position: absolute; /* Allows dynamic placement */
+            background-color: #28a745; /* Green for success */
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            z-index: 1000;
+        }
+
+        .toast2.show {
+            opacity: 1;
+        }        
+    </style>
+    <script src="konstante.js"></script>
+    <script>
+    
+        function showMessage() {
+            // Get the value from the textarea
+            var message = document.getElementById("myTextarea").value;
+
+            // Display the message
+            alert("You entered:\n" + message);
+        }
+
+        function doZamenjajKonstante() {
+            var textarea = document.getElementById("myTextarea");
+            var textareaOut = document.getElementById("myTextareaOut");
+            //var oldText = "44";
+            //var newText = "66";
+            //textarea.value = textarea.value.replace(new RegExp(oldText, "gi"), newText);
+            textareaOut.value = textarea.value;
+            for (var i = 0; i < seznamKonstant.length; i++) {
+                textareaOut.value = textareaOut.value.replace(new RegExp(seznamKonstant[i].text1, "gi"), seznamKonstant[i].text2);
+            }
+            // Toast
+            console.log("Replacing constants completed");
+            //showToast("Zamenjava konstant je končana!");
+            showToastOverTextarea("Zamenjava konstant je končana!", "myTextareaOut");
+        }
+
+        function doNarediTabelo(locilna) {
+            var textarea = document.getElementById("myTextarea");
+            var textareaOut = document.getElementById("myTextareaOut");
+            //var oldText = "44";
+            //var newText = "66";
+            //textarea.value = textarea.value.replace(new RegExp(oldText, "gi"), newText);
+            //textareaOut.value = textarea.value;
+            //for (var i = 0; i < seznamKonstant.length; i++) {
+            //    textareaOut.value = textareaOut.value.replace(new RegExp(seznamKonstant[i].text1, "gi"), seznamKonstant[i].text2);
+            //}
+            // Razdelitev vhodnega besedila na vrstice
+            let lines = textarea.value.split("\n");
+
+            // Razdelitev vsake vrstice na stolpce glede na tabulatorje
+            let rows = lines.map(line => line.split("\t"));
+
+            // Iskanje največje dolžine v vsakem stolpcu
+            let columnWidths = rows[0].map((_, columnIndex) =>
+                Math.max(...rows.map(row => (row[columnIndex] || "").length))
+            );
+
+            let separator = '';
+            if (locilna == '-') {
+                // Ustvarjanje ločilne vrstice
+                separator = columnWidths.map(width => "-".repeat(width)).join("-|-");
+            }
+            
+            // Oblikovanje vrstic z dodanimi presledki za enako širino stolpcev
+            let formattedRows = rows.map(row =>
+                row.map((cell, columnIndex) =>
+                    (cell || "").padEnd(columnWidths[columnIndex], " ")
+                ).join(" | ") // Združitev celic z znakom '|'
+            );
+
+            if (locilna == '-') {
+                // Vstavljanje ločilne vrstice med glavo in podatke
+                formattedRows.splice(1, 0, separator);
+            }
+
+            // Združitev vrstic v končno preglednico
+            textareaOut.value = formattedRows.join("\n");
+            // Toast
+            console.log("Oblikovanje tabele končano!");
+            //showToast("Oblikovanje tabele končano!");
+            showToastOverTextarea("Oblikovanje tabele končano!", "myTextareaOut");
+        }
+
+        function copyText(id) {
+            var textarea = document.getElementById(id);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // For mobile devices
+            navigator.clipboard.writeText(textarea.value);
+            console.log("Kopirano v clipboard.");
+            //showToast("Kopirano v clipboard.");
+            showToastOverTextarea("Kopirano v clipboard.", id);
+        }
+
+        function pasteText(id) {
+            navigator.clipboard.readText().then(function (text) {
+                var textarea = document.getElementById(id);
+                textarea.value = text;
+            }).catch(function (err) {
+                alert("Failed to read clipboard content: " + err);
+            });
+            console.log("Prilepljeno iz clipboarda.");
+            //showToast("Prilepljeno iz clipboarda.");
+            showToastOverTextarea("Prilepljeno iz clipboarda.", id);
+        }
+
+        function clearText(id) {
+            var textarea = document.getElementById(id);
+            textarea.value = "";
+            console.log("Tekst pobrisan.");
+            //showToast("Tekst pobrisan.");
+            showToastOverTextarea("Tekst pobrisan.", id);
+        }
+
+        function doDemo1() {
+            var textarea = document.getElementById("myTextarea");
+            textarea.value = 
+              "select *\n" +
+              "from v_dog_dogodek d\n" +
+              "where d.dog_s01_id_tdg in (mrrsp_const.C_REGISTER_AZ,\n" +
+              "                           mrrsp_const.C_REGISTER_MR,\n" +
+              "                           mrrsp_const.C_REGISTER_RT);\n";
+            console.log("Demo tekst nastavljen.");
+            //showToast("Demo tekst nastavljen.");
+            showToastOverTextarea("Demo tekst nastavljen.", "myTextarea");
+        }
+
+        function doDemo2() {
+            var textarea = document.getElementById("myTextarea");
+            textarea.value = 
+              "Glava1\tGlava2\tGlava3\n" +
+              "1\t2\t3\n" +
+              "A\tB\tC";
+            console.log("Demo tekst nastavljen.");
+            //showToast("Demo tekst nastavljen.");
+            showToastOverTextarea("Demo tekst nastavljen.", "myTextarea");
+        }
+
+        function doDemo2a() {
+            var textarea = document.getElementById("myTextarea");
+            textarea.value = "...";
+            console.log("Demo tekst nastavljen.");
+            //showToast("Demo tekst nastavljen.");
+            showToastOverTextarea("Demo tekst nastavljen.", "myTextarea");
+        }
+        
+        function showToast(message) {
+            var toast = document.getElementById("toast");
+            toast.textContent = message;
+            toast.classList.add("show");
+
+            setTimeout(function () {
+                toast.classList.remove("show");
+            }, 3000); // Toast disappears after 3 seconds
+        }
+
+        function showToastOverTextarea(message, textareaId) {
+            var textarea = document.getElementById(textareaId);
+            var textareaRect = textarea.getBoundingClientRect(); // Get the position of the textarea
+
+            var toast = document.getElementById("toast2");
+            toast.textContent = message;
+
+            // Position the toast in the center of the textarea
+            toast.style.top = textareaRect.top + window.scrollY + textareaRect.height / 2 + "px";
+            toast.style.left = textareaRect.left + textareaRect.width / 2 + "px";
+            toast.style.transform = "translate(-50%, -50%)"; // Center the toast
+            toast.classList.add("show");
+
+            // Hide the toast after 3 seconds
+            setTimeout(function () {
+                toast.classList.remove("show");
+            }, 3000);
+        }        
+    </script>
+</head>
+<body>
+    <form>
+        <br>
+        <div class="textarea-container">
+            <div>
+                <label for="myTextarea" class="styled-label">&#128195; Vhod</label><br>
+                <textarea id="myTextarea" class="styled-textarea" rows="20" cols="60" wrap="off"></textarea>
+                <div class="button-container">
+                    <button type="button" class="styled-button" onclick="pasteText('myTextarea')">✎&nbsp;Paste</button>
+                    <button type="button" class="styled-button" onclick="clearText('myTextarea')">&#128465;&nbsp;Pobriši</button>
+                </div>
+            </div>
+            <div>
+                <label for="myTextareaOut" class="styled-label"">&#128196; Izhod</label><br>
+                <textarea id="myTextareaOut" class="styled-textarea" rows="20" cols="60" wrap="off"></textarea>
+                <div class="button-container">
+                    <button type="button" class="styled-button" onclick="copyText('myTextareaOut')">☑&nbsp;Copy</button>
+                    <button type="button" class="styled-button" onclick="clearText('myTextareaOut')">&#128465;&nbsp;Pobriši</button>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button type="button" class="styled-button3" onclick="doDemo1()">❖&nbsp;Demo</button>
+            <button type="button" class="styled-button2" onclick="doZamenjajKonstante()">&#128585;&nbsp;Zamenjaj konstante</button>
+        </div>
+        <div class="button-container">
+            <button id="myButtonDemo2" type="button" class="styled-button3" onclick="doDemo2a()">❖&nbsp;Demo</button>
+                <script>
+                    document.getElementById("myButtonDemo2").ondblclick = function() {
+                        onDoubleClick();
+                    };
+                    function onDoubleClick() {
+                        doDemo2();
+                    }
+                </script>
+            <button type="button" class="styled-button2" onclick="doNarediTabelo('')">&#128584;&nbsp;Naredi tabelo</button>
+            <button type="button" class="styled-button2" onclick="doNarediTabelo('-')">&#128586;&nbsp;... z ločilno črto</button>
+        </div>
+        <!-- Toast Notification -->
+        <div id="toast" class="toast"></div>
+        <div id="toast2" class="toast2"></div>
+    </form>
+</body>
+</html>

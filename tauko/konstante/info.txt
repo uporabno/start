@@ -1,0 +1,145 @@
+https://codebeautify.org/javascript-obfuscator
+https://www.phpkobo.com/html-obfuscator
+
+/*
+Mušter
+// Editor plugin
+// Lines - Replace constants.epl
+// 
+// Info: String replace
+//
+procedure EditorPlugin(var StringListIn: TStringList; var StringListOut: TStringList);
+var
+  w_pos, i: longint;
+  w_line_in, w_line_out, w_line_temp: string;
+  w_str_old, w_str_new: string;
+begin
+  // do
+  for i := 0 to StringListIn.Count-1 do begin
+    w_line_in := StringListIn.Strings[i];
+
+    //--//
+    w_str_old := 'IIIIIIIIIIIIIZZZZZZZZZZZZZZZZZZZZZZ';
+    w_str_new := 'VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV';
+    w_line_temp := w_line_in;
+    w_line_out := '';
+    w_pos := Pos(AnsiUpperCase(w_str_old), AnsiUpperCase(w_line_temp));
+    while (w_pos > 0) do begin
+      w_line_out := w_line_out + Copy(w_line_temp, 1, w_pos-1);
+      w_line_out := w_line_out + w_str_new;
+      w_line_temp := Copy(w_line_temp, w_pos+Length(w_str_old), Length(w_line_temp));
+      // Delete(w_line_temp, w_pos, Length(w_str_old));
+      // Insert(w_str_new, w_line_temp, w_pos);
+      w_pos := Pos(AnsiUpperCase(w_str_old), AnsiUpperCase(w_line_temp));
+    end;
+    w_line_out := w_line_out + w_line_temp;
+    w_line_in := w_line_out;
+    //--//
+    
+    StringListOut.Add(w_line_out);
+  end;
+end;
+*/
+/*
+-- sql
+select lower(t.name)||'.'||substr(trim(t.text), 1, instr(trim(t.text), ' ')-1) w_iz, 
+       trim(   substr(    substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , 1, instr(   substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , ';')-1)   ) w_v,
+       t.name, t.type, t.line, t.text
+from dba_source t
+where t.type = 'PACKAGE'
+  and upper(t.name) like '%_CONST%'
+  and lower(t.text) like '%constant%'
+  and trim(t.text) not like '--%'
+order by 1;
+*/
+
+/*
+-- generator
+begin
+  --dbms_output.enable(1000000000000);
+  dbms_output.put_line('// Editor plugin');
+  dbms_output.put_line('// Lines - Replace constants.epl');
+  dbms_output.put_line('// ');
+  dbms_output.put_line('// Info: String replace');
+  dbms_output.put_line('//');
+  dbms_output.put_line('procedure EditorPlugin(var StringListIn: TStringList; var StringListOut: TStringList);');
+  dbms_output.put_line('var');
+  dbms_output.put_line('  w_pos, i: longint;');
+  dbms_output.put_line('  w_line_in, w_line_out, w_line_temp: string;');
+  dbms_output.put_line('  w_str_old, w_str_new: string;');
+  dbms_output.put_line('begin');
+  dbms_output.put_line('  // do');
+  dbms_output.put_line('  for i := 0 to StringListIn.Count-1 do begin');
+  dbms_output.put_line('    w_line_in := StringListIn.Strings[i];');
+  for w in (select lower(t.name)||'.'||substr(trim(t.text), 1, instr(trim(t.text), ' ')-1) w_iz, 
+                   trim(   substr(    substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , 1, instr(   substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , ';')-1)   ) w_v,
+                   t.name, t.type, t.line, t.text
+            from dba_source t
+            where t.type = 'PACKAGE'
+              and upper(t.name) like '%_CONST%'
+              and lower(t.text) like '%constant%'
+              and trim(t.text) not like '--%'
+            order by 1) loop
+    dbms_output.put_line('    //--//');
+    dbms_output.put_line('    w_str_old := ''' || w.w_iz || ''';');
+    if substr(w.w_v, 1, 1) = '''' then
+      dbms_output.put_line('    w_str_new := ''' || replace(w.w_v, '''', '''''') || ''';');
+    else
+      dbms_output.put_line('    w_str_new := ''' || w.w_v  || ''';');
+    end if;
+    dbms_output.put_line('    w_line_temp := w_line_in;');
+    dbms_output.put_line('    w_line_out := '''';');
+    dbms_output.put_line('    w_pos := Pos(AnsiUpperCase(w_str_old), AnsiUpperCase(w_line_temp));');
+    dbms_output.put_line('    while (w_pos > 0) do begin');
+    dbms_output.put_line('      w_line_out := w_line_out + Copy(w_line_temp, 1, w_pos-1);');
+    dbms_output.put_line('      w_line_out := w_line_out + w_str_new;');
+    dbms_output.put_line('      w_line_temp := Copy(w_line_temp, w_pos+Length(w_str_old), Length(w_line_temp));');
+    dbms_output.put_line('      // Delete(w_line_temp, w_pos, Length(w_str_old));');
+    dbms_output.put_line('      // Insert(w_str_new, w_line_temp, w_pos);');
+    dbms_output.put_line('      w_pos := Pos(AnsiUpperCase(w_str_old), AnsiUpperCase(w_line_temp));');
+    dbms_output.put_line('    end;');
+    dbms_output.put_line('    w_line_out := w_line_out + w_line_temp;');
+    dbms_output.put_line('    w_line_in := w_line_out;');
+    dbms_output.put_line('    //--//');
+  end loop;
+  dbms_output.put_line('    StringListOut.Add(w_line_out);');
+  dbms_output.put_line('  end;');
+  dbms_output.put_line('end;');
+end;
+*/
+
+create or replace procedure odstrani_konstante(p_in in varchar2, p_out in out varchar2) is
+begin
+  p_out := p_in;
+  for w in (select lower(t.name)||'.'||substr(trim(t.text), 1, instr(trim(t.text), ' ')-1) w_iz, 
+                   trim(   substr(    substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , 1, instr(   substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , ';')-1)   ) w_v,
+                   t.name, t.type, t.line, t.text
+            from all_source t
+            where t.type = 'PACKAGE'
+              and upper(t.name) like '%_CONST%'
+              and lower(t.text) like '%constant%'
+              and trim(t.text) not like '--%'
+            order by 1
+           ) loop
+    --select regexp_replace(p_out, 'p_trN', 'xyy', 1, 0, 'i')
+    --select regexp_replace(p_out, w.w_iz, w.w_v, 1, 0, 'i')
+    --into p_out
+    --from dual;
+--if (w.w_iz) like ('%C_S64_RT_IZBR_STATUS_UPRAVIC%') then
+    null;  
+  end loop;
+end odstrani_konstante;
+
+
+select '            { text1: "' || lower(t.name)||'.'||substr(trim(t.text), 1, instr(trim(t.text), ' ')-1) || '", text2: "' || 
+                                   trim(   substr(    substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , 1, instr(   substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , ';')-1)   ) || '" },' lineeee,
+       lower(t.name)||'.'||substr(trim(t.text), 1, instr(trim(t.text), ' ')-1) w_iz, 
+       trim(   substr(    substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , 1, instr(   substr(trim(t.text),instr(trim(t.text), ':=')+2, 999)   , ';')-1)   ) w_v,
+       t.name, t.type, t.line, t.text
+from all_source t
+where t.type = 'PACKAGE'
+  and upper(t.name) like '%_CONST%'
+  and lower(t.text) like '%constant%'
+  and trim(t.text) not like '--%'
+order by 1 desc
+

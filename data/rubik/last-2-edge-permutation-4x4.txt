@@ -1,0 +1,10 @@
+https://www.youtube.com/watch?v=rq5RqVCDVaU&t=174s
+
+Opposite on right - M2 U M U2 M' U M2
+Opposite on left - M2 U' M U2 M' U' M2
+All opposites - M2 U' M2 U2' M2 U' M2     == 2-1  2-2  2-1  2
+Diag swap - M' U' M2 U' M2 U' M' U2 M2 U  == 1-1  2-1  2-1  1-2  2-1'
+
+Please note that M and M' are done with respect to the left face.  For example, M' is the same direction as L' (you pull the bottom of the M-slice towards you).
+
+Also, M2 is really M2', but since they are equivalent most people prefer to just write it as M2.

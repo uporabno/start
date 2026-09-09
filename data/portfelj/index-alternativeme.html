@@ -1,0 +1,464 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Kripto portfelj Alternative.me</title>
+    <link rel="icon" href="img/portfelj.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=0.6">
+
+<!--    <script type="text/javascript" src="portfelj.json"></script> -->
+    <script type="text/javascript" src="portfelj-json.js"></script>
+<!--    <script src="portfelj.json?2"></script> -->
+    <script src="js/tether.min.js"></script>
+    <script src="js/jquery-1.11.3.min.js"></script>    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>    
+    <script src="portfelj-alternativeme.js?11"></script>
+
+	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<style>
+p.small {
+    line-height: 0.35;
+}
+p.big {
+    line-height: 2;
+}
+p.doubleHeight {
+    -webkit-transform: scaleY(2);
+    -moz-transform: scaleY(2);
+}
+h4.doubleHeight {
+    -webkit-transform: scaleY(2);
+    -moz-transform: scaleY(2);
+}
+.nopadding {
+   padding: 0 !important;
+   margin: 0 !important;
+}
+</style>    
+</head>
+
+<body>
+  <div class="container-fluid">
+<!--
+    <div class="card" style="width: 35rem;">
+      <h1 class="card-header card-warning"><p>O firbec, kaj to gledaš?</p></h1>
+	</div>  
+    <br/>
+-->
+
+    <script>
+        //////////
+        // suma //
+        //////////
+        // pripravi sumo
+        var stanje = [];
+        var tmpValut = 0;
+        for(var i=0; i<portfelj.valute.length; i++) {
+            var tmpIndex = -1;            
+            for(var j=0; j<tmpValut; j++) {
+                if (stanje[j].valuta == portfelj.valute[i].valuta) { 
+                    tmpIndex = j;
+                }
+            }
+            if (tmpIndex == -1 ) {
+                var row = {sort:         portfelj.valute[i].sort, 
+                           valuta:       portfelj.valute[i].valuta, 
+                           znesek:       parseFloat(portfelj.valute[i].znesek),
+                           nabavna_cena: (portfelj.valute[i].povprecna_nabavna_cena=='') ? "" : 'Povprečna nabavna cena: ' + numberWithCommas(precise_round(parseFloat(portfelj.valute[i].povprecna_nabavna_cena), 4)) + ' €'
+                          };
+                stanje.push(row);
+                tmpValut = tmpValut + 1;
+            }
+            else {
+                stanje[tmpIndex].znesek = stanje[tmpIndex].znesek + parseFloat(portfelj.valute[i].znesek);
+            }
+        }
+        stanje.sort(function(a,b) {return (a.sort > b.sort) ? 1 : ((b.sort > a.sort) ? -1 : 0);} ); 
+        document.write('<div style="width:35rem;font-size:11px;color:gray;padding:2px 4px;display:flex;justify-content:space-between;">');
+        document.write('  <span>Vir: Alternative.me</span>');
+        document.write('  <a href="index-coincap1.html" style="color:gray;">&#x27A1; Odpri na CoinCap1</a>');
+        document.write('  <a href="index-coincap2.html" style="color:gray;">&#x27A1; Odpri na CoinCap2</a>');
+        document.write('  <a href="index-alternativeme.html" style="color:gray;">&#x27A1; Odpri na Alternative.me</a>');
+        document.write('</div>');
+        document.write('<div class="card" style="width: 35rem;">'); // prej 32rem;
+        document.write('  <div class="card-header card-info">');
+        document.write('    <div class="container-fluid">');
+        document.write('      <div class="row">');
+        document.write('         <div class="col-sm-4 nopadding btn-group-vertical">');
+        document.write('           <a href="javascript:window.location.reload(true)">');        
+        document.write('           <h4 class="doubleHeight" id="sum_all">Nalagam...</h4></a>');
+        document.write('         </div>');
+        document.write('         <div class="col-sm-2 nopadding text-center"><smallx>');
+        document.write('           <p class="small"></p>');        
+        document.write('           <p class="small">1h</p>');        
+        document.write('           <p class="small" id="sum_1h_e"></p>');
+        document.write('           <p class="small" id="sum_1h_p"></p>');
+        document.write('         </smallx></div>');
+        document.write('         <div class="col-sm-2 nopadding text-center"><smallx>');
+        document.write('           <p class="small"></p>');        
+        document.write('           <p class="small">24h</p>');        
+        document.write('           <p class="small" id="sum_24h_e"></p>');
+        document.write('           <p class="small" id="sum_24h_p"></p>');
+        document.write('         </smallx></div>');
+        document.write('         <div class="col-sm-2 nopadding text-center"><smallx>');
+        document.write('           <p class="small"></p>');        
+        document.write('           <p class="small">7d</p>');        
+        document.write('           <p class="small" id="sum_7d_e"></p>');
+        document.write('           <p class="small" id="sum_7d_p"></p>');
+        document.write('         </smallx></div>');
+        document.write('         <div class="col-sm-2 text-right btn-group-vertical">');
+        //document.write('           <a href="javascript: document.body.scrollIntoView(false);"><img src="img/more48.png"></a>');
+		document.write('           <div><a href="#jumpSum"><img src="img/wallet/sum.png" width="25"></a>');
+        document.write('           <a href="#jumpTop15"><img src="img/wallet/top15.png" width="25" height="25"></a></div>');
+        document.write('         </div>');
+        document.write('      </div>');
+        document.write('    </div>');
+        document.write('  </div>');
+        document.write('  <div class="card-block">');
+        document.write('    <div id="alerts"></div>');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj €</th>');
+        document.write('          <th class="text-right">1h/24h</th>');        
+        document.write('          <th class="text-right">Količina</th>');
+        document.write('          <th class="text-right">Vrednost<br/></th>');
+        document.write('          <th class="text-right" style=display:none>Pred 1h<br/></th>');
+        document.write('          <th class="text-right" style=display:none>Pred 24h<br/></th>');
+        document.write('          <th class="text-right" style=display:none>Pred 7h<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        var tmpNumVrstica = 0;
+        for(var i=0; i<tmpValut; i++) {
+            document.write('        <tr>');
+            document.write('          <td class="align-middle">' + getImgValuta(stanje[i].valuta)
+                                                                 + '<span title="' + stanje[i].nabavna_cena + '">' 
+                                                                 + stanje[i].valuta
+                                                                 + '</span>'
+                                                                 + '<br/><font color="silver"><small><div id="sum_valuta_procent_v' + tmpNumVrstica + '"></div></small></font>' + '</td>');
+            document.write('          <td class="align-bottom" id="sum_tecaj_v'    + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td class="align-middle" id="sum_1hp_v'      + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td class="align-bottom" id="sum_kolicina_v' + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');            
+            document.write('          <td class="align-bottom" id="sum_vrednost_v' + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td                      id="sum_vrednost_1h_v' + tmpNumVrstica + '" align="right" style=display:none>' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td                      id="sum_vrednost_24h_v'+ tmpNumVrstica + '" align="right" style=display:none>' /*+ parseFloat("0")*/ + '</td>');//style=display:none
+            document.write('          <td                      id="sum_vrednost_7d_v' + tmpNumVrstica + '" align="right" style=display:none>' /*+ parseFloat("0")*/ + '</td>');
+            document.write('        </tr>');            
+            tmpNumVrstica = tmpNumVrstica + 1;
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        /////////////
+        // detajli //
+        /////////////
+        var tmpLokacija = "";
+        var tmpNumSklop = 0;
+        var tmpNumVrstica = 0;
+        for(var i=0; i< portfelj.valute.length; i++){
+            
+            if (portfelj.valute[i].lokacija != tmpLokacija ) {
+               if (i != 0) {
+                   // zaključi tabelo in card
+                   document.write('      </tbody>');
+                   document.write('    </table>');
+                   document.write('  </div>');
+                   document.write('</div>');
+                   document.write('<br/>');
+               }
+            
+               tmpLokacija = portfelj.valute[i].lokacija;
+               tmpNumSklop = tmpNumSklop + 1;
+               tmpNumVrstica = 0;
+               
+               document.write('<div class="card" style="width: 35rem;">');
+               
+               
+               document.write('  <div class="card-header">');
+               document.write('    <div class="row">');
+               document.write('      <div class="col-sm-8">');
+               document.write('        <h3>' + getImgLokacija(tmpLokacija) + tmpLokacija + '</h3>');  
+               document.write('      </div>');  
+               document.write('      <div class="col-sm-4 text-right doubleHeight">');
+               document.write('        <p class="doubleHeight" id="sum_lokacija_sklop' + tmpNumSklop + '"></p>');
+               document.write('      </div>');
+               document.write('    </div>');
+               document.write('  </div>');
+               //document.write('  <h3 class="card-header">' + getImgLokacija(tmpLokacija) + tmpLokacija + '</h3>');
+               document.write('  <div class="card-block">');
+               document.write('    <table class="table">');
+               document.write('      <thead>');
+               document.write('        <tr>');
+               document.write('          <th>Valuta</th>');
+               document.write('          <th class="text-right">Tečaj</th>');
+               document.write('          <th class="text-right">Količina</th>');
+               document.write('          <th class="text-right">Vrednost<br/></th>');
+               document.write('        </tr>');
+               document.write('      </thead>');
+               document.write('    <tbody>');       
+            }
+            else {
+               tmpNumVrstica = tmpNumVrstica + 1;
+            }
+            document.write('        <tr>');
+            var my_nabavna_cena = (portfelj.valute[i].povprecna_nabavna_cena=='') ? "" : 'Povprečna nabavna cena: ' + numberWithCommas(precise_round(parseFloat(portfelj.valute[i].povprecna_nabavna_cena), 4)) + ' €'
+            document.write('          <td>' + getImgValuta(portfelj.valute[i].valuta) 
+                                            + '<span title="' + my_nabavna_cena + '">' 
+                                            + portfelj.valute[i].valuta 
+                                            + '</span>'
+                                            + '</td>');
+            document.write('          <td id="tecaj_s'    + tmpNumSklop + 'v' + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td id="kolicina_s' + tmpNumSklop + 'v' + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');            
+            document.write('          <td id="vrednost_s' + tmpNumSklop + 'v' + tmpNumVrstica + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            //var dummy = getTecajDetajl(portfelj.valute[i].valuta, portfelj.valute[i].znesek, tmpNumSklop, tmpNumVrstica);
+            document.write('        </tr>');            
+        }
+                   // zaključi tabelo in card
+                   document.write('      </tbody>');
+                   document.write('    </table>');
+                   document.write('  </div>');
+                   document.write('</div>');
+                   document.write('<br/>');
+
+        //////////////
+        // lokacije //
+        //////////////
+        document.write('<div class="card" style="width: 35rem;" id="jumpSum">');
+        document.write('  <div class="card-header card-success">');
+        document.write('    <div class="row">');
+        document.write('      <div class="col-sm-6">');
+        document.write('        <h3>' + getImgLokacija('sum') + 'Lokacije' + '</h3>');  
+        document.write('      </div>');  
+        document.write('      <div class="col-sm-2 text-right doubleHeight">');
+		document.write('        <p class="doubleHeight" id="sum_lokacije_btc"></p>');
+        document.write('      </div>');
+        document.write('      <div class="col-sm-4 text-right doubleHeight">');
+        document.write('        <p class="doubleHeight" id="sum_lokacije"></p>');
+        document.write('      </div>');
+        document.write('    </div>');
+        document.write('  </div>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Lokacija</th>');
+        document.write('          <th class="text-right">Delež<br/></th>');
+        document.write('          <th class="text-right">BTC<br/></th>');
+        document.write('          <th class="text-right">Znesek<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        var tmpLokacija = "";
+        var tmpSklop = -1;
+        for(var i=0; i< portfelj.valute.length; i++){
+            if (portfelj.valute[i].lokacija != tmpLokacija ) {
+                tmpLokacija = portfelj.valute[i].lokacija;
+                tmpSklop = tmpSklop + 1;
+                document.write('        <tr>');
+                document.write('          <td id="lokacija_v' + tmpSklop + '"></td>');
+                document.write('          <td id="lokacija_delez_v'  + tmpSklop + '" align="right"></td>');
+				document.write('          <td id="lokacija_znesek_btc_v'  + tmpSklop + '" align="right"></td>');
+                document.write('          <td id="lokacija_znesek_v'  + tmpSklop + '" align="right"></td>');
+                document.write('        </tr>');            
+            }
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+		document.write('    <div id="piechart_lokacije"></div>');
+		document.write('    <div id="piechart_kovanci"></div>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+
+        ////////////
+        // top 15 //
+        ////////////
+        document.write('<div class="card" style="width: 35rem;" id="jumpTop15">');
+        document.write('  <div class="card-header card-info">');
+        document.write('    <div class="row">');
+        document.write('      <div class="col-sm-6">');
+        document.write('        <h3>' + getImgLokacija('top15') + 'Največji paketi' + '</h3>');  
+        document.write('      </div>');  
+        document.write('    </div>');
+        document.write('  </div>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Delež<br/></th>');
+        document.write('          <th class="text-right">Količina<br/></th>');
+        document.write('          <th class="text-right">BTC<br/></th>');
+        document.write('          <th class="text-right">Vrednost<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<15; i++) {
+            document.write('        <tr>');
+            document.write('          <td class="align-middle" id="top15_valuta'   + i + '" align="left">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td class="align-middle" id="top15_delez'    + i + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td class="align-middle" id="top15_kolicina' + i + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td class="align-middle" id="top15_btc'      + i + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('          <td class="align-middle" id="top15_vrednost' + i + '" align="right">' /*+ parseFloat("0")*/ + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        
+/*
+        ////////////
+        // top 1h //
+        ////////////
+        document.write('<div class="card" style="width: 35rem;">');
+        document.write('  <h3 class="card-header card-success">' + getImgLokacija('top1h') + 'Top 1h' + '</h3>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj</th>');
+        document.write('          <th class="text-right">1h<br/></th>');
+        document.write('          <th class="text-right">24h<br/></th>');
+        document.write('          <th class="text-right">7d<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<10; i++){
+            document.write('        <tr>');
+            document.write('          <td id="top1h_valuta_v' + i + '">' + '</td>');
+            document.write('          <td id="top1h_tecaj_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top1h_spr1h_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top1h_spr24h_v' + i + '" align="right">' + '</td>');
+            document.write('          <td id="top1h_spr7d_v'  + i + '" align="right">' + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        /////////////
+        // top 24h //
+        /////////////
+        document.write('<div class="card" style="width: 35rem;">');
+        document.write('  <h3 class="card-header card-success">' + getImgLokacija('top24h') + 'Top 24h' + '</h3>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj</th>');
+        document.write('          <th class="text-right">1h<br/></th>');
+        document.write('          <th class="text-right">24h<br/></th>');
+        document.write('          <th class="text-right">7d<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<10; i++){
+            document.write('        <tr>');
+            document.write('          <td id="top24h_valuta_v' + i + '">' + '</td>');
+            document.write('          <td id="top24h_tecaj_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top24h_spr1h_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top24h_spr24h_v' + i + '" align="right">' + '</td>');
+            document.write('          <td id="top24h_spr7d_v'  + i + '" align="right">' + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+
+        ////////////
+        // top 7d //
+        ////////////
+        document.write('<div class="card" style="width: 35rem;">');
+        document.write('  <h3 class="card-header card-success">' + getImgLokacija('top7d') + 'Top 7d' + '</h3>');
+        document.write('  <div class="card-block">');
+        document.write('    <table class="table">');
+        document.write('      <thead>');
+        document.write('        <tr>');
+        document.write('          <th>Valuta</th>');
+        document.write('          <th class="text-right">Tečaj</th>');
+        document.write('          <th class="text-right">1h<br/></th>');
+        document.write('          <th class="text-right">24h<br/></th>');
+        document.write('          <th class="text-right">7d<br/></th>');
+        document.write('        </tr>');
+        document.write('      </thead>');
+        document.write('    <tbody>');       
+        for(var i=0; i<10; i++){
+            document.write('        <tr>');
+            document.write('          <td id="top7d_valuta_v' + i + '">' + '</td>');
+            document.write('          <td id="top7d_tecaj_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top7d_spr1h_v'  + i + '" align="right">' + '</td>');
+            document.write('          <td id="top7d_spr24h_v' + i + '" align="right">' + '</td>');
+            document.write('          <td id="top7d_spr7d_v'  + i + '" align="right">' + '</td>');
+            document.write('        </tr>');            
+        }
+        document.write('      </tbody>');
+        document.write('    </table>');
+        document.write('  </div>');
+        document.write('</div>');
+        document.write('<br/>');
+*/
+        pridobiPodatke();
+    </script>
+    <div class="card" style="width: 35rem;">
+      <h3 class="card-header card-warning"><img src="img/more32.png" class="img-circle" height="32" width="32"></a>&nbsp;Povezave</h3>
+      <div class="card-block">
+        <div class="row">
+          <div class="col-sm-5">
+            &bull;&nbsp;<a href="https://www.livecoinwatch.com/">LiveCoinWatch</a>
+            <br/>
+            &bull;&nbsp;<a href="https://coinmarketcap.com/">CoinMarketCap</a>
+            <br/>
+            &bull;&nbsp;<a href="https://coinmarketcap.com/gainers-losers/">Gainers & losers</a>
+          </div>          
+          <div class="col-sm-4">
+            <!--&bull;&nbsp;<a href="top10.html">Top 10</a>-->
+            <!--<br/>-->
+            &bull;&nbsp;<a href="https://www.tradingview.com/chart/?symbol=BITSTAMP%3AXRPEUR">TradingView</a>
+            <br/>
+            &bull;&nbsp;<a href="https://etherscan.io/tokenholdings?a=0x085600C3d700CDAef98f3b3Fc548ff4eC9EF4477">MalePareMEW</a>
+          </div>
+          <div class="col-sm-3">
+            &bull;&nbsp;<a href="https://yobit.net/en/freecoins/">Yobit</a>
+            <br/>
+            <!--&bull;&nbsp;<a href="https://freedoge.co.in/">Free DOGE</a>-->
+            &bull;&nbsp;<a href="https://freebitco.in/?op=home">Free BTC</a>
+            <br/>
+            &bull;&nbsp;<a href="http://start.66ghz.com/phone/start_dnevno.html">Dnevno</a>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <font color="silver">
+            <small>
+            <!--<br/>-->
+            Exit20: 40+&nbsp;&nbsp;80=120 ... -20 (konec FEB)
+            <br/>
+            Exit40: 20+120=140 ... -20 (konec MAJ)
+            <br/>
+            Final:  120...
+            </small>
+            </font>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br/>
+  </div>    
+</body>
+
+</html>
