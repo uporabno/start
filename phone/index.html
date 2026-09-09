@@ -149,12 +149,16 @@ onload="myOnLoad()">
 
 <!-- ============================================================
      REŠITEV ZA GITHUB PAGES (staticen hosting, brez PHP)
-     direkten fetch na LJSE API prek CORS proxyja
+     poskusi direktno, potem več CORS proxy fallbackov
      ============================================================ -->
 <script>
 (function() {
   var LJSE_URL = 'https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0';
-  var CORS = 'https://api.allorigins.win/raw?url=';
+  var PROXIES = [
+    '',                                          // 1. direktno (če LJSE ima CORS)
+    'https://api.allorigins.win/raw?url=',       // 2. allorigins
+    'https://thingproxy.freeboard.io/fetch/',    // 3. thingproxy
+  ];
   var WANT = {
     'KRKG': {id:'sKRKG', lbl:'KRKG'},
     'ZVTG': {id:'sZVTG', lbl:'ZVTG'},
@@ -190,12 +194,30 @@ onload="myOnLoad()">
     Object.keys(WANT).forEach(function(s){ if (!found[s]) na(WANT[s].id, WANT[s].lbl); });
   }
 
-  function fetchStocks() {
-    fetch(CORS + encodeURIComponent(LJSE_URL))
-      .then(function(r) { return r.json(); })
-      .then(function(data) { parseData(data); })
-      .catch(function() { Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); }); });
+  function tryProxy(idx) {
+    if (idx >= PROXIES.length) {
+      console.warn('LJSE: vsi proxiji neuspešni');
+      Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); });
+      return;
+    }
+    var url = PROXIES[idx] ? PROXIES[idx] + encodeURIComponent(LJSE_URL) : LJSE_URL;
+    console.log('LJSE: poskus ' + idx + ':', url);
+    fetch(url)
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function(data) {
+        console.log('LJSE: OK (proxy ' + idx + ')');
+        parseData(data);
+      })
+      .catch(function(e) {
+        console.warn('LJSE: proxy ' + idx + ' napaka:', e.message);
+        tryProxy(idx + 1);
+      });
   }
+
+  function fetchStocks() { tryProxy(0); }
 
   fetchStocks();
   setInterval(fetchStocks, 5*60*1000);
