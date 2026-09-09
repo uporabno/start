@@ -153,7 +153,9 @@ onload="myOnLoad()">
      ============================================================ -->
 <script>
 (function() {
+  var VER = 'v4';
   var LJSE_URL = 'https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0';
+  console.log('LJSE skript ' + VER + ' naložen');
   var PROXIES = [
     '',                                          // 1. direktno (če LJSE ima CORS)
     'https://api.allorigins.win/raw?url=',       // 2. allorigins
