@@ -193,7 +193,7 @@ onload="myOnLoad()">
   }
 
   function fetchStocks() {
-    fetch('ljse-data.json?_=' + Date.now())
+    fetch('../actions/ljse-data.json?_=' + Date.now())
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();

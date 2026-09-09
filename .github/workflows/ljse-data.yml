@@ -16,13 +16,13 @@ jobs:
 
       - name: Fetch LJSE data
         run: |
-          curl -s -o phone/ljse-data.json \
+          curl -s -o actions/ljse-data.json \
             "https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0"
 
       - name: Commit & push
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
-          git add phone/ljse-data.json
+          git add actions/ljse-data.json
           git diff --cached --quiet || git commit -m "LJSE data $(date -u '+%H:%M')"
           git push
