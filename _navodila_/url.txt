@@ -1,0 +1,77 @@
+LJSE TEČAJ - NAVODILA
+=====================
+
+PROBLEM
+-------
+GitHub Pages je statičen hosting - PHP ne teče, direkten fetch na ljse.si
+pa browser blokira zaradi CORS politike. Javni CORS proxiji (corsproxy.io,
+allorigins.win, thingproxy) so nezanesljivi ali zahtevajo plačilo.
+
+REŠITEV
+-------
+GitHub Action vsake 10 minut fetchá LJSE API in shrani podatke kot lokalno
+JSON datoteko. JavaScript potem bere to lokalno datoteko brez CORS problema.
+
+DATOTEKE
+--------
+.github/workflows/ljse-data.yml   - GitHub Action (urnik + fetch + commit)
+phone/ljse-data.json               - podatki (avtomatsko posodobljeni)
+phone/index.html                   - JS bere ljse-data.json (v5)
+
+LJSE API URL
+------------
+https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0
+
+URNIK
+-----
+Vsake 10 minut, ponedeljek-petek, 7-16 UTC (= 9-18 CET)
+Cron: */10 7-16 * * 1-5
+
+ROČNI ZAGON
+-----------
+https://github.com/uporabno/start/actions
+→ "Fetch LJSE data" → "Run workflow"
+
+PHP PROXY (za 66ghz.com strežnik) - ODSTRANJENO
+------------------------------------------------
+proxy.php in komentirana JS koda sta bila odstranjena (ni več potrebna).
+
+Kaj je delal proxy.php:
+  - PHP skripta na start.66ghz.com/phone/proxy.php
+  - Fetchala LJSE API z curl (SSL_VERIFYPEER=false):
+      https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0
+  - Vrnila odgovor kot JSONP (callback ime iz ?cb= parametra, sanitizirano z regex)
+  - Content-Type: application/javascript; charset=utf-8
+
+Kaj je delal JS v index.html (v1):
+  - <script src="proxy.php?cb=ljseCallback"> tehnika (brez CORS)
+  - Callback ljseCallback() parsiral data.priceList[] → poiskal KRKG, ZVTG, CICG, VZZR
+  - Prikazal ceno + % spremembo (zelena/rdeča)
+  - Ponavljal vsake 5 minut (setInterval)
+
+DELNIŠKI SIMBOLI
+----------------
+KRKG, ZVTG, CICG, VZZR
+
+VERZIJE
+-------
+v1 - original PHP proxy (66ghz.com)
+v2 - corsproxy.io → 401 Unauthorized
+v3 - allorigins.win → 522 error
+v4 - multi proxy fallback (direktno + allorigins + thingproxy) → vsi padli
+v5 - GitHub Action + lokalna datoteka (DELA)
+
+
+===============================================================================
+DOSTOP DO STRANI
+===============================================================================
+
+PHONE STRAN
+-----------
+https://uporabno.github.io/start/phone/
+
+GitHub repo:
+https://github.com/uporabno/start
+
+GitHub Pages settings:
+https://github.com/uporabno/start/settings/pages
