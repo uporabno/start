@@ -32,15 +32,22 @@ ROČNI ZAGON
 https://github.com/uporabno/start/actions
 → "Fetch LJSE data" → "Run workflow"
 
-ZAKOMENTIRANI PHP PROXY (za 66ghz.com strežnik)
+PHP PROXY (za 66ghz.com strežnik) - ODSTRANJENO
 ------------------------------------------------
-V phone/index.html je stara PHP rešitev zakomentirana:
-  <!-- REŠITEV ZA PHP STREŽNIK (66ghz.com) -->
-  <!-- ... proxy.php fetchá LJSE in vrne JSONP ... -->
+proxy.php in komentirana JS koda sta bila odstranjena (ni več potrebna).
 
-Za PHP strežnik: odkomentiraj staro kodo, zakomentiraj v5 blok.
-proxy.php kliče: https://ljse.si/json/TradingPriceList?...
-in vrne JSONP callback (script tag technika, brez CORS).
+Kaj je delal proxy.php:
+  - PHP skripta na start.66ghz.com/phone/proxy.php
+  - Fetchala LJSE API z curl (SSL_VERIFYPEER=false):
+      https://ljse.si/json/TradingPriceList?lng=sl&market_segment_ids=A,B,C,D,E,F&type=&model=&date=&only_traded=0
+  - Vrnila odgovor kot JSONP (callback ime iz ?cb= parametra, sanitizirano z regex)
+  - Content-Type: application/javascript; charset=utf-8
+
+Kaj je delal JS v index.html (v1):
+  - <script src="proxy.php?cb=ljseCallback"> tehnika (brez CORS)
+  - Callback ljseCallback() parsiral data.priceList[] → poiskal KRKG, ZVTG, CICG, VZZR
+  - Prikazal ceno + % spremembo (zelena/rdeča)
+  - Ponavljal vsake 5 minut (setInterval)
 
 DELNIŠKI SIMBOLI
 ----------------

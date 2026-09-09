@@ -84,68 +84,6 @@ onload="myOnLoad()">
   }
 </script>
 
-<!-- ============================================================
-     REŠITEV ZA PHP STREŽNIK (66ghz.com)
-     proxy.php fetchá LJSE in vrne JSONP
-     ============================================================
-<script>
-(function() {
-  var PROXY = 'https://start.66ghz.com/phone/proxy.php';
-  var WANT = {
-    'KRKG': {id:'sKRKG', lbl:'KRKG'},
-    'ZVTG': {id:'sZVTG', lbl:'ZVTG'},
-    'CICG': {id:'sCICG', lbl:'CICG'},
-    'VZZR': {id:'sVZZR', lbl:'VZZR'}
-  };
-
-  function show(id, lbl, price, chg) {
-    var el = document.getElementById(id);
-    if (!el) return;
-    var color = chg >= 0 ? '#5c5' : '#f55';
-    var sign  = chg >= 0 ? '+' : '';
-    el.innerHTML = '<span style="color:#888">' + lbl + ':</span> <b style="color:#ddd">' + price.toFixed(2) + '</b> <span style="color:' + color + ';font-size:18px">' + sign + chg.toFixed(2) + '%</span>';
-  }
-
-  function na(id, lbl) {
-    var el = document.getElementById(id);
-    if (el) el.innerHTML = '<span style="color:#444">' + lbl + ': N/A</span>';
-  }
-
-  function parseData(data) {
-    var found = {};
-    (data.priceList || []).forEach(function(seg) {
-      ((seg.tradingPriceList || {}).rows || []).forEach(function(item) {
-        var st = WANT[item.symbol];
-        if (!st || found[item.symbol]) return;
-        var price = item.last_price_n;
-        var chg = parseFloat((item.change_prev_close_percentage || '0').replace(/&nbsp;/g,'').replace('%','').replace(',','.').trim()) || 0;
-        if (price > 0) { show(st.id, st.lbl, price, chg); found[item.symbol] = true; }
-        else na(st.id, st.lbl);
-      });
-    });
-    Object.keys(WANT).forEach(function(s){ if (!found[s]) na(WANT[s].id, WANT[s].lbl); });
-  }
-
-  window.ljseCallback = function(data) {
-    try { parseData(data); }
-    catch(e) { Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); }); }
-  };
-
-  function fetchStocks() {
-    var old = document.getElementById('_ljse_s');
-    if (old) old.parentNode.removeChild(old);
-    var s = document.createElement('script');
-    s.id = '_ljse_s';
-    s.onerror = function() { Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); }); };
-    s.src = PROXY + '?cb=ljseCallback&_=' + Date.now();
-    document.head.appendChild(s);
-  }
-
-  fetchStocks();
-  setInterval(fetchStocks, 5*60*1000);
-})();
-</script>
--->
 
 <!-- ============================================================
      REŠITEV ZA GITHUB PAGES (staticen hosting, brez PHP)
