@@ -1,0 +1,2978 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Ratež šah</title>
+	<link rel="icon" type="image/x-icon" href="images/ratez-konj.png">
+    <style>
+        /* Lock orientation to portrait on mobile */
+        @media screen and (orientation: landscape) and (max-width: 768px) {
+            html {
+                transform: rotate(-90deg);
+                transform-origin: left top;
+                width: 100vh;
+                overflow-x: hidden;
+                position: absolute;
+                top: 100%;
+                left: 0;
+            }
+        }
+    </style>
+    <style>
+        /* ==========================================
+           CHESS MERIDA FONT
+           ========================================== */
+
+        @font-face {
+            font-family: 'Chess Merida';
+            src: url('Chess-Merida.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* ==========================================
+           WIN 3.11 RETRO STYLE
+           ========================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "MS Sans Serif", "Microsoft Sans Serif", sans-serif;
+            background: url('images/ozadje1.png');
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
+            -webkit-user-select: none;
+            overflow: hidden;
+        }
+
+        /* SCALING CONTAINER */
+        #app-container {
+            position: relative;
+            width: 1500px;
+            height: 920px;
+            transform-origin: center center;
+        }
+
+        /* MAIN WINDOW */
+        .window {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+            width: 1500px;
+            height: 920px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TITLE BAR */
+        .titlebar {
+            background: linear-gradient(to right, #000080, #1084d0);
+            color: white;
+            padding: 6px 8px;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 16px;
+            font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+        }
+
+        .titlebar-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .titlebar-text {
+            margin-right: auto;
+        }
+
+        .titlebar-buttons {
+            display: flex;
+            gap: 2px;
+            margin-left: auto;
+        }
+
+        .titlebar-button {
+            width: 20px;
+            height: 18px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .titlebar-button:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+
+        /* MENU BAR */
+        .menubar {
+            background: #c0c0c0;
+            display: flex;
+            padding: 2px 5px;
+            border-bottom: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        .menu-item {
+            padding: 3px 8px;
+            cursor: pointer;
+            font-size: 20px;
+            position: relative;
+            color: #000000;
+        }
+
+        .menu-item:hover {
+            background: #000080;
+            color: white;
+        }
+
+        .menu-item.active {
+            background: #000080;
+            color: white;
+        }
+
+        /* DROPDOWN MENU */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            min-width: 180px;
+            z-index: 1000;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .menu-option {
+            padding: 4px 20px;
+            font-size: 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #808080;
+            color: #000000;
+        }
+
+        .menu-option:last-child {
+            border-bottom: none;
+        }
+
+        .menu-option:hover {
+            background: #000080;
+            color: white;
+        }
+
+        .menu-option.disabled {
+            color: #808080;
+            cursor: default;
+        }
+
+        .menu-option.disabled:hover {
+            background: #c0c0c0;
+            color: #808080;
+        }
+
+        .menu-separator {
+            height: 1px;
+            background: #808080;
+            margin: 2px 0;
+        }
+
+        /* CONTROL BUTTONS */
+        .controls {
+            background: #c0c0c0;
+            padding: 8px;
+            display: flex;
+            gap: 5px;
+            border-bottom: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        .btn {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 5px 15px;
+            font-size: 20px;
+            font-family: "MS Sans Serif", sans-serif;
+            cursor: pointer;
+            min-width: 70px;
+        }
+
+        .btn:active {
+            border-color: #000000 #ffffff #ffffff #000000;
+        }
+
+        .btn:disabled {
+            color: #808080;
+            cursor: default;
+        }
+
+        /* MAIN CONTENT */
+        .content {
+            display: flex;
+            background: #c0c0c0;
+            padding: 10px 8px 2px 8px;
+            gap: 25px;
+            flex: 1;
+            overflow: auto;
+        }
+
+        /* CHESS BOARD CONTAINER */
+        .board-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* COORDINATE LABELS */
+        .coord-top, .coord-bottom {
+            display: flex;
+            padding-left: 28px;
+            margin-bottom: 2px;
+        }
+
+        .coord-bottom {
+            margin-top: 2px;
+            margin-bottom: 0;
+        }
+
+        .coord-label {
+            width: 86px;
+            height: 16px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: #000000;
+        }
+
+        .board-with-coords {
+            display: flex;
+        }
+
+        .coord-left, .coord-right {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            width: 25px;
+        }
+
+        .coord-left {
+            margin-right: 0px;
+            text-align: center;
+        }
+
+        .coord-right {
+            margin-left: 0px;
+            text-align: center;
+        }
+
+        .coord-left .coord-label {
+            height: 86px;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: horizontal-tb;
+            font-size: 15px;
+        }
+
+        .coord-right .coord-label {
+            height: 86px;
+            width: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            writing-mode: horizontal-tb;
+            font-size: 15px;
+        }
+
+        /* CHESS BOARD */
+        .chessboard {
+            display: grid;
+            grid-template-columns: repeat(8, 86px);
+            grid-template-rows: repeat(8, 86px);
+            border: 3px solid #000000;
+            box-shadow: inset 0 0 0 1px #ffffff;
+        }
+
+        .square {
+            width: 86px;
+            height: 86px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 62px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .square.light {
+            background-color: #ffff99;
+        }
+
+        .square.dark {
+            background-color: #006600;
+        }
+
+        .square.selected {
+            background-color: #00ff00 !important;
+            box-shadow: inset 0 0 0 3px #008000;
+        }
+
+        .square.valid-move {
+            background-color: #ffff00 !important;
+            box-shadow: inset 0 0 0 2px #ff8800;
+        }
+
+        .square.valid-move::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(255, 136, 0, 0.5);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .piece {
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .piece svg {
+            width: 90%;
+            height: 90%;
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.4));
+        }
+
+        .piece.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+        }
+
+        /* SIDE PANELS */
+        .side-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 380px;
+            flex: 1;
+        }
+
+        .panel {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+        }
+
+        /* Ujete figure - zmanjšan panel na 1/3 višine */
+        .panelPozrte {
+            max-height: 100px;
+        }
+
+        .panelPozrte .panel-content {
+            min-height: 60px;
+            max-height: 70px;
+            overflow-y: auto;
+            padding: 4px 6px;
+            font-size: 12px;
+        }
+
+        .panel-title {
+            background: #000080;
+            color: white;
+            padding: 4px 6px;
+            font-size: 12px;
+            font-weight: bold;
+            font-family: "Segoe UI", "Tahoma", "Arial", sans-serif;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-close {
+            width: 14px;
+            height: 12px;
+            background: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            cursor: pointer;
+        }
+
+        .panel-content {
+            background: white;
+            min-height: 250px;
+            max-height: 350px;
+            overflow-y: auto;
+            padding: 8px;
+            font-size: 13px;
+            font-family: "Courier New", monospace;
+        }
+
+        /* AI Analysis panel - override height */
+        .ai-analysis {
+            min-height: auto;
+        }
+
+        /* STARO PRAVILO - ODSTRANJEN (konflikt s panel-ai-analiza)
+        .panel:has(.ai-analysis) .panel-content {
+            min-height: 140px;
+            max-height: 160px;
+        }
+        */
+
+        /* Panel AI Analiza - razmerje kot "Seznam potez" */
+        /* Title bar ~22px + content 190px + borders ~4px = ~216px */
+        .panel-ai-analiza {
+            height: auto !important;
+            min-height: auto !important;
+            max-height: none !important;
+        }
+
+        .panel-ai-analiza .panel-content {
+            min-height: 190px !important;
+            max-height: 190px !important;
+            overflow-y: visible;
+        }
+
+        /* Panel Content AI Analiza - specifičen razred */
+        .panel-content-ai-analiza {
+            min-height: 190px !important;
+            max-height: 190px !important;
+            padding: 8px;
+            overflow-y: visible;
+        }
+
+        /* CAPTURED PIECES PANEL */
+        .captured-pieces {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .captured-row {
+            display: flex;
+            align-items: center;
+            padding: 1px 3px;
+            font-size: 9px;  /* Zmanjšan font */
+        }
+
+        .captured-label {
+            font-weight: bold;
+            margin-right: 5px;
+            font-size: 14px;  /* Zmanjšan font */
+            color: #000000;  /* Črna barva za oba igralca (ozadje je belo) */
+        }
+
+        .captured-piece {
+            font-size: 18px;
+            margin-right: 2px;
+        }
+
+        /* MOVE LIST */
+        .move-list {
+            list-style: none;
+        }
+
+        .move-list li {
+            padding: 2px 5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .move-list li:hover {
+            background: #e0e0e0;
+        }
+
+        /* STATUS BAR */
+        .statusbar {
+            background: #c0c0c0;
+            border-top: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            padding: 5px 5px;
+            font-size: 13px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .status-item {
+            border: 1px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 1px 5px;
+            flex: 1;
+        }
+
+        /* AI ANALYSIS PANEL */
+        .ai-analysis {
+            font-family: "Courier New", monospace;
+            font-size: 13px;
+            padding: 5px;
+        }
+
+        .ai-player-label {
+            font-weight: bold;
+            color: #000080;
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px 10px;
+            margin-bottom: 5px;
+        }
+
+        .ai-row {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .ai-level {
+            font-weight: bold;
+            color: #000080;
+            font-size: 14px;
+        }
+
+        .ai-move {
+            font-weight: 600;
+            color: #000000;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .ai-score {
+            color: #008000;
+            font-size: 14px;
+        }
+
+        .ai-score.negative {
+            color: #800000;
+        }
+
+        /* Inactive player (not on turn) - gray text */
+        .ai-player-section.inactive .ai-player-label,
+        .ai-player-section.inactive .ai-move,
+        .ai-player-section.inactive .ai-score,
+        .ai-player-section.inactive .ai-level {
+            color: #808080;
+        }
+
+        .ai-player-section.inactive .ai-score.negative {
+            color: #a0a0a0;
+        }
+
+        /* MOBILE RESPONSIVE */
+        @media (max-width: 768px) {
+            .window {
+                width: 100%;
+                height: auto;
+            }
+
+            .content {
+                flex-direction: column;
+            }
+
+            .side-panels {
+                width: 100%;
+                min-width: auto;
+            }
+
+            .chessboard {
+                grid-template-columns: repeat(8, 45px);
+                grid-template-rows: repeat(8, 45px);
+            }
+
+            .square {
+                width: 45px;
+                height: 45px;
+                font-size: 32px;
+            }
+
+            .coord-left .coord-label,
+            .coord-right .coord-label {
+                height: 45px;
+            }
+
+            .coord-label {
+                width: 45px;
+                font-size: 12px;
+            }
+        }
+
+        /* MODAL DIALOG */
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .dialog-window {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.4);
+            width: 567px;
+        }
+
+        .dialog-content {
+            padding: 15px;
+        }
+
+        .dialog-field {
+            margin-bottom: 15px;
+        }
+
+        .dialog-label {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .dialog-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .dialog-label-inline {
+            font-size: 22px;
+            width: auto;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+
+        .dialog-input {
+            flex: 1;
+            padding: 3px 5px;
+            border: 2px solid;
+            border-color: #808080 #ffffff #ffffff #808080;
+            background: white;
+            font-family: "MS Sans Serif", sans-serif;
+            font-size: 18px;
+        }
+
+        .dialog-input:disabled {
+            background: #c0c0c0;
+            color: #808080;
+            cursor: not-allowed;
+        }
+
+        .dialog-radio {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        .dialog-radio input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .dialog-radio span {
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dialog-radio svg {
+            width: 28px;
+            height: 28px;
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+        }
+
+        .dialog-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .dialog-buttons .btn {
+            min-width: 80px;
+        }
+
+        .difficulty-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-row .dialog-radio {
+            margin-bottom: 0;
+            flex: 0 0 auto;
+        }
+
+        /* SCROLLBAR STYLING (Win 3.11 style) */
+        ::-webkit-scrollbar {
+            width: 16px;
+            height: 16px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #c0c0c0;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #808080;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+        }
+
+        ::-webkit-scrollbar-button {
+            background: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #000000 #000000 #ffffff;
+        }
+        .about-header { display: flex; align-items: center; gap: 12px; height: 81px; }
+        .about-logo-box { background: #000; flex-shrink: 0; display: flex; align-items: center; justify-content: center; padding: 4px; border: 2px solid; border-color: #404040 #f0f0f0 #f0f0f0 #404040; }
+        .about-logo-box img { width: 81px; height: 81px; display: block; }
+        .about-right { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+        .about-copyright { font-size: 0.85em; color: #888; margin: 0; align-self: center; }
+        .about-email { display: block; font-size: 0.85em; color: #888; text-decoration: none; align-self: center; }
+        .about-email:hover { color: #2e59d9; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <!-- SVG Chess Pieces (Inline - from Wikimedia Commons) -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+      <defs>
+        <!-- Source: https://commons.wikimedia.org/wiki/File:Chess_Pieces_Sprite.svg -->
+
+        <!-- WHITE KING -->
+        <symbol id="white-king" viewBox="0 0 45 45">
+          <g style="fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 22.5,11.63 L 22.5,6" style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+            <path d="M 20,8 L 25,8" style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+            <path d="M 22.5,25 C 22.5,25 27,17.5 25.5,14.5 C 25.5,14.5 24.5,12 22.5,12 C 20.5,12 19.5,14.5 19.5,14.5 C 18,17.5 22.5,25 22.5,25" style="fill:#ffffff; stroke:#000000; stroke-linecap:butt; stroke-linejoin:miter;" />
+            <path d="M 11.5,37 C 17,40.5 27,40.5 32.5,37 L 32.5,30 C 32.5,30 41.5,25.5 38.5,19.5 C 34.5,13 25,16 22.5,23.5 L 22.5,27 L 22.5,23.5 C 19,16 9.5,13 6.5,19.5 C 3.5,25.5 11.5,29.5 11.5,29.5 L 11.5,37 z " style="fill:#ffffff; stroke:#000000;" />
+            <path d="M 11.5,30 C 17,27 27,27 32.5,30" style="fill:none; stroke:#000000;" />
+            <path d="M 11.5,33.5 C 17,30.5 27,30.5 32.5,33.5" style="fill:none; stroke:#000000;" />
+            <path d="M 11.5,37 C 17,34 27,34 32.5,37" style="fill:none; stroke:#000000;" />
+          </g>
+        </symbol>
+
+        <!-- WHITE QUEEN -->
+        <symbol id="white-queen" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 9 13 A 2 2 0 1 1  5,13 A 2 2 0 1 1  9 13 z" transform="translate(-1,-1)" />
+            <path d="M 9 13 A 2 2 0 1 1  5,13 A 2 2 0 1 1  9 13 z" transform="translate(15.5,-5.5)" />
+            <path d="M 9 13 A 2 2 0 1 1  5,13 A 2 2 0 1 1  9 13 z" transform="translate(32,-1)" />
+            <path d="M 9 13 A 2 2 0 1 1  5,13 A 2 2 0 1 1  9 13 z" transform="translate(7,-4.5)" />
+            <path d="M 9 13 A 2 2 0 1 1  5,13 A 2 2 0 1 1  9 13 z" transform="translate(24,-4)" />
+            <path d="M 9,26 C 17.5,24.5 30,24.5 36,26 L 38,14 L 31,25 L 31,11 L 25.5,24.5 L 22.5,9.5 L 19.5,24.5 L 14,10.5 L 14,25 L 7,14 L 9,26 z " style="stroke-linecap:butt;" />
+            <path d="M 9,26 C 9,28 10.5,28 11.5,30 C 12.5,31.5 12.5,31 12,33.5 C 10.5,34.5 10.5,36 10.5,36 C 9,37.5 11,38.5 11,38.5 C 17.5,39.5 27.5,39.5 34,38.5 C 34,38.5 35.5,37.5 34,36 C 34,36 34.5,34.5 33,33.5 C 32.5,31 32.5,31.5 33.5,30 C 34.5,28 36,28 36,26 C 27.5,24.5 17.5,24.5 9,26 z " style="stroke-linecap:butt;" />
+            <path d="M 11.5,30 C 15,29 30,29 33.5,30" style="fill:none;" />
+            <path d="M 12,33.5 C 18,32.5 27,32.5 33,33.5" style="fill:none;" />
+          </g>
+        </symbol>
+
+        <!-- WHITE BISHOP -->
+        <symbol id="white-bishop" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:none; fill-rule:evenodd; fill-opacity:1; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <g style="fill:#ffffff; stroke:#000000; stroke-linecap:butt;">
+              <path d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.646,38.99 6.677,38.97 6,38 C 7.354,36.06 9,36 9,36 z" />
+              <path d="M 15,32 C 17.5,34.5 27.5,34.5 30,32 C 30.5,30.5 30,30 30,30 C 30,27.5 27.5,26 27.5,26 C 33,24.5 33.5,14.5 22.5,10.5 C 11.5,14.5 12,24.5 17.5,26 C 17.5,26 15,27.5 15,30 C 15,30 14.5,30.5 15,32 z" />
+              <path d="M 25 8 A 2.5 2.5 0 1 1  20,8 A 2.5 2.5 0 1 1  25 8 z" />
+            </g>
+            <path d="M 17.5,26 L 27.5,26 M 15,30 L 30,30 M 22.5,15.5 L 22.5,20.5 M 20,18 L 25,18" style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+          </g>
+        </symbol>
+
+        <!-- WHITE KNIGHT -->
+        <symbol id="white-knight" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 22,10 C 32.5,11 38.5,18 38,39 L 15,39 C 15,30 25,32.5 23,18" style="fill:#ffffff; stroke:#000000;" />
+            <path d="M 24,18 C 24.38,20.91 18.45,25.37 16,27 C 13,29 13.18,31.34 11,31 C 9.958,30.06 12.41,27.96 11,28 C 10,28 11.19,29.23 10,30 C 9,30 5.997,31 6,26 C 6,24 12,14 12,14 C 12,14 13.89,12.1 14,10.5 C 13.27,9.506 13.5,8.5 13.5,7.5 C 14.5,6.5 16.5,10 16.5,10 L 18.5,10 C 18.5,10 19.28,8.008 21,7 C 22,7 22,10 22,10" style="fill:#ffffff; stroke:#000000;" />
+            <path d="M 9.5 25.5 A 0.5 0.5 0 1 1 8.5,25.5 A 0.5 0.5 0 1 1 9.5 25.5 z" style="fill:#000000; stroke:#000000;" />
+            <path d="M 15 15.5 A 0.5 1.5 0 1 1  14,15.5 A 0.5 1.5 0 1 1  15 15.5 z" transform="matrix(0.866,0.5,-0.5,0.866,9.693,-5.173)" style="fill:#000000; stroke:#000000;" />
+          </g>
+        </symbol>
+
+        <!-- WHITE ROOK -->
+        <symbol id="white-rook" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z " style="stroke-linecap:butt;" />
+            <path d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z " style="stroke-linecap:butt;" />
+            <path d="M 11,14 L 11,9 L 15,9 L 15,11 L 20,11 L 20,9 L 25,9 L 25,11 L 30,11 L 30,9 L 34,9 L 34,14" style="stroke-linecap:butt;" />
+            <path d="M 34,14 L 31,17 L 14,17 L 11,14" />
+            <path d="M 31,17 L 31,29.5 L 14,29.5 L 14,17" style="stroke-linecap:butt; stroke-linejoin:miter;" />
+            <path d="M 31,29.5 L 32.5,32 L 12.5,32 L 14,29.5" />
+            <path d="M 11,14 L 34,14" style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+          </g>
+        </symbol>
+
+        <!-- WHITE PAWN -->
+        <symbol id="white-pawn" viewBox="0 0 45 45">
+          <path d="M 22,9 C 19.79,9 18,10.79 18,13 C 18,13.89 18.29,14.71 18.78,15.38 C 16.83,16.5 15.5,18.59 15.5,21 C 15.5,23.03 16.44,24.84 17.91,26.03 C 14.91,27.09 10.5,31.58 10.5,39.5 L 33.5,39.5 C 33.5,31.58 29.09,27.09 26.09,26.03 C 27.56,24.84 28.5,23.03 28.5,21 C 28.5,18.59 27.17,16.5 25.22,15.38 C 25.71,14.71 26,13.89 26,13 C 26,10.79 24.21,9 22,9 z " style="opacity:1; fill:#ffffff; fill-opacity:1; fill-rule:nonzero; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" />
+        </symbol>
+
+        <!-- BLACK KING -->
+        <symbol id="black-king" viewBox="0 0 45 45">
+          <g style="fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 22.5,11.63 L 22.5,6" style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+            <path d="M 22.5,25 C 22.5,25 27,17.5 25.5,14.5 C 25.5,14.5 24.5,12 22.5,12 C 20.5,12 19.5,14.5 19.5,14.5 C 18,17.5 22.5,25 22.5,25" style="fill:#000000;fill-opacity:1; stroke-linecap:butt; stroke-linejoin:miter;" />
+            <path d="M 11.5,37 C 17,40.5 27,40.5 32.5,37 L 32.5,30 C 32.5,30 41.5,25.5 38.5,19.5 C 34.5,13 25,16 22.5,23.5 L 22.5,27 L 22.5,23.5 C 19,16 9.5,13 6.5,19.5 C 3.5,25.5 11.5,29.5 11.5,29.5 L 11.5,37 z " style="fill:#000000; stroke:#000000;" />
+            <path d="M 20,8 L 25,8" style="fill:none; stroke:#000000; stroke-linejoin:miter;" />
+            <path d="M 32,29.5 C 32,29.5 40.5,25.5 38.03,19.85 C 34.15,14 25,18 22.5,24.5 L 22.51,26.6 L 22.5,24.5 C 20,18 9.906,14 6.997,19.85 C 4.5,25.5 11.85,28.85 11.85,28.85" style="fill:none; stroke:#ffffff;" />
+            <path d="M 11.5,30 C 17,27 27,27 32.5,30 M 11.5,33.5 C 17,30.5 27,30.5 32.5,33.5 M 11.5,37 C 17,34 27,34 32.5,37" style="fill:none; stroke:#ffffff;" />
+          </g>
+        </symbol>
+
+        <!-- BLACK QUEEN -->
+        <symbol id="black-queen" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:000000; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <g style="fill:#000000; stroke:none;">
+              <circle cx="6"    cy="12" r="2.75" />
+              <circle cx="14"   cy="9"  r="2.75" />
+              <circle cx="22.5" cy="8"  r="2.75" />
+              <circle cx="31"   cy="9"  r="2.75" />
+              <circle cx="39"   cy="12" r="2.75" />
+            </g>
+            <path d="M 9,26 C 17.5,24.5 30,24.5 36,26 L 38.5,13.5 L 31,25 L 30.7,10.9 L 25.5,24.5 L 22.5,10 L 19.5,24.5 L 14.3,10.9 L 14,25 L 6.5,13.5 L 9,26 z" style="stroke-linecap:butt; stroke:#000000;" />
+            <path d="M 9,26 C 9,28 10.5,28 11.5,30 C 12.5,31.5 12.5,31 12,33.5 C 10.5,34.5 10.5,36 10.5,36 C 9,37.5 11,38.5 11,38.5 C 17.5,39.5 27.5,39.5 34,38.5 C 34,38.5 35.5,37.5 34,36 C 34,36 34.5,34.5 33,33.5 C 32.5,31 32.5,31.5 33.5,30 C 34.5,28 36,28 36,26 C 27.5,24.5 17.5,24.5 9,26 z" style="stroke-linecap:butt;" />
+            <path d="M 11,38.5 A 35,35 1 0 0 34,38.5" style="fill:none; stroke:#000000; stroke-linecap:butt;" />
+            <path d="M 11,29 A 35,35 1 0 1 34,29" style="fill:none; stroke:#ffffff;" />
+            <path d="M 12.5,31.5 L 32.5,31.5" style="fill:none; stroke:#ffffff;" />
+            <path d="M 11.5,34.5 A 35,35 1 0 0 33.5,34.5" style="fill:none; stroke:#ffffff;" />
+            <path d="M 10.5,37.5 A 35,35 1 0 0 34.5,37.5" style="fill:none; stroke:#ffffff;" />
+          </g>
+        </symbol>
+
+        <!-- BLACK BISHOP -->
+        <symbol id="black-bishop" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:none; fill-rule:evenodd; fill-opacity:1; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <g style="fill:#000000; stroke:#000000; stroke-linecap:butt;">
+              <path d="M 9,36 C 12.39,35.03 19.11,36.43 22.5,34 C 25.89,36.43 32.61,35.03 36,36 C 36,36 37.65,36.54 39,38 C 38.32,38.97 37.35,38.99 36,38.5 C 32.61,37.53 25.89,38.96 22.5,37.5 C 19.11,38.96 12.39,37.53 9,38.5 C 7.646,38.99 6.677,38.97 6,38 C 7.354,36.06 9,36 9,36 z" />
+              <path d="M 15,32 C 17.5,34.5 27.5,34.5 30,32 C 30.5,30.5 30,30 30,30 C 30,27.5 27.5,26 27.5,26 C 33,24.5 33.5,14.5 22.5,10.5 C 11.5,14.5 12,24.5 17.5,26 C 17.5,26 15,27.5 15,30 C 15,30 14.5,30.5 15,32 z" />
+              <path d="M 25 8 A 2.5 2.5 0 1 1  20,8 A 2.5 2.5 0 1 1  25 8 z" />
+            </g>
+            <path d="M 17.5,26 L 27.5,26 M 15,30 L 30,30 M 22.5,15.5 L 22.5,20.5 M 20,18 L 25,18" style="fill:none; stroke:#ffffff; stroke-linejoin:miter;" />
+          </g>
+        </symbol>
+
+        <!-- BLACK KNIGHT -->
+        <symbol id="black-knight" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:none; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 22,10 C 32.5,11 38.5,18 38,39 L 15,39 C 15,30 25,32.5 23,18" style="fill:#000000; stroke:#000000;" />
+            <path d="M 24,18 C 24.38,20.91 18.45,25.37 16,27 C 13,29 13.18,31.34 11,31 C 9.958,30.06 12.41,27.96 11,28 C 10,28 11.19,29.23 10,30 C 9,30 5.997,31 6,26 C 6,24 12,14 12,14 C 12,14 13.89,12.1 14,10.5 C 13.27,9.506 13.5,8.5 13.5,7.5 C 14.5,6.5 16.5,10 16.5,10 L 18.5,10 C 18.5,10 19.28,8.008 21,7 C 22,7 22,10 22,10" style="fill:#000000; stroke:#000000;" />
+            <path d="M 9.5 25.5 A 0.5 0.5 0 1 1 8.5,25.5 A 0.5 0.5 0 1 1 9.5 25.5 z" style="fill:#ffffff; stroke:#ffffff;" />
+            <path d="M 15 15.5 A 0.5 1.5 0 1 1  14,15.5 A 0.5 1.5 0 1 1  15 15.5 z" transform="matrix(0.866,0.5,-0.5,0.866,9.693,-5.173)" style="fill:#ffffff; stroke:#ffffff;" />
+            <path d="M 24.55,10.4 L 24.1,11.85 L 24.6,12 C 27.75,13 30.25,14.49 32.5,18.75 C 34.75,23.01 35.75,29.06 35.25,39 L 35.2,39.5 L 37.45,39.5 L 37.5,39 C 38,28.94 36.62,22.15 34.25,17.66 C 31.88,13.17 28.46,11.02 25.06,10.5 L 24.55,10.4 z " style="fill:#ffffff; stroke:none;" />
+          </g>
+        </symbol>
+
+        <!-- BLACK ROOK -->
+        <symbol id="black-rook" viewBox="0 0 45 45">
+          <g style="opacity:1; fill:000000; fill-opacity:1; fill-rule:evenodd; stroke:#000000; stroke-width:1.5; stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;">
+            <path d="M 9,39 L 36,39 L 36,36 L 9,36 L 9,39 z " style="stroke-linecap:butt;" />
+            <path d="M 12.5,32 L 14,29.5 L 31,29.5 L 32.5,32 L 12.5,32 z " style="stroke-linecap:butt;" />
+            <path d="M 12,36 L 12,32 L 33,32 L 33,36 L 12,36 z " style="stroke-linecap:butt;" />
+            <path d="M 14,29.5 L 14,16.5 L 31,16.5 L 31,29.5 L 14,29.5 z " style="stroke-linecap:butt;stroke-linejoin:miter;" />
+            <path d="M 14,16.5 L 11,14 L 34,14 L 31,16.5 L 14,16.5 z " style="stroke-linecap:butt;" />
+            <path d="M 11,14 L 11,9 L 15,9 L 15,11 L 20,11 L 20,9 L 25,9 L 25,11 L 30,11 L 30,9 L 34,9 L 34,14 L 11,14 z " style="stroke-linecap:butt;" />
+            <path d="M 12,35.5 L 33,35.5 L 33,35.5" style="fill:none; stroke:#ffffff; stroke-width:1; stroke-linejoin:miter;" />
+            <path d="M 13,31.5 L 32,31.5" style="fill:none; stroke:#ffffff; stroke-width:1; stroke-linejoin:miter;" />
+            <path d="M 14,29.5 L 31,29.5" style="fill:none; stroke:#ffffff; stroke-width:1; stroke-linejoin:miter;" />
+            <path d="M 14,16.5 L 31,16.5" style="fill:none; stroke:#ffffff; stroke-width:1; stroke-linejoin:miter;" />
+            <path d="M 11,14 L 34,14" style="fill:none; stroke:#ffffff; stroke-width:1; stroke-linejoin:miter;" />
+          </g>
+        </symbol>
+
+        <!-- BLACK PAWN -->
+        <symbol id="black-pawn" viewBox="0 0 45 45">
+          <path d="M 22,9 C 19.79,9 18,10.79 18,13 C 18,13.89 18.29,14.71 18.78,15.38 C 16.83,16.5 15.5,18.59 15.5,21 C 15.5,23.03 16.44,24.84 17.91,26.03 C 14.91,27.09 10.5,31.58 10.5,39.5 L 33.5,39.5 C 33.5,31.58 29.09,27.09 26.09,26.03 C 27.56,24.84 28.5,23.03 28.5,21 C 28.5,18.59 27.17,16.5 25.22,15.38 C 25.71,14.71 26,13.89 26,13 C 26,10.79 24.21,9 22,9 z " style="opacity:1; fill:#000000; fill-opacity:1; fill-rule:nonzero; stroke:#000000; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:miter; stroke-miterlimit:4; stroke-dasharray:none; stroke-opacity:1;" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <div id="app-container">
+    <div class="window">
+        <!-- TITLE BAR -->
+        <div class="titlebar">
+            <svg class="titlebar-icon" viewBox="0 0 16 16">
+                <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="white" font-size="14">♘</text>
+            </svg>
+            <span class="titlebar-text">Ratež šah</span>
+            <div class="titlebar-buttons">
+                <div class="titlebar-button">_</div>
+                <div class="titlebar-button">□</div>
+                <div class="titlebar-button">×</div>
+            </div>
+        </div>
+
+        <!-- MENU BAR -->
+        <div class="menubar">
+            <div class="menu-item" id="menuIgra">
+                Igra
+                <div class="dropdown-menu" id="dropdownIgra">
+                    <div class="menu-option" data-action="nova-igra">Nova igra</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" data-action="shrani">Shrani igro</div>
+                    <div class="menu-option" data-action="nalozi">Naloži igro</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" data-action="izhod">Izhod</div>
+                </div>
+            </div>
+            <div class="menu-item" id="menuPoteza">
+                Poteza
+                <div class="dropdown-menu" id="dropdownPoteza">
+                    <div class="menu-option" data-action="razveljavi">Razveljavi</div>
+                    <div class="menu-option disabled" data-action="ponovi">Ponovi</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" data-action="premik">Premik figure</div>
+                </div>
+            </div>
+            <div class="menu-item" id="menuVaja">
+                Vaja
+                <div class="dropdown-menu" id="dropdownVaja">
+                    <div class="menu-option disabled" data-action="zacni-vajo">Začni vajo</div>
+                    <div class="menu-option disabled" data-action="koncaj-vajo">Končaj vajo</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option disabled" data-action="nalozi-pozicijo">Naloži pozicijo</div>
+                </div>
+            </div>
+            <div class="menu-item" id="menuPomoc">
+                Pomoč
+                <div class="dropdown-menu" id="dropdownPomoc">
+                    <div class="menu-option" data-action="navodila">Navodila</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-option" data-action="o-programu">O programu</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL BUTTONS -->
+        <div class="controls">
+            <button class="btn" id="btnBack">Nazaj</button>
+            <button class="btn" id="btnForward" disabled>Naprej</button>
+            <button class="btn" id="btnForce">Prisili</button>
+            <button class="btn" id="btnPause">Premor</button>
+            <button class="btn" id="btnHint">Namig</button>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="content">
+            <!-- CHESS BOARD -->
+            <div class="board-container">
+                <!-- TOP COORDINATES -->
+                <div class="coord-top">
+                    <div class="coord-label">A</div>
+                    <div class="coord-label">B</div>
+                    <div class="coord-label">C</div>
+                    <div class="coord-label">D</div>
+                    <div class="coord-label">E</div>
+                    <div class="coord-label">F</div>
+                    <div class="coord-label">G</div>
+                    <div class="coord-label">H</div>
+                </div>
+
+                <div class="board-with-coords">
+                    <!-- LEFT COORDINATES -->
+                    <div class="coord-left">
+                        <div class="coord-label">8</div>
+                        <div class="coord-label">7</div>
+                        <div class="coord-label">6</div>
+                        <div class="coord-label">5</div>
+                        <div class="coord-label">4</div>
+                        <div class="coord-label">3</div>
+                        <div class="coord-label">2</div>
+                        <div class="coord-label">1</div>
+                    </div>
+
+                    <!-- CHESS BOARD -->
+                    <div class="chessboard" id="chessboard">
+                        <!-- Squares will be generated by JavaScript -->
+                    </div>
+
+                    <!-- RIGHT COORDINATES -->
+                    <div class="coord-right">
+                        <div class="coord-label">8</div>
+                        <div class="coord-label">7</div>
+                        <div class="coord-label">6</div>
+                        <div class="coord-label">5</div>
+                        <div class="coord-label">4</div>
+                        <div class="coord-label">3</div>
+                        <div class="coord-label">2</div>
+                        <div class="coord-label">1</div>
+                    </div>
+                </div>
+
+                <!-- BOTTOM COORDINATES -->
+                <div class="coord-bottom">
+                    <div class="coord-label">A</div>
+                    <div class="coord-label">B</div>
+                    <div class="coord-label">C</div>
+                    <div class="coord-label">D</div>
+                    <div class="coord-label">E</div>
+                    <div class="coord-label">F</div>
+                    <div class="coord-label">G</div>
+                    <div class="coord-label">H</div>
+                </div>
+            </div>
+
+            <!-- SIDE PANELS -->
+            <div class="side-panels">
+                <!-- MOVE LIST PANEL -->
+                <div class="panel">
+                    <div class="panel-title">
+                        <span>Seznam potez</span>
+                        <div class="panel-close">×</div>
+                    </div>
+                    <div class="panel-content">
+                        <ul class="move-list" id="moveList">
+                            <li>Igra se je začela</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- CAPTURED PIECES PANEL -->
+                <div class="panel panelPozrte">
+                    <div class="panel-title">
+                        <span>Ujete figure</span>
+                        <div class="panel-close">×</div>
+                    </div>
+                    <div class="panel-content">
+                        <div class="captured-pieces" id="capturedPieces">
+                            <div class="captured-row">
+                                <span class="captured-label">Črni:</span>
+                                <span id="capturedBlack"></span>
+                            </div>
+                            <div class="captured-row">
+                                <span class="captured-label">Beli:</span>
+                                <span id="capturedWhite"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI ANALYSIS PANEL -->
+                <div class="panel panel-ai-analiza">
+                    <div class="panel-title">
+                        <span>AI Analiza</span>
+                        <div class="panel-close">×</div>
+                    </div>
+                    <div class="panel-content panel-content-ai-analiza">
+                        <div class="ai-analysis" id="aiAnalysis">
+                            <!-- BLACK PLAYER (zgoraj - kot na deski) -->
+                            <div class="ai-player-section" id="aiSectionBlack">
+                                <div class="ai-player-label">♞ Črni (<span id="blackPlayerName">-</span>)</div>
+                                <div class="ai-grid">
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv1</span>
+                                    <span class="ai-move" id="aiMoveBlack1">-</span>
+                                    <span class="ai-score" id="aiScoreBlack1">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv2</span>
+                                    <span class="ai-move" id="aiMoveBlack2">-</span>
+                                    <span class="ai-score" id="aiScoreBlack2">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv3</span>
+                                    <span class="ai-move" id="aiMoveBlack3">-</span>
+                                    <span class="ai-score" id="aiScoreBlack3">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv4</span>
+                                    <span class="ai-move" id="aiMoveBlack4">-</span>
+                                    <span class="ai-score" id="aiScoreBlack4">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv5</span>
+                                    <span class="ai-move" id="aiMoveBlack5">-</span>
+                                    <span class="ai-score" id="aiScoreBlack5">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv6</span>
+                                    <span class="ai-move" id="aiMoveBlack6">-</span>
+                                    <span class="ai-score" id="aiScoreBlack6">-</span>
+                                </div>
+                            </div>
+                            </div>
+
+                            <!-- WHITE PLAYER (spodaj - kot na deski) -->
+                            <div class="ai-player-section" id="aiSectionWhite" style="margin-top: 8px;">
+                                <div class="ai-player-label">♘ Beli (<span id="whitePlayerName">-</span>)</div>
+                                <div class="ai-grid">
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv1</span>
+                                    <span class="ai-move" id="aiMoveWhite1">-</span>
+                                    <span class="ai-score" id="aiScoreWhite1">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv2</span>
+                                    <span class="ai-move" id="aiMoveWhite2">-</span>
+                                    <span class="ai-score" id="aiScoreWhite2">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv3</span>
+                                    <span class="ai-move" id="aiMoveWhite3">-</span>
+                                    <span class="ai-score" id="aiScoreWhite3">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv4</span>
+                                    <span class="ai-move" id="aiMoveWhite4">-</span>
+                                    <span class="ai-score" id="aiScoreWhite4">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv5</span>
+                                    <span class="ai-move" id="aiMoveWhite5">-</span>
+                                    <span class="ai-score" id="aiScoreWhite5">-</span>
+                                </div>
+                                <div class="ai-row">
+                                    <span class="ai-level">Lv6</span>
+                                    <span class="ai-move" id="aiMoveWhite6">-</span>
+                                    <span class="ai-score" id="aiScoreWhite6">-</span>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS BAR -->
+        <div class="statusbar">
+            <div class="status-item" id="statusTurn">Beli na potezi</div>
+            <div class="status-item" id="statusInfo">Pripravljen</div>
+        </div>
+    </div>
+
+    <!-- NEW GAME DIALOG -->
+    <div class="modal-overlay" id="newGameDialog" style="display: none;">
+        <div class="dialog-window">
+            <div class="titlebar">
+                <span class="titlebar-text">Izberi igralce</span>
+            </div>
+            <div class="dialog-content">
+                <div class="dialog-field">
+                    <div class="dialog-row">
+                        <span class="dialog-label-inline">Ime belega igralca:</span>
+                        <input type="text" class="dialog-input" id="whiteName" value="Igralec">
+                    </div>
+                    <div class="dialog-row">
+                        <span class="dialog-label-inline">Ime črnega igralca:</span>
+                        <input type="text" class="dialog-input" id="blackName" value="Claude Ziggurat" disabled>
+                    </div>
+                </div>
+                <div class="dialog-field">
+                    <label class="dialog-radio">
+                        <input type="radio" name="gameMode" value="pvp">
+                        <span>Igralec proti igralcu</span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="gameMode" value="pvc" checked>
+                        <span>
+                            Igralec proti računalniku (imaš bele figure)
+                            <svg viewBox="0 0 45 45"><use xlink:href="#white-knight"></use></svg>
+                        </span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="gameMode" value="cvp">
+                        <span>
+                            Računalnik proti igralcu (imaš črne figure)
+                            <svg viewBox="0 0 45 45"><use xlink:href="#black-knight"></use></svg>
+                        </span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="gameMode" value="cvc">
+                        <span>Računalnik proti računalniku</span>
+                    </label>
+                </div>
+                <div class="dialog-field">
+                    <label class="dialog-label">Nasprotnik:</label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="difficulty" value="1">
+                        <span>1 - Začetnik (ELO 800-1000)</span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="difficulty" value="2">
+                        <span>2 - Osnovni (ELO 1000-1200)</span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="difficulty" value="3" checked>
+                        <span>3 - Srednji (ELO 1200-1500)</span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="difficulty" value="4">
+                        <span>4 - Napreden (ELO 1500-1800)</span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="difficulty" value="5">
+                        <span>5 - Močan (ELO 1800-2000)</span>
+                    </label>
+                    <label class="dialog-radio">
+                        <input type="radio" name="difficulty" value="6">
+                        <span>6 - Mojster (ELO 2000+)</span>
+                    </label>
+                </div>
+                <div class="dialog-buttons">
+                    <button class="btn" id="dialogOK">OK</button>
+                    <button class="btn" id="dialogCancel">Prekliči</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <div class="modal-overlay" id="aboutDialog" style="display: none;" onclick="if(event.target===this)document.getElementById('aboutDialog').style.display='none'">
+        <div class="dialog-window" style="width:auto;">
+            <div class="titlebar">
+                <span class="titlebar-text">O programu</span>
+            </div>
+            <div class="dialog-content">
+                <div class="about-header">
+                    <div class="about-logo-box"><img src="images/tauko.gif" alt="Tauko"></div>
+                    <div class="about-right">
+                        <img src="images/tauko-title.png" alt="Tauko">
+                        <div class="about-copyright">Copyright &copy; 2025 Tauko</div>
+                        <a href="mailto:slavko.mervar@gmail.com" class="about-email">slavko.mervar@gmail.com</a>
+                    </div>
+                </div>
+                <div class="dialog-buttons" style="margin-top:12px;">
+                    <button class="btn" onclick="document.getElementById('aboutDialog').style.display='none'">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chess.js library (local) -->
+    <script src="chess.js"></script>
+    <script src="sah-ai.js"></script>
+    <script>
+        // ==========================================
+        // CHESS GAME - WIN 3.11 STYLE
+        // ==========================================
+
+        class ChessGame {
+            constructor() {
+                // Initialize chess.js
+                this.chess = new Chess();
+
+                // AI Analysis abort controller
+                this.currentAnalysisId = 0;
+
+                // Web Worker za AI analizo (ne blokira UI!)
+                this.aiWorker = null;
+                this.initAIWorker();
+
+                // SVG chess pieces mapping
+                this.pieces = {
+                    'K': 'white-king',
+                    'Q': 'white-queen',
+                    'R': 'white-rook',
+                    'B': 'white-bishop',
+                    'N': 'white-knight',
+                    'P': 'white-pawn',
+                    'k': 'black-king',
+                    'q': 'black-queen',
+                    'r': 'black-rook',
+                    'b': 'black-bishop',
+                    'n': 'black-knight',
+                    'p': 'black-pawn'
+                };
+
+                // Initial board position (FEN-like)
+                this.initialPosition = [
+                    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],  // Row 8
+                    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],  // Row 7
+                    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],  // Row 6
+                    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],  // Row 5
+                    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],  // Row 4
+                    [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],  // Row 3
+                    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],  // Row 2
+                    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']   // Row 1
+                ];
+
+                this.board = JSON.parse(JSON.stringify(this.initialPosition));
+                this.selectedSquare = null;
+                this.currentTurn = 'white';
+                this.moveHistory = [];
+                this.capturedWhite = [];
+                this.capturedBlack = [];
+
+                this.draggedPiece = null;
+                this.draggedFrom = null;
+
+                // Privzete nastavitve za novo igro
+                this.gameMode = 'pvc';  // Igralec (beli) vs. Računalnik (črni)
+                this.playerNames = {
+                    white: 'Igralec',
+                    black: 'Claude Ziggurat'
+                };
+                this.difficulty = 3;  // Privzeta težavnost: Level 3
+
+                this.init();
+            }
+
+            initAIWorker() {
+                // Poskusi ustvariti Web Worker
+                try {
+                    this.aiWorker = new Worker('sah-ai-worker.js');
+
+                    // Listen za messages iz worker-ja
+                    this.aiWorker.addEventListener('message', (e) => {
+                        const { type, analysisId, level, poteza, ocena, cas_ms } = e.data;
+
+                        if (type === 'LEVEL_RESULT') {
+                            // Preveri če je še veljavna analiza
+                            if (this.currentAnalysisId !== analysisId) return;
+
+                            // Posodobi UI - TA KLIC NE BLOKIRA!
+                            console.log(`  ✓ Level ${level}: ${poteza} (${ocena.toFixed(2)}) ${cas_ms}ms`);
+                            this.updateAIAnalysis(level, poteza, ocena, cas_ms);
+                            this.updateStatus(`AI: Level ${level}/6`);
+                        } else if (type === 'ANALYSIS_COMPLETE') {
+                            if (this.currentAnalysisId === analysisId) {
+                                console.log(`✅ AI analiza končana`);
+                                this.updateStatus('Pripravljen');
+                            }
+                        } else if (type === 'ERROR') {
+                            console.error('AI Worker napaka:', e.data.error);
+                        }
+                    });
+
+                    console.log('✅ AI Worker initialized');
+                } catch (error) {
+                    console.warn('⚠️ Web Worker ne deluje, uporabljam fallback:', error);
+                    this.aiWorker = null;
+                }
+            }
+
+            init() {
+                this.createBoard();
+                this.attachEventListeners();
+                this.renderBoard();
+                this.initMenus();
+                this.initDialog();
+                this.clearAllAIAnalysis();
+                this.updatePlayerNames();
+
+                // Eksplicitno nastavi status za Belega (ob zagonu)
+                this.updateStatus();
+                this.updateAIPlayerSections(); // Inicializiraj active/inactive status
+
+                // Zahtevaj AI analizo za začetno pozicijo (beli na potezi)
+                this.requestAIAnalysis();
+            }
+
+            // AI Analysis functions
+            updateAIAnalysis(level, poteza, ocena, cas_ms = null, forceColor = null) {
+                // Posodobi za trenutnega igralca (white ali black)
+                // forceColor parameter omogoča direktno ciljanje (npr. 'White' ali 'Black')
+                const color = forceColor || (this.currentTurn === 'white' ? 'White' : 'Black');
+                const moveElement = document.getElementById(`aiMove${color}${level}`);
+                const scoreElement = document.getElementById(`aiScore${color}${level}`);
+
+                if (moveElement) {
+                    // Če je "/" (nepopoln izračun), prikaži samo "/"
+                    if (poteza === '/') {
+                        moveElement.textContent = '/';
+                    } else {
+                        // Dodaj čas VEDNO (ne glede na tip igralca)
+                        let casText = '';
+                        if (cas_ms !== null && cas_ms !== undefined && cas_ms > 0) {
+                            const casS = Math.round(cas_ms / 1000);
+                            casText = ` (${casS}s)`;
+                        }
+                        moveElement.textContent = poteza + casText;
+                    }
+                }
+
+                if (scoreElement) {
+                    // Če je "/" (nepopoln izračun), prikaži samo "/"
+                    if (poteza === '/') {
+                        scoreElement.textContent = '/';
+                        scoreElement.classList.remove('negative');
+                    } else {
+                        const formattedScore = ocena >= 0 ? `+${ocena.toFixed(2)}` : ocena.toFixed(2);
+                        scoreElement.textContent = formattedScore;
+
+                        // Add/remove negative class
+                        if (ocena < 0) {
+                            scoreElement.classList.add('negative');
+                        } else {
+                            scoreElement.classList.remove('negative');
+                        }
+                    }
+                }
+
+                console.log(`AI Analysis updated: ${color} Level ${level} = ${poteza} (${ocena}) ${cas_ms ? cas_ms + 'ms' : ''}`);
+
+                // ✅ AVTOMATSKO IGRANJE: Če je računalnik na potezi in je to njegov level
+                const currentPlayer = this.currentTurn;
+                const isComputerPlayer = (currentPlayer === 'white' && (this.gameMode === 'cvp' || this.gameMode === 'cvc')) ||
+                                         (currentPlayer === 'black' && (this.gameMode === 'pvc' || this.gameMode === 'cvc'));
+
+                if (isComputerPlayer && level === this.difficulty && poteza !== '/') {
+                    console.log(`🤖 Računalnik (Level ${level}) bo igral: ${poteza}`);
+
+                    // Počakaj 1.5s da uporabnik vidi kaj se dogaja
+                    setTimeout(() => {
+                        // Preveri da še vedno ista pozicija (uporabnik ni naredil poteze vmes)
+                        if (this.currentTurn === currentPlayer) {
+                            console.log(`🎯 Izvajam potezo: ${poteza}`);
+                            this.makeComputerMove(poteza);
+                        }
+                    }, 1500);
+                }
+            }
+
+            clearAIAnalysis() {
+                // Počisti samo za trenutnega igralca (ki je na potezi)
+                const color = this.currentTurn === 'white' ? 'White' : 'Black';
+
+                for (let level = 1; level <= 6; level++) {
+                    const moveElement = document.getElementById(`aiMove${color}${level}`);
+                    const scoreElement = document.getElementById(`aiScore${color}${level}`);
+
+                    if (moveElement) moveElement.textContent = '-';
+                    if (scoreElement) {
+                        scoreElement.textContent = '-';
+                        scoreElement.classList.remove('negative');
+                    }
+                }
+            }
+
+            clearAllAIAnalysis() {
+                // Počisti VSE predloge (white in black)
+                for (const color of ['White', 'Black']) {
+                    for (let level = 1; level <= 6; level++) {  // ✅ POPRAVLJENO: 1-6 namesto 1-4
+                        const moveElement = document.getElementById(`aiMove${color}${level}`);
+                        const scoreElement = document.getElementById(`aiScore${color}${level}`);
+
+                        if (moveElement) moveElement.textContent = '-';
+                        if (scoreElement) {
+                            scoreElement.textContent = '-';
+                            scoreElement.classList.remove('negative');
+                        }
+                    }
+                }
+            }
+
+            updatePlayerNames() {
+                // Posodobi imena igralcev v AI panelu
+                const whiteNameElement = document.getElementById('whitePlayerName');
+                const blackNameElement = document.getElementById('blackPlayerName');
+
+                if (this.playerNames && this.playerNames.white && this.playerNames.black) {
+                    if (whiteNameElement) whiteNameElement.textContent = this.playerNames.white;
+                    if (blackNameElement) blackNameElement.textContent = this.playerNames.black;
+                }
+            }
+
+            initDialog() {
+                // Dialog OK button
+                document.getElementById('dialogOK').addEventListener('click', () => {
+                    this.startNewGame();
+                });
+
+                // Dialog Cancel button
+                document.getElementById('dialogCancel').addEventListener('click', () => {
+                    this.cancelNewGame();
+                });
+
+                // Game mode radio buttons - update names
+                const radioButtons = document.querySelectorAll('input[name="gameMode"]');
+                radioButtons.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        this.updatePlayerNames(e.target.value);
+                    });
+                });
+            }
+
+            updatePlayerNames(mode) {
+                const whiteInput = document.getElementById('whiteName');
+                const blackInput = document.getElementById('blackName');
+
+                switch(mode) {
+                    case 'pvp': // Player vs. Player
+                        whiteInput.value = 'Igralec 1';
+                        whiteInput.disabled = false;
+                        blackInput.value = 'Igralec 2';
+                        blackInput.disabled = false;
+                        break;
+                    case 'pvc': // Player vs. Computer
+                        whiteInput.value = 'Igralec';
+                        whiteInput.disabled = false;
+                        blackInput.value = 'Claude Ziggurat';
+                        blackInput.disabled = true;
+                        break;
+                    case 'cvp': // Computer vs. Player
+                        whiteInput.value = 'Claude Ziggurat';
+                        whiteInput.disabled = true;
+                        blackInput.value = 'Igralec';
+                        blackInput.disabled = false;
+                        break;
+                    case 'cvc': // Computer vs. Computer
+                        whiteInput.value = 'Claude Ziggurat';
+                        whiteInput.disabled = true;
+                        blackInput.value = 'Claude Ziggurat';
+                        blackInput.disabled = true;
+                        break;
+                }
+            }
+
+            initMenus() {
+                // Menu items
+                const menuItems = document.querySelectorAll('.menu-item');
+                let activeMenu = null;
+
+                menuItems.forEach(menuItem => {
+                    const dropdown = menuItem.querySelector('.dropdown-menu');
+
+                    // Click to toggle
+                    menuItem.addEventListener('click', (e) => {
+                        e.stopPropagation();
+
+                        // Close other menus
+                        menuItems.forEach(item => {
+                            if (item !== menuItem) {
+                                item.classList.remove('active');
+                                item.querySelector('.dropdown-menu')?.classList.remove('show');
+                            }
+                        });
+
+                        // Toggle current menu
+                        menuItem.classList.toggle('active');
+                        dropdown?.classList.toggle('show');
+                        activeMenu = dropdown?.classList.contains('show') ? dropdown : null;
+                    });
+
+                    // Hover to switch between open menus
+                    menuItem.addEventListener('mouseenter', () => {
+                        if (activeMenu && activeMenu !== dropdown) {
+                            menuItems.forEach(item => {
+                                item.classList.remove('active');
+                                item.querySelector('.dropdown-menu')?.classList.remove('show');
+                            });
+                            menuItem.classList.add('active');
+                            dropdown?.classList.add('show');
+                            activeMenu = dropdown;
+                        }
+                    });
+                });
+
+                // Close menus when clicking outside
+                document.addEventListener('click', () => {
+                    menuItems.forEach(item => {
+                        item.classList.remove('active');
+                        item.querySelector('.dropdown-menu')?.classList.remove('show');
+                    });
+                    activeMenu = null;
+                });
+
+                // Menu option clicks
+                document.querySelectorAll('.menu-option').forEach(option => {
+                    option.addEventListener('click', (e) => {
+                        if (option.classList.contains('disabled')) return;
+
+                        const action = option.dataset.action;
+                        this.handleMenuAction(action);
+
+                        // Close all menus
+                        menuItems.forEach(item => {
+                            item.classList.remove('active');
+                            item.querySelector('.dropdown-menu')?.classList.remove('show');
+                        });
+                        activeMenu = null;
+                    });
+                });
+            }
+
+            handleMenuAction(action) {
+                switch(action) {
+                    case 'nova-igra':
+                        this.novaIgra();
+                        break;
+                    case 'shrani':
+                        this.shraniIgro();
+                        break;
+                    case 'nalozi':
+                        this.naloziIgro();
+                        break;
+                    case 'izhod':
+                        this.izhod();
+                        break;
+                    case 'razveljavi':
+                        this.undoMove();
+                        break;
+                    case 'ponovi':
+                        this.redoMove();
+                        break;
+                    case 'premik':
+                        alert('Premik figure - funkcionalnost še ni implementirana');
+                        break;
+                    case 'navodila':
+                        this.pokaziNavodila();
+                        break;
+                    case 'o-programu':
+                        this.oProgramu();
+                        break;
+                }
+            }
+
+            novaIgra() {
+                // Show new game dialog
+                document.getElementById('newGameDialog').style.display = 'flex';
+            }
+
+            updateStatus(message) {
+                const statusInfo = document.getElementById('statusInfo');
+                if (statusInfo) {
+                    statusInfo.textContent = message;
+                }
+            }
+
+            async startNewGame() {
+                // Clear console
+                console.clear();
+                console.log('=== NOVA IGRA ===');
+
+                // Get values from dialog
+                const whiteName = document.getElementById('whiteName').value;
+                const blackName = document.getElementById('blackName').value;
+                const gameMode = document.querySelector('input[name="gameMode"]:checked').value;
+                const difficulty = parseInt(document.querySelector('input[name="difficulty"]:checked').value);
+
+                // Reset chess.js
+                this.chess.reset();
+
+                // Reset game
+                this.board = JSON.parse(JSON.stringify(this.initialPosition));
+                this.selectedSquare = null;
+                this.currentTurn = 'white';
+                this.moveHistory = [];
+                this.capturedWhite = [];
+                this.capturedBlack = [];
+                this.gameMode = gameMode;
+                this.playerNames = { white: whiteName, black: blackName };
+                this.difficulty = difficulty;
+
+                const moveList = document.getElementById('moveList');
+                moveList.innerHTML = '<li>Igra se je začela</li>';
+
+                this.updateCapturedPieces();
+                this.renderBoard();
+                this.clearAllAIAnalysis();
+                this.updatePlayerNames();
+                this.updateAIPlayerSections(); // Posodobi active/inactive status
+
+                // Hide dialog
+                document.getElementById('newGameDialog').style.display = 'none';
+
+                // Start AI analysis for initial position (beli na potezi)
+                this.requestAIAnalysis();
+            }
+
+
+            cancelNewGame() {
+                document.getElementById('newGameDialog').style.display = 'none';
+            }
+
+            shraniIgro() {
+                const gameState = {
+                    board: this.board,
+                    currentTurn: this.currentTurn,
+                    moveHistory: this.moveHistory,
+                    capturedWhite: this.capturedWhite,
+                    capturedBlack: this.capturedBlack
+                };
+
+                const json = JSON.stringify(gameState);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'sahovna-igra.json';
+                a.click();
+
+                URL.revokeObjectURL(url);
+                alert('Igra je bila shranjena');
+            }
+
+            naloziIgro() {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const gameState = JSON.parse(event.target.result);
+                            this.board = gameState.board;
+                            this.currentTurn = gameState.currentTurn;
+                            this.moveHistory = gameState.moveHistory;
+                            this.capturedWhite = gameState.capturedWhite || [];
+                            this.capturedBlack = gameState.capturedBlack || [];
+
+                            // Reconstruct move list
+                            const moveList = document.getElementById('moveList');
+                            moveList.innerHTML = '<li>Igra se je začela</li>';
+                            this.moveHistory.forEach((move, i) => {
+                                const li = document.createElement('li');
+                                const fromPos = this.getNotation(move.from.row, move.from.col);
+                                const toPos = this.getNotation(move.to.row, move.to.col);
+                                li.textContent = `${i + 1}. ${fromPos}-${toPos}`;
+                                moveList.appendChild(li);
+                            });
+
+                            this.updateCapturedPieces();
+                            this.renderBoard();
+                            alert('Igra je bila naložena');
+                        } catch (error) {
+                            alert('Napaka pri nalaganju igre: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+
+                input.click();
+            }
+
+            izhod() {
+                if (confirm('Ali ste prepričani, da želite zapreti igro?')) {
+                    window.close();
+                    // If window.close() doesn't work (browser security)
+                    setTimeout(() => {
+                        alert('Zaprite zavihek/okno ročno');
+                    }, 100);
+                }
+            }
+
+            pokaziNavodila() {
+                alert(`ŠAHOVSKA IGRA - NAVODILA\n\n` +
+                      `Osnovno:\n` +
+                      `- Kliknite na figuro za izbiro\n` +
+                      `- Kliknite na ciljno polje za premik\n` +
+                      `- ALI povlecite figuro (drag & drop)\n\n` +
+                      `Gumbi:\n` +
+                      `- Nazaj: Razveljavi zadnjo potezo\n` +
+                      `- Naprej: Ponovi potezo (če je na voljo)\n` +
+                      `- Premor: Pavziraj/nadaljuj igro\n` +
+                      `- Namig: Prikaži predlagano potezo\n\n` +
+                      `Meniji:\n` +
+                      `- Igra: Nova igra, shrani, naloži\n` +
+                      `- Poteza: Upravljanje s potezami\n` +
+                      `- Vaja: Vaje in učenje (kmalu)\n` +
+                      `- Pomoč: Navodila in informacije`);
+            }
+
+            oProgramu() {
+                document.getElementById('aboutDialog').style.display = 'flex';
+            }
+
+            createBoard() {
+                const board = document.getElementById('chessboard');
+                board.innerHTML = '';
+
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        const square = document.createElement('div');
+                        square.className = 'square ' + ((row + col) % 2 === 0 ? 'light' : 'dark');
+                        square.dataset.row = row;
+                        square.dataset.col = col;
+                        square.dataset.pos = this.getNotation(row, col);
+                        board.appendChild(square);
+                    }
+                }
+            }
+
+            getNotation(row, col) {
+                const files = 'abcdefgh';
+                const rank = 8 - row;
+                return files[col] + rank;
+            }
+
+            parseNotation(notation) {
+                const files = 'abcdefgh';
+                const col = files.indexOf(notation[0]);
+                const row = 8 - parseInt(notation[1]);
+                return { row, col };
+            }
+
+            renderBoard() {
+                const squares = document.querySelectorAll('.square');
+                squares.forEach(square => {
+                    const row = parseInt(square.dataset.row);
+                    const col = parseInt(square.dataset.col);
+                    const piece = this.board[row][col];
+
+                    square.innerHTML = '';
+
+                    if (piece !== ' ') {
+                        const pieceElement = document.createElement('div');
+                        pieceElement.className = 'piece ' + (piece === piece.toUpperCase() ? 'white' : 'black');
+
+                        // Create SVG use element
+                        const svgNS = "http://www.w3.org/2000/svg";
+                        const svg = document.createElementNS(svgNS, 'svg');
+                        svg.setAttribute('viewBox', '0 0 45 45');
+
+                        const use = document.createElementNS(svgNS, 'use');
+                        use.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + this.pieces[piece]);
+
+                        svg.appendChild(use);
+                        pieceElement.appendChild(svg);
+
+                        pieceElement.dataset.piece = piece;
+                        pieceElement.dataset.row = row;
+                        pieceElement.dataset.col = col;
+
+                        // Make piece draggable
+                        pieceElement.draggable = true;
+
+                        square.appendChild(pieceElement);
+                    }
+                });
+
+                this.updateStatus();
+            }
+
+            attachEventListeners() {
+                const board = document.getElementById('chessboard');
+
+                // DESKTOP: Mouse events
+                board.addEventListener('dragstart', (e) => this.handleDragStart(e));
+                board.addEventListener('dragover', (e) => this.handleDragOver(e));
+                board.addEventListener('drop', (e) => this.handleDrop(e));
+                board.addEventListener('dragend', (e) => this.handleDragEnd(e));
+
+                // MOBILE: Touch events
+                board.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+                board.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+                board.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+
+                // Click for selection (alternative to drag)
+                board.addEventListener('click', (e) => this.handleClick(e));
+
+                // Control buttons
+                document.getElementById('btnBack').addEventListener('click', () => this.undoMove());
+                document.getElementById('btnForward').addEventListener('click', () => this.redoMove());
+                document.getElementById('btnForce').addEventListener('click', () => this.forceMove());
+                document.getElementById('btnPause').addEventListener('click', () => this.togglePause());
+                document.getElementById('btnHint').addEventListener('click', () => this.showHint());
+            }
+
+            // ==========================================
+            // DRAG & DROP (Desktop)
+            // ==========================================
+
+            handleDragStart(e) {
+                if (!e.target.classList.contains('piece')) return;
+
+                const piece = e.target.dataset.piece;
+                const isWhite = piece === piece.toUpperCase();
+
+                if ((this.currentTurn === 'white' && !isWhite) || (this.currentTurn === 'black' && isWhite)) {
+                    e.preventDefault();
+                    return;
+                }
+
+                this.draggedPiece = e.target;
+                this.draggedFrom = {
+                    row: parseInt(e.target.dataset.row),
+                    col: parseInt(e.target.dataset.col)
+                };
+
+                // Show valid moves
+                this.showValidMoves(this.draggedFrom.row, this.draggedFrom.col);
+
+                e.target.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/html', e.target.innerHTML);
+            }
+
+            handleDragOver(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+                e.dataTransfer.dropEffect = 'move';
+                return false;
+            }
+
+            handleDrop(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+                e.preventDefault();
+
+                if (!this.draggedPiece) return;
+
+                const targetSquare = e.target.classList.contains('square') ? e.target : e.target.closest('.square');
+                if (!targetSquare) return;
+
+                const toRow = parseInt(targetSquare.dataset.row);
+                const toCol = parseInt(targetSquare.dataset.col);
+
+                this.movePiece(this.draggedFrom.row, this.draggedFrom.col, toRow, toCol);
+
+                return false;
+            }
+
+            handleDragEnd(e) {
+                if (this.draggedPiece) {
+                    this.draggedPiece.classList.remove('dragging');
+                }
+                this.draggedPiece = null;
+                this.draggedFrom = null;
+
+                // Clear valid move highlights
+                this.clearSelection();
+            }
+
+            // ==========================================
+            // TOUCH (Mobile)
+            // ==========================================
+
+            handleTouchStart(e) {
+                const touch = e.touches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+
+                if (!element || !element.classList.contains('piece')) return;
+
+                const piece = element.dataset.piece;
+                const isWhite = piece === piece.toUpperCase();
+
+                if ((this.currentTurn === 'white' && !isWhite) || (this.currentTurn === 'black' && isWhite)) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                this.draggedPiece = element;
+                this.draggedFrom = {
+                    row: parseInt(element.dataset.row),
+                    col: parseInt(element.dataset.col)
+                };
+
+                // Show valid moves
+                this.showValidMoves(this.draggedFrom.row, this.draggedFrom.col);
+
+                element.classList.add('dragging');
+            }
+
+            handleTouchMove(e) {
+                if (!this.draggedPiece) return;
+                e.preventDefault();
+            }
+
+            handleTouchEnd(e) {
+                if (!this.draggedPiece) return;
+                e.preventDefault();
+
+                const touch = e.changedTouches[0];
+                const element = document.elementFromPoint(touch.clientX, touch.clientY);
+                const targetSquare = element?.classList.contains('square') ? element : element?.closest('.square');
+
+                if (targetSquare) {
+                    const toRow = parseInt(targetSquare.dataset.row);
+                    const toCol = parseInt(targetSquare.dataset.col);
+                    this.movePiece(this.draggedFrom.row, this.draggedFrom.col, toRow, toCol);
+                }
+
+                this.draggedPiece.classList.remove('dragging');
+                this.draggedPiece = null;
+                this.draggedFrom = null;
+
+                // Clear valid move highlights
+                this.clearSelection();
+            }
+
+            // ==========================================
+            // CLICK SELECTION (Alternative)
+            // ==========================================
+
+            handleClick(e) {
+                const square = e.target.classList.contains('square') ? e.target : e.target.closest('.square');
+                if (!square) return;
+
+                const row = parseInt(square.dataset.row);
+                const col = parseInt(square.dataset.col);
+
+                if (this.selectedSquare) {
+                    // Try to move
+                    this.movePiece(this.selectedSquare.row, this.selectedSquare.col, row, col);
+                    this.clearSelection();
+                } else {
+                    // Select piece
+                    const piece = this.board[row][col];
+                    if (piece !== ' ') {
+                        const isWhite = piece === piece.toUpperCase();
+                        if ((this.currentTurn === 'white' && isWhite) || (this.currentTurn === 'black' && !isWhite)) {
+                            this.selectedSquare = { row, col };
+                            square.classList.add('selected');
+                            this.showValidMoves(row, col);
+                        }
+                    }
+                }
+            }
+
+            clearSelection() {
+                document.querySelectorAll('.square').forEach(sq => {
+                    sq.classList.remove('selected', 'valid-move');
+                });
+                this.selectedSquare = null;
+            }
+
+            // ==========================================
+            // CHESS RULES - VALID MOVES
+            // ==========================================
+
+            getValidMoves(row, col) {
+                // Use chess.js to get valid moves
+                const fromPos = this.getNotation(row, col);
+                const moves = this.chess.moves({ square: fromPos, verbose: true });
+
+                // Convert to our format {row, col}
+                return moves.map(m => {
+                    const [toRow, toCol] = this.parseNotation(m.to);
+                    return { row: toRow, col: toCol };
+                });
+
+            }
+
+            isValidSquare(row, col) {
+                return row >= 0 && row < 8 && col >= 0 && col < 8;
+            }
+
+            canCapture(row, col, isWhite) {
+                if (!this.isValidSquare(row, col)) return false;
+                const target = this.board[row][col];
+                if (target === ' ') return false;
+                const targetIsWhite = target === target.toUpperCase();
+                return targetIsWhite !== isWhite;
+            }
+
+            canMoveTo(row, col, isWhite) {
+                if (!this.isValidSquare(row, col)) return false;
+                const target = this.board[row][col];
+                if (target === ' ') return true;
+                const targetIsWhite = target === target.toUpperCase();
+                return targetIsWhite !== isWhite;
+            }
+
+            getPawnMoves(row, col, isWhite) {
+                const moves = [];
+                const direction = isWhite ? -1 : 1;
+                const startRow = isWhite ? 6 : 1;
+
+                // Move forward one square
+                if (this.isValidSquare(row + direction, col) && this.board[row + direction][col] === ' ') {
+                    moves.push({ row: row + direction, col });
+
+                    // Move forward two squares from start
+                    if (row === startRow && this.board[row + 2 * direction][col] === ' ') {
+                        moves.push({ row: row + 2 * direction, col });
+                    }
+                }
+
+                // Capture diagonally
+                if (this.canCapture(row + direction, col - 1, isWhite)) {
+                    moves.push({ row: row + direction, col: col - 1 });
+                }
+                if (this.canCapture(row + direction, col + 1, isWhite)) {
+                    moves.push({ row: row + direction, col: col + 1 });
+                }
+
+                return moves;
+            }
+
+            getRookMoves(row, col, isWhite) {
+                const moves = [];
+                const directions = [[0,1], [0,-1], [1,0], [-1,0]];
+
+                for (const [dr, dc] of directions) {
+                    let r = row + dr;
+                    let c = col + dc;
+
+                    while (this.isValidSquare(r, c)) {
+                        if (this.board[r][c] === ' ') {
+                            moves.push({ row: r, col: c });
+                        } else if (this.canCapture(r, c, isWhite)) {
+                            moves.push({ row: r, col: c });
+                            break;
+                        } else {
+                            break;
+                        }
+                        r += dr;
+                        c += dc;
+                    }
+                }
+
+                return moves;
+            }
+
+            getKnightMoves(row, col, isWhite) {
+                const moves = [];
+                const jumps = [
+                    [-2, -1], [-2, 1], [-1, -2], [-1, 2],
+                    [1, -2], [1, 2], [2, -1], [2, 1]
+                ];
+
+                for (const [dr, dc] of jumps) {
+                    const r = row + dr;
+                    const c = col + dc;
+                    if (this.canMoveTo(r, c, isWhite)) {
+                        moves.push({ row: r, col: c });
+                    }
+                }
+
+                return moves;
+            }
+
+            getBishopMoves(row, col, isWhite) {
+                const moves = [];
+                const directions = [[1,1], [1,-1], [-1,1], [-1,-1]];
+
+                for (const [dr, dc] of directions) {
+                    let r = row + dr;
+                    let c = col + dc;
+
+                    while (this.isValidSquare(r, c)) {
+                        if (this.board[r][c] === ' ') {
+                            moves.push({ row: r, col: c });
+                        } else if (this.canCapture(r, c, isWhite)) {
+                            moves.push({ row: r, col: c });
+                            break;
+                        } else {
+                            break;
+                        }
+                        r += dr;
+                        c += dc;
+                    }
+                }
+
+                return moves;
+            }
+
+            getQueenMoves(row, col, isWhite) {
+                return [
+                    ...this.getRookMoves(row, col, isWhite),
+                    ...this.getBishopMoves(row, col, isWhite)
+                ];
+            }
+
+            getKingMoves(row, col, isWhite) {
+                const moves = [];
+                const directions = [
+                    [-1,-1], [-1,0], [-1,1],
+                    [0,-1],          [0,1],
+                    [1,-1],  [1,0],  [1,1]
+                ];
+
+                for (const [dr, dc] of directions) {
+                    const r = row + dr;
+                    const c = col + dc;
+                    if (this.canMoveTo(r, c, isWhite)) {
+                        moves.push({ row: r, col: c });
+                    }
+                }
+
+                return moves;
+            }
+
+            showValidMoves(row, col) {
+                const validMoves = this.getValidMoves(row, col);
+                validMoves.forEach(move => {
+                    const square = document.querySelector(`[data-row="${move.row}"][data-col="${move.col}"]`);
+                    if (square) {
+                        square.classList.add('valid-move');
+                    }
+                });
+            }
+
+            isValidMove(fromRow, fromCol, toRow, toCol) {
+                // Use chess.js to validate move
+                const fromPos = this.getNotation(fromRow, fromCol);
+                const toPos = this.getNotation(toRow, toCol);
+
+                const moves = this.chess.moves({ square: fromPos, verbose: true });
+                return moves.some(m => m.to === toPos);
+            }
+
+            // ==========================================
+            // MOVE LOGIC
+            // ==========================================
+
+            makeComputerMove(san) {
+                // Računalnik naredi potezo s SAN notacijo (npr. "e4", "Nf3")
+                console.log(`🤖 Računalnik izvaja potezo: ${san}`);
+
+                // Naredi potezo v chess.js
+                const move = this.chess.move(san);
+
+                if (!move) {
+                    console.error('❌ Chess.js zavrnil potezo:', san);
+                    return;
+                }
+
+                // Pretvori chess.js pozicije v row/col
+                const fromPos = move.from; // npr. "e2"
+                const toPos = move.to;     // npr. "e4"
+
+                const fromRow = 8 - parseInt(fromPos[1]);
+                const fromCol = fromPos.charCodeAt(0) - 'a'.charCodeAt(0);
+                const toRow = 8 - parseInt(toPos[1]);
+                const toCol = toPos.charCodeAt(0) - 'a'.charCodeAt(0);
+
+                const piece = this.board[fromRow][fromCol];
+                const captured = this.board[toRow][toCol];
+
+                // Zabeleži v zgodovino
+                this.moveHistory.push({
+                    from: { row: fromRow, col: fromCol },
+                    to: { row: toRow, col: toCol },
+                    piece: piece,
+                    captured: captured
+                });
+
+                // Če je figura ujeta
+                if (captured !== ' ') {
+                    if (captured === captured.toUpperCase()) {
+                        this.capturedBlack.push(captured);
+                    } else {
+                        this.capturedWhite.push(captured);
+                    }
+                    this.updateCapturedPieces();
+                }
+
+                // Premakni figuro na vizualnem boardu
+                this.board[toRow][toCol] = piece;
+                this.board[fromRow][fromCol] = ' ';
+
+                // Handle castling - premakni tudi trdnjavo
+                if (move.flags.includes('k') || move.flags.includes('q')) {
+                    // Rošada zaznana
+                    const isKingside = move.flags.includes('k'); // O-O
+                    const isQueenside = move.flags.includes('q'); // O-O-O
+
+                    if (isKingside) {
+                        // Kratka rošada: Trdnjava h -> f
+                        const rookFromCol = 7; // h
+                        const rookToCol = 5;   // f
+                        const rook = this.board[toRow][rookFromCol];
+                        this.board[toRow][rookToCol] = rook;
+                        this.board[toRow][rookFromCol] = ' ';
+                        console.log(`♜ Računalnik rošada O-O: Trdnjava ${this.getNotation(toRow, rookFromCol)} → ${this.getNotation(toRow, rookToCol)}`);
+                    } else if (isQueenside) {
+                        // Dolga rošada: Trdnjava a -> d
+                        const rookFromCol = 0; // a
+                        const rookToCol = 3;   // d
+                        const rook = this.board[toRow][rookFromCol];
+                        this.board[toRow][rookToCol] = rook;
+                        this.board[toRow][rookFromCol] = ' ';
+                        console.log(`♜ Računalnik rošada O-O-O: Trdnjava ${this.getNotation(toRow, rookFromCol)} → ${this.getNotation(toRow, rookToCol)}`);
+                    }
+                }
+
+                // Zamenjaj turn
+                this.currentTurn = this.currentTurn === 'white' ? 'black' : 'white';
+
+                // LAN notacija
+                const lan = this.convertToLAN(piece, fromPos, toPos, move.captured);
+
+                // Dodaj v seznam potez
+                this.addMoveToList(san, lan);
+
+                // Render board
+                this.renderBoard();
+                this.updateCapturedPieces();
+
+                // Zaženemo analizo za naslednjega igralca (če je potrebno)
+                setTimeout(() => {
+                    this.clearAllAIAnalysis();
+                    this.requestAIAnalysis();
+                }, 10);
+
+                console.log(`✅ Računalnik igral: ${san}`);
+            }
+
+            movePiece(fromRow, fromCol, toRow, toCol) {
+                // Same square - cancel
+                if (fromRow === toRow && fromCol === toCol) return;
+
+                const piece = this.board[fromRow][fromCol];
+
+                // Check if move is valid
+                if (!this.isValidMove(fromRow, fromCol, toRow, toCol)) {
+                    document.getElementById('statusInfo').textContent = 'Neveljavna poteza!';
+                    setTimeout(() => {
+                        document.getElementById('statusInfo').textContent = 'Pripravljen';
+                    }, 2000);
+                    return;
+                }
+
+                const fromPos = this.getNotation(fromRow, fromCol);
+                const toPos = this.getNotation(toRow, toCol);
+
+                // Make move in chess.js
+                const move = this.chess.move({
+                    from: fromPos,
+                    to: toPos,
+                    promotion: 'q' // Always promote to queen for now
+                });
+
+                if (!move) {
+                    console.error('Chess.js rejected move:', fromPos, toPos);
+                    document.getElementById('statusInfo').textContent = 'Napaka pri potezi!';
+                    return;
+                }
+
+                // Get SAN and LAN from chess.js
+                const san = move.san;
+                const lan = this.convertToLAN(piece, fromPos, toPos, move.captured);
+
+                const captured = this.board[toRow][toCol];
+
+                // Save for undo
+                this.moveHistory.push({
+                    from: { row: fromRow, col: fromCol },
+                    to: { row: toRow, col: toCol },
+                    piece: piece,
+                    captured: captured
+                });
+
+                // Capture piece
+                if (captured !== ' ') {
+                    if (captured === captured.toUpperCase()) {
+                        this.capturedBlack.push(captured);
+                    } else {
+                        this.capturedWhite.push(captured);
+                    }
+                    this.updateCapturedPieces();
+                }
+
+                // Move piece on visual board
+                this.board[toRow][toCol] = piece;
+                this.board[fromRow][fromCol] = ' ';
+
+                // Handle castling - premakni tudi trdnjavo
+                if (move.flags.includes('k') || move.flags.includes('q')) {
+                    // Rošada zaznana
+                    const isKingside = move.flags.includes('k'); // O-O
+                    const isQueenside = move.flags.includes('q'); // O-O-O
+
+                    if (isKingside) {
+                        // Kratka rošada: Trdnjava h -> f
+                        const rookFromCol = 7; // h
+                        const rookToCol = 5;   // f
+                        const rook = this.board[toRow][rookFromCol];
+                        this.board[toRow][rookToCol] = rook;
+                        this.board[toRow][rookFromCol] = ' ';
+                        console.log(`♜ Rošada O-O: Trdnjava ${this.getNotation(toRow, rookFromCol)} → ${this.getNotation(toRow, rookToCol)}`);
+                    } else if (isQueenside) {
+                        // Dolga rošada: Trdnjava a -> d
+                        const rookFromCol = 0; // a
+                        const rookToCol = 3;   // d
+                        const rook = this.board[toRow][rookFromCol];
+                        this.board[toRow][rookToCol] = rook;
+                        this.board[toRow][rookFromCol] = ' ';
+                        console.log(`♜ Rošada O-O-O: Trdnjava ${this.getNotation(toRow, rookFromCol)} → ${this.getNotation(toRow, rookToCol)}`);
+                    }
+                }
+
+                // Switch turn
+                this.currentTurn = this.currentTurn === 'white' ? 'black' : 'white';
+
+                // Add to move list
+                this.addMoveToList(san, lan);
+
+                // Render board FIRST (updates this.currentTurn via updateStatus())
+                this.renderBoard();
+
+                // Clear selection and valid move highlights
+                this.clearSelection();
+
+                // Status: Pripravljen za igro
+                document.getElementById('statusInfo').textContent = 'Pripravljen';
+
+                // AI analiza - POPOLNOMA asinhrono, ne blokira!
+                // Zaženemo v ločenem timeout, da se board najprej posodobi
+                setTimeout(() => {
+                    this.clearAllAIAnalysis();
+                    this.requestAIAnalysis();
+                }, 10);  // 10ms delay da se UI zagotovo osveži
+            }
+
+            requestAIAnalysis() {
+                // Prekini prejšnjo analizo (če še teče)
+                this.currentAnalysisId++;
+                const analysisId = this.currentAnalysisId;
+
+                // Request AI analysis for BOTH players
+                // Najprej trenutni igralec, nato naslednji (če je čas)
+                const fen = this.generateFEN();
+                this.updateStatus('Pripravljam AI analizo...');
+
+                console.log(`🔄 Nova AI analiza #${analysisId} - prejšnja je preklicana`);
+
+                // Run analysis asynchronously (don't block UI)
+                setTimeout(() => {
+                    this.runAIAnalysisCurrentPlayer(fen, analysisId);
+                }, 100);
+            }
+
+            runAIAnalysisCurrentPlayer(fen, analysisId) {
+                // Analiza samo za igralca na potezi
+                const currentPlayer = this.currentTurn;
+                const currentColor = currentPlayer === 'white' ? 'Beli' : 'Črni';
+
+                // Preveri ali je trenutni igralec računalnik
+                const isComputerPlayer = (currentPlayer === 'white' && (this.gameMode === 'cvp' || this.gameMode === 'cvc')) ||
+                                         (currentPlayer === 'black' && (this.gameMode === 'pvc' || this.gameMode === 'cvc'));
+
+                // ČE JE ČLOVEK NA POTEZI, NE RAČUNAJ HINTOV (prihranek CPU)
+                if (!isComputerPlayer) {
+                    console.log(`⏹️ ${currentColor} je človek - hiniti se ne računajo (prihranek CPU)`);
+                    this.updateStatus('Pripravljen');
+                    return;
+                }
+
+                // ČAS ANALIZE:
+                // - Računalnik: 2s (CPU optimizacija - hitro igra)
+                // - Igralec: 60s (hiniti se ne računajo - glej preverjanje zgoraj)
+                const maxTime = isComputerPlayer ? 2 : 60;
+
+                console.log(`🧠 AI analiza #${analysisId} za ${currentColor} (${isComputerPlayer ? 'RAČUNALNIK' : 'IGRALEC'})`);
+                console.log(`⏱️ Max čas: ${maxTime}s`);
+                console.log(`📍 FEN: ${fen}`);
+
+                // Preveri, če je analiza še vedno veljavna
+                if (this.currentAnalysisId !== analysisId) {
+                    console.log(`⛔ Analiza #${analysisId} preklicana`);
+                    return;
+                }
+
+                console.log(`⏳ Začenjam analizo...`);
+
+                // HYBRID NAČIN:
+                // - Če Web Worker deluje → L1-L6 v ozadju (0% obremenitev UI)
+                // - Če ne deluje → L1-L4 direktno (L5-L6 = "/")
+                if (this.aiWorker) {
+                    // ✅ WEB WORKER - VSI LEVELI 1-6 V OZADJU!
+                    this.aiWorker.postMessage({
+                        type: 'ANALYZE_LEVEL',
+                        fen: fen,
+                        maxTime: maxTime,
+                        analysisId: analysisId,
+                        useWorker: true  // Flag da je Worker aktiven
+                    });
+                    console.log('📤 Poslano v Web Worker → L1-L6 v ozadju (0% UI obremenitev)');
+                } else {
+                    // ⚠️ DIREKTNI KLIC - SAMO L1-L4 (L5-L6 = "/")
+                    console.warn('⚠️ Web Worker ni na voljo → L1-L4 direktno, L5-L6 preskočeni');
+                    Predlagaj_Potezo(fen, maxTime, (level, poteza, ocena, cas_ms) => {
+                        if (this.currentAnalysisId !== analysisId) return;
+                        console.log(`  ✓ Level ${level}: ${poteza} (${ocena.toFixed(2)}) ${cas_ms}ms`);
+                        this.updateAIAnalysis(level, poteza, ocena, cas_ms);
+                        this.updateStatus(`AI: Level ${level}/6`);
+                    }).then(predlogi1 => {
+                        if (this.currentAnalysisId !== analysisId) return;
+                        console.log(`✅ Končano: ${predlogi1.length}/6 levelov`);
+                        this.updateStatus('Pripravljen');
+                    });
+                }
+            }
+
+            async runAIAnalysis(fen) {
+                // DEPRECATED - uporablja se runAIAnalysisBothPlayers
+                try {
+                    const predlogi = await Predlagaj_Potezo(fen, 10, (level, poteza, ocena, cas_ms) => {
+                        this.updateAIAnalysis(level, poteza, ocena, cas_ms);
+                        this.updateStatus(`AI: Level ${level}/6 - ${poteza} (${ocena.toFixed(2)})`);
+                    });
+
+                    if (predlogi.length > 0) {
+                        const lastPredlog = predlogi[predlogi.length - 1];
+                        this.updateStatus(`AI: ${predlogi.length}/6 levelov | Najboljši: L${lastPredlog.level} ${lastPredlog.poteza}`);
+                    }
+                } catch (error) {
+                    this.updateStatus(`AI napaka: ${error.message}`);
+                    console.error('AI napaka:', error);
+                }
+            }
+
+            generateFEN() {
+                // Use chess.js to get current FEN position
+                return this.chess.fen();
+            }
+
+            // ==========================================
+            // UI UPDATES
+            // ==========================================
+
+            updateStatus() {
+                const knightIcon = this.currentTurn === 'white' ? '♘' : '♞';
+                const colorText = this.currentTurn === 'white' ? 'Beli' : 'Črni';
+
+                // Če imamo playerNames, dodaj ime
+                if (this.playerNames && this.playerNames.white && this.playerNames.black) {
+                    const playerName = this.currentTurn === 'white' ? this.playerNames.white : this.playerNames.black;
+                    document.getElementById('statusTurn').textContent =
+                        `${knightIcon} ${colorText} na potezi (${playerName})`;
+                } else {
+                    // Default brez imena
+                    document.getElementById('statusTurn').textContent =
+                        `${knightIcon} ${colorText} na potezi`;
+                }
+
+                // Posodobi inactive/active status sekcij v AI Analysis
+                this.updateAIPlayerSections();
+            }
+
+            updateAIPlayerSections() {
+                // Označi sekcije glede na to, kdo je na potezi
+                const whiteSection = document.getElementById('aiSectionWhite');
+                const blackSection = document.getElementById('aiSectionBlack');
+
+                if (whiteSection && blackSection) {
+                    if (this.currentTurn === 'white') {
+                        // Beli na potezi → White active, Black inactive (siva)
+                        whiteSection.classList.remove('inactive');
+                        blackSection.classList.add('inactive');
+                    } else {
+                        // Črni na potezi → Black active, White inactive (siva)
+                        blackSection.classList.remove('inactive');
+                        whiteSection.classList.add('inactive');
+                    }
+                }
+            }
+
+            addMoveToList(san, longNotation) {
+                const moveList = document.getElementById('moveList');
+                const li = document.createElement('li');
+
+                // Format: "1. e4          (e2-e4)"
+                // SAN aligned left (10 chars), long notation in parentheses
+                const paddedSAN = san.padEnd(10, ' ');
+                li.textContent = `${this.moveHistory.length}. ${paddedSAN} (${longNotation})`;
+
+                moveList.appendChild(li);
+                moveList.scrollTop = moveList.scrollHeight;
+            }
+
+            convertToSAN(piece, from, to, captured) {
+                // Prava SAN notacija (Standard Algebraic Notation)
+
+                const pieceUpper = piece.toUpperCase();
+                const pieceMap = {
+                    'P': '',      // Pawn - no letter in SAN
+                    'N': 'N',     // Knight
+                    'B': 'B',     // Bishop
+                    'R': 'R',     // Rook
+                    'Q': 'Q',     // Queen
+                    'K': 'K'      // King
+                };
+
+                let san = '';
+
+                // Check for castling
+                if (pieceUpper === 'K') {
+                    const fromCol = from.charCodeAt(0) - 97; // a=0, b=1, etc
+                    const toCol = to.charCodeAt(0) - 97;
+                    if (Math.abs(toCol - fromCol) === 2) {
+                        // Castling detected
+                        return toCol > fromCol ? 'O-O' : 'O-O-O';
+                    }
+                }
+
+                const pieceSymbol = pieceMap[pieceUpper] || '';
+
+                // Disambiguation - check if another piece of same type can move to same square
+                const disambiguation = this.getDisambiguation(piece, from, to);
+
+                // Capture symbol
+                const captureSymbol = captured && captured !== ' ' ? 'x' : '';
+
+                // For pawns capturing, always include source file
+                if (pieceUpper === 'P' && captureSymbol) {
+                    san = `${from[0]}${captureSymbol}${to}`;
+                } else if (pieceUpper === 'P') {
+                    san = `${to}`;
+                } else {
+                    san = `${pieceSymbol}${disambiguation}${captureSymbol}${to}`;
+                }
+
+                // TODO: Check for check (+) and checkmate (#)
+                // For now, we'll leave this out as it requires full move validation
+
+                return san;
+            }
+
+            getDisambiguation(piece, from, to) {
+                // Check if multiple pieces of same type can move to target square
+                // Returns: '' (no disambiguation), file letter (e.g. 'a'), rank number (e.g. '1'), or both (e.g. 'a1')
+
+                const [toRow, toCol] = this.parseNotation(to);
+                const [fromRow, fromCol] = this.parseNotation(from);
+
+                let sameFile = false;
+                let sameRank = false;
+                let needsDisambiguation = false;
+
+                // Check all squares for same piece type
+                for (let row = 0; row < 8; row++) {
+                    for (let col = 0; col < 8; col++) {
+                        if (row === fromRow && col === fromCol) continue;
+
+                        const otherPiece = this.board[row][col];
+                        if (otherPiece === piece) {
+                            // Same piece type - can it move to target square?
+                            if (this.isValidMove(row, col, toRow, toCol)) {
+                                needsDisambiguation = true;
+                                if (col === fromCol) sameFile = true;
+                                if (row === fromRow) sameRank = true;
+                            }
+                        }
+                    }
+                }
+
+                if (!needsDisambiguation) return '';
+
+                // Decide what disambiguation to use
+                if (!sameFile) {
+                    // Different files - use file letter
+                    return from[0];
+                } else if (!sameRank) {
+                    // Different ranks - use rank number
+                    return from[1];
+                } else {
+                    // Both same - use full square
+                    return from;
+                }
+            }
+
+            parseNotation(notation) {
+                // Convert "e4" to [4, 4] (row, col)
+                const file = notation.charCodeAt(0) - 97; // a=0, b=1, etc
+                const rank = 8 - parseInt(notation[1]); // 8=0, 7=1, etc
+                return [rank, file];
+            }
+
+            convertToLAN(piece, from, to, captured) {
+                // Prava LAN notacija (Long Algebraic Notation)
+                // Format: Pe2-e4, Ng1-f3, Bf1xc4, O-O, O-O-O
+
+                const pieceUpper = piece.toUpperCase();
+                const pieceMap = {
+                    'P': 'P',     // Pawn
+                    'N': 'N',     // Knight
+                    'B': 'B',     // Bishop
+                    'R': 'R',     // Rook
+                    'Q': 'Q',     // Queen
+                    'K': 'K'      // King
+                };
+
+                // Check for castling
+                if (pieceUpper === 'K') {
+                    const fromCol = from.charCodeAt(0) - 97;
+                    const toCol = to.charCodeAt(0) - 97;
+                    if (Math.abs(toCol - fromCol) === 2) {
+                        return toCol > fromCol ? 'O-O' : 'O-O-O';
+                    }
+                }
+
+                const pieceSymbol = pieceMap[pieceUpper] || 'P';
+                const separator = (captured && captured !== ' ') ? 'x' : '-';
+
+                return `${pieceSymbol}${from}${separator}${to}`;
+            }
+
+            updateCapturedPieces() {
+                const whiteEl = document.getElementById('capturedWhite');
+                const blackEl = document.getElementById('capturedBlack');
+
+                whiteEl.innerHTML = this.capturedWhite.map(p => {
+                    const svgId = this.pieces[p];
+                    return `<span class="captured-piece">
+                        <svg viewBox="0 0 45 45" width="24" height="24">
+                            <use xlink:href="#${svgId}"></use>
+                        </svg>
+                    </span>`;
+                }).join('');
+
+                blackEl.innerHTML = this.capturedBlack.map(p => {
+                    const svgId = this.pieces[p];
+                    return `<span class="captured-piece">
+                        <svg viewBox="0 0 45 45" width="24" height="24">
+                            <use xlink:href="#${svgId}"></use>
+                        </svg>
+                    </span>`;
+                }).join('');
+            }
+
+            // ==========================================
+            // CONTROL BUTTONS
+            // ==========================================
+
+            undoMove() {
+                if (this.moveHistory.length === 0) return;
+
+                const lastMove = this.moveHistory.pop();
+
+                // Restore piece
+                this.board[lastMove.from.row][lastMove.from.col] = lastMove.piece;
+                this.board[lastMove.to.row][lastMove.to.col] = lastMove.captured;
+
+                // Restore captured
+                if (lastMove.captured !== ' ') {
+                    if (lastMove.captured === lastMove.captured.toUpperCase()) {
+                        this.capturedBlack.pop();
+                    } else {
+                        this.capturedWhite.pop();
+                    }
+                    this.updateCapturedPieces();
+                }
+
+                // Switch turn back
+                this.currentTurn = this.currentTurn === 'white' ? 'black' : 'white';
+
+                // Remove from move list
+                const moveList = document.getElementById('moveList');
+                if (moveList.lastChild && moveList.lastChild.textContent !== 'Game started') {
+                    moveList.removeChild(moveList.lastChild);
+                }
+
+                this.renderBoard();
+            }
+
+            redoMove() {
+                // Placeholder - would need separate redo stack
+                alert('Redo še ni implementiran');
+            }
+
+            forceMove() {
+                // Placeholder - for forcing computer move
+                alert('Prisili potezo - AI še ni implementiran');
+            }
+
+            togglePause() {
+                const btn = document.getElementById('btnPause');
+                if (btn.textContent === 'Premor') {
+                    btn.textContent = 'Nadaljuj';
+                    document.getElementById('statusInfo').textContent = 'Pavzirano';
+                } else {
+                    btn.textContent = 'Premor';
+                    document.getElementById('statusInfo').textContent = 'Pripravljen';
+                }
+            }
+
+            showHint() {
+                // Placeholder - would show suggested move
+                alert('Namig - AI še ni implementiran');
+            }
+        }
+
+        // ==========================================
+        // START GAME
+        // ==========================================
+
+        // ==========================================
+        // RESPONSIVE SCALING
+        // Base: 1500x920 for 1920x1080 screen
+        // ==========================================
+
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+                || window.innerWidth < 768;
+        }
+
+        function isSamsungPhone() {
+            const ua = navigator.userAgent;
+            return /Samsung|SM-|Galaxy/i.test(ua) && /Mobile/i.test(ua);
+        }
+
+        // Lock screen orientation to portrait on mobile
+        function lockOrientation() {
+            // Only lock orientation on Samsung phones
+            if (isSamsungPhone()) {
+                // Try Screen Orientation API (modern browsers)
+                if (screen.orientation && screen.orientation.lock) {
+                    screen.orientation.lock('portrait').catch(err => {
+                        console.log('Orientation lock not supported:', err);
+                    });
+                }
+                // For older devices
+                else if (screen.lockOrientation) {
+                    screen.lockOrientation('portrait');
+                }
+                else if (screen.mozLockOrientation) {
+                    screen.mozLockOrientation('portrait');
+                }
+                else if (screen.msLockOrientation) {
+                    screen.msLockOrientation('portrait');
+                }
+            }
+        }
+
+        function scaleApp() {
+            const container = document.getElementById('app-container');
+            const body = document.body;
+            const baseWidth = 1500;
+            const baseHeight = 920;
+
+            if (isMobileDevice()) {
+                // Mobile: full screen with 4px margin
+                const margin = 4;
+                const viewportWidth = window.innerWidth;
+                const viewportHeight = window.innerHeight;
+                const availableWidth = viewportWidth - (margin * 2);
+                const availableHeight = viewportHeight - (margin * 2);
+
+                // Check orientation
+                const isPortrait = viewportHeight > viewportWidth;
+
+                let scale;
+                if (isPortrait) {
+                    // Portrait: scale by width (height will be much taller than app)
+                    scale = availableWidth / baseWidth;
+                } else {
+                    // Landscape: use minimum of both to fit
+                    const scaleX = availableWidth / baseWidth;
+                    const scaleY = availableHeight / baseHeight;
+                    scale = Math.min(scaleX, scaleY);
+                }
+
+                // Samsung phones: reduce scale by 10% for better touch targets
+                if (isSamsungPhone()) {
+                    scale *= 0.90;
+                }
+
+                // Calculate scaled dimensions AFTER Samsung adjustment
+                const scaledWidth = baseWidth * scale;
+                const scaledHeight = baseHeight * scale;
+
+                // Recalculate available space for Samsung phones
+                let finalAvailableWidth = availableWidth;
+                let finalAvailableHeight = availableHeight;
+
+                // Center both horizontally and vertically
+                const leftOffset = (viewportWidth - scaledWidth) / 2;
+                const topOffset = (viewportHeight - scaledHeight) / 2;
+
+                console.log('Samsung Debug:', {
+                    isSamsung: isSamsungPhone(),
+                    viewportWidth,
+                    viewportHeight,
+                    scale,
+                    scaledWidth,
+                    scaledHeight,
+                    leftOffset,
+                    topOffset
+                });
+
+                container.style.transform = `scale(${scale})`;
+                container.style.transformOrigin = 'top left';
+                container.style.position = 'absolute';
+                container.style.top = topOffset + 'px';
+                container.style.left = leftOffset + 'px';
+                container.style.width = baseWidth + 'px';
+                container.style.height = baseHeight + 'px';
+
+                body.style.padding = '0';
+                body.style.margin = '0';
+                body.style.overflow = 'hidden';
+                body.style.width = '100vw';
+                body.style.height = '100vh';
+                body.style.justifyContent = 'flex-start';
+                body.style.alignItems = 'flex-start';
+            } else {
+                // Desktop: centered with padding
+                const availableWidth = window.innerWidth - 40;
+                const availableHeight = window.innerHeight - 40;
+
+                const scaleX = availableWidth / baseWidth;
+                const scaleY = availableHeight / baseHeight;
+                const scale = Math.min(scaleX, scaleY, 1); // Don't scale up beyond 100%
+
+                container.style.transform = `scale(${scale})`;
+                container.style.transformOrigin = 'center center';
+                container.style.position = 'relative';
+                container.style.top = '';
+                container.style.left = '';
+                container.style.width = '1500px';
+                container.style.height = '920px';
+
+                body.style.padding = '20px';
+                body.style.margin = '';
+                body.style.overflow = 'hidden';
+                body.style.width = '';
+                body.style.height = '';
+                body.style.justifyContent = 'center';
+                body.style.alignItems = 'center';
+            }
+        }
+
+        // Scale on load and resize
+        window.addEventListener('load', () => {
+            scaleApp();
+            lockOrientation();
+        });
+        window.addEventListener('resize', scaleApp);
+        window.addEventListener('orientationchange', scaleApp);
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const game = new ChessGame();
+            console.log('Šahovska igra naložena - Win 3.11 stil!');
+            scaleApp();
+            lockOrientation();
+        });
+    </script>
+</body>
+</html>

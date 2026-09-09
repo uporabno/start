@@ -1,0 +1,716 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    padding: 10px;
+    overflow: auto;
+}
+
+.container {
+    min-width: 920px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    color: white;
+    margin-bottom: 15px;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.header p {
+    font-size: 1.1em;
+    opacity: 0.9;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.3);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.debug-toggle {
+    color: white;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.zvok-jezik-select {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: white;
+    font-size: 0.9em;
+    cursor: pointer;
+}
+
+/* Game Board */
+.game-board {
+    position: relative;
+    width: 900px;
+    min-width: 900px;
+    height: 600px;
+    min-height: 600px;
+    margin: 0 auto 20px;
+    background: #0a5f0a;
+    background: radial-gradient(ellipse at center, #0d7c0d 0%, #085008 100%);
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    border: 8px solid #654321;
+}
+
+/* Player Areas */
+.player-area {
+    position: absolute;
+    background: linear-gradient(135deg, #ececec 0%, #d8d8d8 50%, #c8c8c8 100%);
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid #a0a0a0;
+}
+
+.player-you {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-opposite {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.player-left {
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.player-right {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.player-info {
+    text-align: center;
+    color: #000;
+    text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
+    margin-bottom: 5px;
+}
+
+.player-name {
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.player-points {
+    font-size: 0.9em;
+    opacity: 0.9;
+}
+
+.player-cards {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Štih indicator - mini card back showing player has won tricks */
+.stih-indicator {
+    position: absolute;
+    background: url('images/karte/hrbtna.png') center/cover no-repeat;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: none;
+}
+
+.stih-indicator.visible {
+    display: block;
+}
+
+/* Player 0 (bottom) - vertical card in bottom left */
+#stih-indicator-0 {
+    width: 36px;
+    height: 48px;
+    bottom: 5px;
+    left: 10px;
+}
+
+/* Player 1 (left) - vertical card in bottom left corner */
+#stih-indicator-1 {
+    width: 36px;
+    height: 48px;
+    bottom: 5px;
+    left: 50px;
+}
+
+/* Player 2 (opposite/top) - horizontal card, top right of player */
+#stih-indicator-2 {
+    width: 48px;
+    height: 36px;
+    top: 5px;
+    right: 5px;
+}
+
+/* Player 3 (right) - vertical card in bottom right corner */
+#stih-indicator-3 {
+    width: 36px;
+    height: 48px;
+    bottom: 5px;
+    right: 5px;
+}
+
+.player-indicator {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background: yellow;
+    border-radius: 50%;
+    display: none;
+    box-shadow: 0 0 20px yellow;
+    animation: pulse 1s infinite;
+    z-index: 100;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.player-indicator.active {
+    display: block;
+}
+
+/* Arrows (puščice) - show who will win the trick - positioned inside player-indicator */
+.puscica {
+    position: absolute;
+    display: none;
+    pointer-events: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 101;
+}
+
+.puscica.visible {
+    display: block;
+}
+
+/* Card Styling */
+.card {
+    width: 71px;
+    height: 96px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    background: white;
+    border: 2px solid #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+}
+
+.card.selected {
+    transform: translateY(-20px);
+    box-shadow: 0 12px 24px rgba(255,215,0,0.8);
+    border-color: gold;
+}
+
+.card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.card-back {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3em;
+    color: white;
+}
+
+.card-suit {
+    font-size: 2.5em;
+    margin-bottom: 5px;
+}
+
+.card-value {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.card-red {
+    color: #e74c3c;
+}
+
+.card-black {
+    color: #2c3e50;
+}
+
+/* Center Area */
+.center-area {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 400px;
+    height: 300px;
+}
+
+/* Talon */
+.talon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 5px;
+}
+
+.talon-card {
+    width: 48px;
+    height: 64px;
+    border-radius: 5px;
+    background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Table Cards */
+.table-cards {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 260px;
+    height: 260px;
+}
+
+.table-card {
+    position: absolute;
+    width: 71px;
+    height: 96px;
+    transition: all 0.5s ease;
+}
+
+.table-card[data-player="0"] {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.table-card[data-player="1"] {
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.table-card[data-player="2"] {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.table-card[data-player="3"] {
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* Trump Info */
+.trump-info {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255,255,255,0.9);
+    padding: 10px 15px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 80px;
+}
+
+.trump-label {
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.trump-suit {
+    font-size: 2em;
+}
+
+/* Call Indicators */
+.call-indicator {
+    position: absolute;
+    background: gold;
+    color: #333;
+    font-weight: bold;
+    font-size: 1.5em;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255,215,0,0.8);
+    display: none;
+    animation: callPulse 0.5s ease;
+}
+
+@keyframes callPulse {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.call-indicator.active {
+    display: block;
+}
+
+#call20 {
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#call40 {
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Game Type Display */
+.game-type {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255,255,255,0.95);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    min-width: 120px;
+}
+
+/* Status Bar */
+.status-bar {
+    text-align: center;
+    padding: 12px;
+    background: white;
+    border-radius: 8px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Score Panel */
+.score-panel {
+    background: linear-gradient(135deg, #ececec 0%, #d8d8d8 50%, #c8c8c8 100%);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid #a0a0a0;
+}
+
+.score-panel h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#scoreTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#scoreTable th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 10px;
+    text-align: center;
+}
+
+#scoreTable td {
+    padding: 8px;
+    text-align: center;
+    border-bottom: 1px solid #aaa;
+}
+
+#scoreTable tr:hover {
+    background: #f5f5f5;
+}
+
+/* Log Panel */
+.log-panel {
+    background: linear-gradient(135deg, #ececec 0%, #d8d8d8 50%, #c8c8c8 100%);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    border: 2px solid #a0a0a0;
+}
+
+.log-panel h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.log-content {
+    max-height: 200px;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    line-height: 1.6;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.log-entry {
+    margin: 3px 0;
+}
+
+.log-error { color: #dc3545; font-weight: bold; }
+.log-warning { color: #ffc107; }
+.log-normal { color: #333; }
+.log-info { color: #17a2b8; }
+.log-debug { color: #6c757d; font-size: 0.85em; }
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    animation: slideIn 0.3s ease;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    color: #667eea;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #aaa;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Game Type Selection */
+.game-type-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.btn-game-type {
+    padding: 20px;
+    font-size: 1.3em;
+    font-weight: bold;
+    border: 3px solid #667eea;
+    background: white;
+    color: #667eea;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-game-type:hover {
+    background: #667eea;
+    color: white;
+    transform: scale(1.05);
+}
+
+/* Trump Selection */
+.trump-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.suit-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.btn-suit {
+    padding: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    border: 3px solid #333;
+    background: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-suit:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.btn-suit[data-suit="0"],
+.btn-suit[data-suit="2"] {
+    color: #e74c3c;
+    border-color: #e74c3c;
+}
+
+.btn-suit[data-suit="1"],
+.btn-suit[data-suit="3"] {
+    color: #2c3e50;
+    border-color: #2c3e50;
+}
+
+.card-type-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+/* Kontra Buttons */
+.kontra-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Win Modal */
+.modal-content.win {
+    text-align: center;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.modal-content.win h2 {
+    color: white;
+    font-size: 2.5em;
+}
+
+/* Mini avatars with team borders */
+.mini-avatar {
+    border: 2px solid transparent;
+}
+
+.mini-avatar.skupina-zacel {
+    border-color: #2e59d9;
+}
+
+.mini-avatar.skupina-drugi {
+    border-color: #e74c3c;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Fixed size - no responsive scaling, scroll if needed */
+/* Game board and all areas maintain their fixed sizes */

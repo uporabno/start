@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=sah.html">
+    <title>Ratež šah</title>
+	<link rel="icon" type="image/x-icon" href="images/ratez-konj.png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .redirect-message {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+        .redirect-message h1 {
+            color: #2e59d9;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        .redirect-message p {
+            color: #555;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .redirect-message a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #4e73df 0%, #2e59d9 50%, #3e64df 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .redirect-message a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2e59d9;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto 0;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-message">
+        <h1>♘ Ratež šah</h1>
+        <p>Preusmerjanje na standalone verzijo...</p>
+        <p style="font-size: 0.9em; color: #888;">
+            Če se stran ne naloži samodejno, kliknite spodnji gumb:
+        </p>
+        <a href="sah.html">Odpri Ratež šah</a>
+        <div class="spinner"></div>
+    </div>
+
+    <script>
+        // JavaScript redirect za večjo kompatibilnost
+        setTimeout(() => {
+            window.location.href = 'sah.html';
+        }, 500);
+    </script>
+</body>
+</html>

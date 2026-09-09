@@ -1,0 +1,17 @@
+igra03.wav             Igrala se bo navadna igra.  Igrat će se uobičajena igra.
+igra06.wav             Igrala se bo igra šnops.    Igrat će se igra šnops.
+igra09.wav             Igrala se bo igra berač.    Igrat će se igra berač.
+igra12.wav             Igrala se bo igra durhmarš. Igrat će se igra durhmarš.
+izberiaduta.wav        Izberi aduta.               Izaberi adut.
+izberiigro.wav         Izberi igro.                Izaberi igru.
+klic20.wav             Kliče se 20                 Zove se 20
+klic40.wav             Kliče se 40                 Zove se 40
+zacel0.wav             Začel boš ti.               Započet ćeš ti.
+zacel1.wav             Začel bo pingvin.           Započet će pingvin.
+zacel2.wav             Začela bo opica.            Započet će majmun.
+zacel3.wav             Začel bo medo.              Započet će medvjed.
+--
+mesanje.wav
+met.wav
+neuspeh.wav
+zmaga.wav
