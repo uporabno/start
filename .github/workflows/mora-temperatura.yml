@@ -1,0 +1,98 @@
+name: Fetch temperatura morja
+
+on:
+  schedule:
+    - cron: '0 17 * * *'   # vsak dan ob 19:00 CET (17:00 UTC)
+  workflow_dispatch:         # možnost ročnega zagona
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Fetch in parse temperaturo morja
+        run: |
+          python3 << 'EOF'
+          import requests
+          from bs4 import BeautifulSoup
+          import json
+          import os
+          from datetime import datetime, timezone, timedelta
+
+          URL = 'https://meteo.hr/podaci.php?section=podaci_vrijeme&param=more_n&el='
+          OUT = 'phone/mora.json'
+          CET = timezone(timedelta(hours=2))  # CEST poleti
+          danes = datetime.now(CET).strftime('%Y-%m-%d')
+
+          r = requests.get(URL, timeout=30)
+          r.encoding = 'utf-8'
+          soup = BeautifulSoup(r.text, 'html.parser')
+
+          # najdi tabelo s podatki
+          table = soup.find('table')
+          rows = table.find_all('tr')
+
+          # header - ure meritev
+          header = rows[0].find_all(['th','td'])
+          ure = [h.get_text(strip=True) for h in header[1:]]
+
+          # postaje in temperature
+          postaje = {}
+          for row in rows[1:]:
+              cells = row.find_all(['td','th'])
+              if len(cells) < 2:
+                  continue
+              ime = cells[0].get_text(strip=True)
+              if not ime:
+                  continue
+              vrednosti = {}
+              for i, cell in enumerate(cells[1:]):
+                  if i < len(ure):
+                      val = cell.get_text(strip=True).replace('*','').replace('-','').strip()
+                      try:
+                          vrednosti[ure[i] + 'h'] = float(val.replace(',','.'))
+                      except:
+                          vrednosti[ure[i] + 'h'] = None
+              postaje[ime] = vrednosti
+
+          nov_zapis = {
+              'datum': danes,
+              'postaje': postaje
+          }
+
+          # naloži obstoječe podatke in dodaj novega
+          if os.path.exists(OUT):
+              with open(OUT, 'r', encoding='utf-8') as f:
+                  podatki = json.load(f)
+          else:
+              podatki = []
+
+          # posodobi če datum že obstaja, sicer dodaj
+          for i, z in enumerate(podatki):
+              if z.get('datum') == danes:
+                  podatki[i] = nov_zapis
+                  break
+          else:
+              podatki.append(nov_zapis)
+
+          with open(OUT, 'w', encoding='utf-8') as f:
+              json.dump(podatki, f, ensure_ascii=False, indent=2)
+
+          print(f"OK: {danes}, {len(postaje)} postaj, shranjeno v {OUT}")
+          print(f"Skupaj zapisov: {len(podatki)}")
+          EOF
+
+      - name: Commit & push
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git add phone/mora.json
+          git diff --cached --quiet || git commit -m "Temperatura morja $(date -u '+%Y-%m-%d')"
+          git push
