@@ -1,0 +1,53 @@
+TEMPERATURA-ZRAKA.JSON - NAVODILA
+==================================
+
+Izhodni file: actions/temperatura-zraka.json
+GitHub Action: .github/workflows/temperatura-zraka.yml (Fetch TemperaturaZraka)
+
+URNIK
+-----
+Vsak dan ob 17:00 CET (15:00 UTC)
+Cron: 0 15 * * *
+
+URL
+---
+https://meteo.hr/podaci.php?section=podaci_vrijeme&param=hrvatska1_n
+
+KAJ DELA
+--------
+Fetchá DHMZ (Hrvaški meteorološki zavod) stran z meteorološkimi podatki.
+Python parser (BeautifulSoup) izvleče detajlno tabelo s postajami.
+Podatki se NABIRAJO - vsak dan doda nov zapis (ne prepiše).
+
+VSEBINA JSON
+------------
+Array zapisov, en element na dan:
+[
+  {
+    "datum": "2026-09-09",
+    "ura": "17:00",
+    "postaje": {
+      "Zagreb-Maksimir": {
+        "vjetar smjer": "S",
+        "vjetar brzina": 2.0,
+        "temperatura": 22.4,
+        "vlažnost": 65.0,
+        "tlak": 1013.2,
+        ...
+      },
+      ...
+    }
+  },
+  ...
+]
+
+POSTAJE (~50)
+-------------
+Zagreb (3 lokacije), Rijeka, Split, Dubrovnik, Osijek, Zadar, Šibenik,
+Pula, Rovinj, Varaždin, Krapina, Karlovac, Gospić, Zavižan, in druge.
+
+STOLPCI V TABELI
+----------------
+Ime postaje, smer vetra, hitrost vetra (m/s), temperatura zraka (°C),
+relativna vlažnost (%), zračni tlak (hPa), tendenco tlaka (hPa/3h),
+stanje vremena.
