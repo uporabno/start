@@ -1,0 +1,310 @@
+
+<!-- saved from url=(0039)http://start.66ghz.com/phone/index.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Bližnjice</title>
+
+<link href="./img/start.png" rel="shortcut icon" type="image/x-icon">
+<style type="text/css"> 
+    table {font-size: 72pt; font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif,"Proxima Soft";} 
+    .nounderline {
+        text-decoration:none;
+    }
+    .mediumfont {
+        font-size: 36px;
+    }
+    .smallfont {
+        font-size: 24px;
+    }
+    .extrasmallfont {
+        font-size: 18px;
+    }
+
+    .tablePcClass {
+	    width: 490;
+        font-size: 32pt; font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif,"Proxima Soft";
+    }
+    .mediumfontPcClass {
+        font-size: 24px;
+    }
+    .smallfontPcClass {
+        font-size: 16px;
+    }
+    .extrasmallfontPcClass {
+        font-size: 12px;
+    }
+</style>
+
+</head>
+
+<body bgcolor="#000000" text="#000000" link="#ffffff" vlink="#ffffff" alink="#ffffff" width="100%"
+onload="myOnLoad()">
+
+<script>
+  var isMobile = {
+    Android: function() {
+        return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+        return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+        return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+        return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+        return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+    },
+    any: function() {
+        return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+  };
+
+  function myOnLoad() {
+    if (location.protocol === 'file:') {
+      document.getElementById('rowTecaji').style.display = 'none';
+    }
+    if( isMobile.any() ) {
+      console.log("Mobile.");
+    }
+    else {
+      console.log("Not mobile.");
+      //document.getElementById("tabela").style.fontSize = "32px";
+      document.getElementById("tabela").className = "tablePcClass";
+
+      var all = document.getElementsByTagName("*");
+      for (var i=0, max=all.length; i < max; i++) {
+        //console.log(all[i].getAttribute("id"));
+        if (all[i].className == "mediumfont") all[i].className = "mediumfontPcClass";
+        if (all[i].className == "smallfont") all[i].className = "smallfontPcClass";
+        if (all[i].className == "extrasmallfont") all[i].className == "extrasmallfontPcClass";
+      }
+    }
+  }
+</script>
+
+<script>
+(function() {
+  var PROXY = 'https://start.66ghz.com/phone/proxy.php';
+  var WANT = {
+    'KRKG': {id:'sKRKG', lbl:'KRKG'},
+    'ZVTG': {id:'sZVTG', lbl:'ZVTG'},
+    'CICG': {id:'sCICG', lbl:'CICG'},
+    'VZZR': {id:'sVZZR', lbl:'VZZR'}
+  };
+
+  function show(id, lbl, price, chg) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    var color = chg >= 0 ? '#5c5' : '#f55';
+    var sign  = chg >= 0 ? '+' : '';
+    el.innerHTML = '<span style="color:#888">' + lbl + ':</span> <b style="color:#ddd">' + price.toFixed(2) + '</b> <span style="color:' + color + ';font-size:18px">' + sign + chg.toFixed(2) + '%</span>';
+  }
+
+  function na(id, lbl) {
+    var el = document.getElementById(id);
+    if (el) el.innerHTML = '<span style="color:#444">' + lbl + ': N/A</span>';
+  }
+
+  function parseData(data) {
+    var found = {};
+    (data.priceList || []).forEach(function(seg) {
+      ((seg.tradingPriceList || {}).rows || []).forEach(function(item) {
+        var st = WANT[item.symbol];
+        if (!st || found[item.symbol]) return;
+        var price = item.last_price_n;
+        var chg = parseFloat((item.change_prev_close_percentage || '0').replace(/&nbsp;/g,'').replace('%','').replace(',','.').trim()) || 0;
+        if (price > 0) { show(st.id, st.lbl, price, chg); found[item.symbol] = true; }
+        else na(st.id, st.lbl);
+      });
+    });
+    Object.keys(WANT).forEach(function(s){ if (!found[s]) na(WANT[s].id, WANT[s].lbl); });
+  }
+
+  window.ljseCallback = function(data) {
+    try { parseData(data); }
+    catch(e) { Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); }); }
+  };
+
+  function fetchStocks() {
+    var old = document.getElementById('_ljse_s');
+    if (old) old.parentNode.removeChild(old);
+    var s = document.createElement('script');
+    s.id = '_ljse_s';
+    s.onerror = function() { Object.keys(WANT).forEach(function(k){ na(WANT[k].id, WANT[k].lbl); }); };
+    s.src = PROXY + '?cb=ljseCallback&_=' + Date.now();
+    document.head.appendChild(s);
+  }
+
+  fetchStocks();
+  setInterval(fetchStocks, 5*60*1000);
+})();
+</script>
+
+<br>
+
+<table id="tabela" width="990" bgcolor="#00000">
+
+<!--
+<tr>
+  <td align="center">
+    <font color="red">Izbira:</font>
+  </td>
+</tr>
+-->
+
+<tbody>
+<tr id="rowTecaji">
+  <td align="center" style="font-family:Calibri,Arial,sans-serif;font-size:21px;padding:6px 0 4px;line-height:1.6;">
+    <span id="sKRKG" style="color:#666">KRKG…</span>
+    &nbsp;<span style="color:#2a2a2a">|</span>&nbsp;
+    <span id="sZVTG" style="color:#666">ZVTG…</span>
+    <br>
+    <span id="sCICG" style="color:#666">CICG…</span>
+    &nbsp;<span style="color:#2a2a2a">|</span>&nbsp;
+    <span id="sVZZR" style="color:#666">VZZR…</span>
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+  <td align="center">
+    <a href="http://www.google.com/m?client=ms-android-google&amp;source=android-home"><font color="DarkSalmon">Google</font></a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="smallfont">
+    <a href="https://translate.google.si/?hl=sl&amp;tab=wT#auto/sl/">Translate</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://duckduckgo.com/">DuckDuckGo</a>
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+  <td align="center">
+    <a href="http://start.66ghz.com/phone/start_zaznamki.html"><font color="PaleGreen">Zaznamki</font></a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="smallfont">
+    <a href="http://start.66ghz.com/phone/start_zaznamki_txt.html" class="smallfont">Txt</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://start.66ghz.com/mobi/index.html" class="smallfont">Mobi</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://start.66ghz.com/phone/start_minix.html" class="smallfont"><font color="gray">Minix</font></a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://start.66ghz.com/phone/start_nvidia.html" class="smallfont"><font color="gray">Nvidia</font></a>
+    &nbsp;&nbsp;&nbsp;
+	<a href="https://www.easistent.com/webapp#/calendar" class="mediumfont"><font color="green">eA</font></a>
+    &nbsp;&nbsp;&nbsp;
+	<a href="http://start.66ghz.com/phone/start_dnevno.html" class="mediumfont"><font color="mediumseagreen">Dnevno</font></a>
+
+  
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+  <td align="center">
+    <a href="http://start.66ghz.com/phone/start_dodatno.html"><font color="BurlyWood">Dodatno</font></a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="extrasmallfont">
+	<a href="https://start.66ghz.com/tauko/snopc/">Šnopc</a>
+    &nbsp;&nbsp;&nbsp;
+	<a href="https://start.66ghz.com/tauko/sah/">Šah</a>
+    &nbsp;&nbsp;&nbsp;
+	<a href="http://start.66ghz.com/data/belezke">Beležke</a>
+    &nbsp;&nbsp;&nbsp;
+    <!--
+    <a href="http://start.66ghz.com/data/airdrop">Airdrop</a>
+    &nbsp;&nbsp;&nbsp;
+    -->
+    <a href="http://start.66ghz.com/tauko/enigma">Enigma</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://start.66ghz.com/tauko/besede">Besede</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://scratch.mit.edu/projects/915512521">AF</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://start.66ghz.com/phone/start_media.html">Media</a>
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+  <td align="center">
+    <font color="yellow"><!--&#x2600--></font> <a href="http://start.66ghz.com/phone/start_dramalj.html"><font color="0099ff">Dramalj</font></a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="smallfont">
+    <a href="http://start.66ghz.com/phone/start_dopust.html">Promet in vreme</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://start.66ghz.com/data/morje_nakup">Nakup</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="http://ytmp3.cc">YtMp3</a>
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+<tr>
+  <td align="center" class="mediumfont">
+    <a href="http://start.66ghz.com/phone/start_tv.html">TV</a>
+    <a href="http://www.siol.net/tv-spored.aspx"><font color="Tan">spored</font></a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="smallfont">
+    <a href="https://www.rtl.hr/televizija/tv-raspored/">Kockica</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://raspored.hrt.hr/">HRT</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://hrtprikazuje.hrt.hr/dokumentarci">Dokumentarci</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://novatv.dnevnik.hr/raspored">NovaTv</a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="smallfont">
+    <a href="https://tv-spored.siol.net/kanal/eurosport">Eurosport</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://tv-spored.siol.net/kanal/eurosport2">Eurosport2</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://cycling.today/live-streaming/">Cycling Stream</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://www.procyclingstats.com/index.php">Cycling</a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="smallfont">
+    <a href="https://tv-spored.siol.net/kanali/dokumentarci">Doku</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://tv-spored.siol.net/kanal/discoveryhdd">Discovery</a>
+    &nbsp;&nbsp;&nbsp;
+    <a href="https://tv-spored.siol.net/kanal/davincilear">Da Vinci Learning</a>
+  </td>
+</tr>
+<tr>
+  <td align="center" class="extrasmallfont">
+	<a href="http://start.66ghz.com/phone/start_napis157.html">157</a>
+	&nbsp;&nbsp;&nbsp;
+	<a href="http://start.66ghz.com/phone/start_napis158.html">158</a>
+	&nbsp;&nbsp;&nbsp;
+	<a href="http://start.66ghz.com/phone/start_napis159.html">159</a>
+  </td>
+</tr>
+
+<tr><td>&nbsp;</td></tr>
+
+</tbody></table>
+
+
+</body></html>

@@ -1,0 +1,342 @@
+﻿<html>
+
+<head>
+<title>Rubik</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<link rel="icon" href="./img/start.ico">
+<style type="text/css"> table {font-size: 36pt; font-family: "Proxima Soft Bold", Arial, Helvetica, sans-serif;} </style>
+</head>
+
+<body bgcolor=#000000 text=#00ffff link=#ffffff vlink=#ffffff alink=#ffffff width="100%">
+
+<br/>
+
+<table width="100%" bgcolor=#00000>
+
+<!-- ------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------- -->
+<!-- -- SKLOPI --------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------- -->
+<!-- ------------------------------------------------------------------- -->
+
+<tr><td>&nbsp;</td></tr>
+<tr>
+  <td>
+    <a>Timer: </a>
+    <a href="https://ruwix.com/online-rubiks-stopwatch-timer/?insp=10">3x3</a>
+    <a href="https://ruwix.com/online-rubiks-stopwatch-timer/?puzz=1&slen=9&ssett=nni&insp=10">2x2</a>
+    <a href="./../data/timer/index.html">Tauko</a>
+  </td>
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr><td>&nbsp;</td></tr>
+<tr>
+  <td>
+    <a>3x3x3 - Osnovne povezave: </a>
+    <a href="./../data/rubik/ruru/index.html">R U R' U'</a><br/>
+    <span style="color: silver;">Video:</span>
+    <a href="https://www.youtube.com/watch?v=E7-0GYMCwyQ">Part 1</a>
+    <a href="https://www.youtube.com/watch?v=1xZzv95AOMk">Part 2</a>
+    <a href="https://www.youtube.com/watch?v=2k9LmLetxLg">Part 3</a>
+    <a href="https://www.youtube.com/watch?v=1ZLCKY4GAAY">Part 4</a>
+  </td>
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>3x3x3 - CFOP:</a><br/>
+    <a href="./../data/rubik/cfop-oll.png">2 Look OLL</a>&nbsp;&nbsp;&nbsp;
+    <a href="./../data/rubik/cfop-pll.png">2 Look PLL</a>
+    <small><sub><sub><sub><sub>
+      <p style="color:gray;"><span style="color: White;">F2L:</span>
+        <br/>- že sestavljen par na vrhu
+        <br/>- bela ob strani, na vrhu različni barvi
+        <br/>&nbsp;&nbsp;* mogoče moraš rob zarotirati na drugo ploskev
+        <br/>&nbsp;&nbsp;&nbsp;&nbsp;> postaviš belo nad mesto, kamor mora vstavit L' U' L / R U R'
+        <br/>- bela ob strani, na vrhu enaki barvi
+        <br/>&nbsp;&nbsp;* potopimo, sestavimo, vstavimo
+        <br/>- bela na vrhu
+        <br/>&nbsp;&nbsp;* rob poravnaš s središčem, plosko zarotiraš stran od barve, ki gleda navzgor
+        <br/>&nbsp;&nbsp;* zgorno ploskev pripelješ k premaknjenemu robu
+        <br/>&nbsp;&nbsp;* vrneš stransko navzgor in imaš sestavljen par
+        <br/>&nbsp;&nbsp;* vstavimo
+        <br/>Posebnosti:
+        <br/>- delčka na vrhu skupaj, samo nista sestavljena
+        <br/>&nbsp;&nbsp;* najprej ju ločimo; kot potopimo, vogal zarotiramo
+      </p>
+    </sub></sub></sub></sub></small>
+    <small><sub><sub><sub><sub>
+      <p style="color:gray;"><span style="color: White;">Zeta Slotting (F2L):</span>
+        <br/>- sestavi bel križ
+        <br/>- sestavi edge v 2. layerju (na vrhu iščeš ne rumene edge) (R U' R') ali (L' U L)
+        <br/>- sestavi bele cornerje (na vrhu jo postavi v desni kot):
+        <br/>&nbsp;&nbsp;* bela na vrhu: (3x R U R' U')
+        <br/>&nbsp;&nbsp;* bela desno:   U (R U R') U2 (R U R')
+        <br/>&nbsp;&nbsp;* bela spredaj: U' (R U' R') U' (R U'2 R')
+      </p>
+    </sub></sub></sub></sub></small>
+  </td>
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>3x3x3 - Last Edge Permutation: </a>
+    <a href="https://www.youtube.com/watch?v=rq5RqVCDVaU&t=174s">Video</a>
+    <pre style="color: silver;">
+Opposite on right - M2 U M U2 M' U M2
+Opposite on left - M2 U' M U2 M' U' M2
+All opposites - M2 U' M2 U2' M2 U' M2<span style="color: MediumSeaGreen;">
+   2-1  2-2  2-1  2</span>
+Diag swap - M' U' M2 U' M2 U' M' U2 M2 U<span style="color: MediumSeaGreen;">
+   1-1  2-1  2-1  1-2  2-1'</span>
+</pre>
+    <small><sub><sub><sub><sub><sub>
+    <p style="color:gray;">Please note that M and M' are done with respect to the left face.  For example, M' is the same direction as L' (you pull the bottom of the M-slice towards you).
+    <br/>Also, M2 is really M2', but since they are equivalent most people prefer to just write it as M2.</p>
+    </sub></sub> </sub></sub></sub></small>
+<pre style="color: silver;">    
+Metoda 2050:
+    <span style="color: MediumSeaGreen;">R2 U  S' U2 S U  R2</span> (desna gre dol)
+    <span style="color: MediumSeaGreen;">R2 U' S' U2 S U' R2</span> (desna ne gre dol)  
+</pre>
+  </td>
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>3x3x3 - Komutator centrov: </a>
+    <pre style="color: silver;">
+5x: M' U M U' (Mdol U Mgor U')</pre>
+    <p style="color:gray;">zarotira centra: zgornji -90°, zadnji 90°</p>
+  </td>
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>4x4x4: </a>
+    <a href="https://youtu.be/LVPnVByolpw?t=1362">Video</a>
+    <p style="color:gray;"></p>
+    <!-- staro
+    <pre style="color: silver;">
+Zadnja 2 robova:
+primer 1 - <span style="color: MediumSeaGreen;">R  U  R'  F  R'  F'  R</span>
+primer 2 - <span style="color: MediumSeaGreen;">Uw'  R  U  R'  F  R'  F'  R  Uw</span>
+Zadnja 2 krajše: <a href="https://www.youcandothecube.com/solve-it/4x4-solution">Link</a>
+primer 1 - <span style="color: MediumSeaGreen;">R  F'  U  F</span>
+primer 2 - <span style="color: MediumSeaGreen;">Dw  R  F'  U  R'  F  Dw'</span>
+    </pre>-->
+    <pre style="color: silver;">
+Last Two Edges (enaki barvi <a href="./../data/rubik/last_edge_parity_error.jpg">vzporedno</a>):<span style="color: MediumSeaGreen;">
+Dw  R  F'  U  R'  F  Dw'</span>
+
+OLL-PARITY:<span style="color: MediumSeaGreen;">
+Rw2  B2  
+U2  Lw  U2  Rw'    U2  Rw  U2
+F2  Rw  F2  Lw'  
+B2  Rw2</span>
+
+PLL-PARITY:<span style="color: MediumSeaGreen;">
+r2  U2  r2  Uw2  r2  u2</span>
+    </pre>
+  </td>
+</tr>
+
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>5x5x5: </a>
+    <p style="color:silver;"><span style="color: White;">1. Last Two Edges:</span> nastavi tako, da imaš na levi stanski ploskvi na vrhu dve enaki kombinaciji barv, na desno čisto zgoraj pa pripelji enako tako kombinacijo barv. Potem uporabi algoritem od 4x4 za zadnje dva robova. Če bosta levi zgornji dve enaki dezni zgornji barvi, zna biti da rešeno brez, da bi moral reševati "cikcak" problem.</p>
+    <p style="color:silver;"><span style="color: White;">2. Last Edge:</span> Cik cak imej pred sabo gor</p>
+    <pre style="color: silver;">
+CikCak 1rob (obrnjeno navzgor) - simple:
+<span style="color: MediumSeaGreen;">Rw U2
+Rw U2 Rw' U2 Rw U2 Lw' U2 Rw U2 Rw' U2
+x' <span style="color: gray;">(zarotiraj proti sebi)</span>
+Rw' U2 Rw' U2 M'</span>
+
+CikCak 1rob (obrnjeno navzgor) - prva verzija:
+<span style="color: MediumSeaGreen;">Rw2 B2 
+U2 Lw U2 Rw' U2 Rw U2 
+F2 Rw F2 Lw' 
+B2 Rw2</span></pre>
+    <p style="color:white;">Smeti in drugi algoritmi:</p>
+    <a href="https://www.youtube.com/watch?v=KgmJg5PSifw">Dober video - 5x5 Parity Errors - uporabil na 7x7</a><br/>
+    <a href="https://cubingcheatsheet.com/algs5x.html">cubingcheatsheet.com</a><br/>
+    <a href="./../data/rubik/last-2-edges-algorithms-5x5.pdf">Last 2 edges [pdf]</a><br/>
+    <a href="./../data/rubik/last-2-edges-algorithms-5x5.png">Last 2 edges [png]</a><br/>
+    <a href="http://www.sirwaffle.com/5x5-last-two-edge-algorithms.html">Last 2 edges [easy 2 alg]</a><br/>
+    <pre style="color: silver;">
+Zamenjaj desni rob (obrnjeno navzgor):
+<span style="color: MediumSeaGreen;">Lw' U2 Lw' U2 
+F2 Lw' F2 Rw 
+U2 Rw' U2 Lw2</span>
+    </pre>
+  </td>
+</tr>
+
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Pyraminx 3x3: </a>
+    <a href="https://www.youtube.com/watch?v=v0huoqKcAZw">Video</a>
+    <p style="color:gray;">1. Poravnaj vogale</p>
+    <p style="color:gray;">2. Yellow cross <span style="color: DarkSlateGray;"> <br/> <small><sub>(nasproti od vogala brez rumene; max 3 poteze)</sub></small></span></p>
+    <p style="color:gray;">3. Edges: (<span style="color: MediumSeaGreen;">R' L R L'</span> ali <span style="color: MediumSeaGreen;">L R' L' R</span>)</p>
+    <p style="color:gray;">4. Zadnji vogali:</p>
+    <p style="color:gray;">- "eyes": <span style="color: MediumSeaGreen;">R' L R L' &nbsp;&nbsp; U L' U' L</span> <br/> <span style="color: DarkSlateGray;"><small><sub>(zadaj se ujema; desni+z desno preprimeš in reverse desni)</sub></small></span></p>
+    <p style="color:gray;">- "symmetrical" : <span style="color: MediumSeaGreen;">R' <span style="color:darkgreen;">U'</span> R <span style="color:darkgreen;">U'</span> R' <span style="color:darkgreen;">U'</span> R</span> <span style="color: DarkSlateGray;"><small><sub><sup>(včasih 2x)</sup></sub></small></span></p>    
+    <p style="color:gray;">- "the right eye": <span style="color: MediumSeaGreen;">R' L R L' &nbsp;&nbsp; U' L' U L</span> <span style="color: DarkSlateGray;"> <br/> <small><sub>(vogal, ki se ne ujema z nobeno barvo je zadaj)</sub></small></span></p>
+    <p style="color:gray;">- "the left eye": <span style="color: MediumSeaGreen;">L R' L' R  &nbsp;&nbsp; U R U' R'</span> </p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Pyraminx 4x4: </a>
+    <p style="color:gray;">1. Poravnaj vogale</p>
+    <p style="color:gray;">2. Uredi edge (kot 3x3)</p>
+    <p style="color:gray;">3. Uredi še ostale</p>
+    <p style="color:gray;">4. Uredi centre</p>
+    <p style="color:gray;">--> Center parity: <span style="color: MediumSeaGreen;">R U R' U R U R' U</span> (široko) in ponoviš enako, s tem da je U mala piramidka</p>
+    <p style="color:gray;">--> Center swap: <span style="color: MediumSeaGreen;">Sladge hammer 3x</span> (široko; nasprotni spredaj in spodaj)</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Pyramorphix: </a>
+    <p style="color:gray;">1. Pripravi ali najdi ujemajoča vogala (levo in desno spodaj)</p>
+    <p style="color:gray;">2. Tretjo ploskev zavrti na vrh. Če ni orientirana, jo rotiraš z dvema sladge hammer-jema.</p>
+    <p style="color:gray;">3. Ena ploskev je urejena. Zarotiraj še drugi vrh (2x sladge hammer)</p>
+    <p style="color:gray;">4. Uredi centre po metodi "Nejc": piramido pretvori v raketko. Če se da rotiraj zgornjo 4-strano piramidko, kot je barva na vseh 4 nogicah raketke. Če se ne da vseh 4-ih, pa nastavi vse različne. Pretvori nazaj v originalno obliko piramide. Poskušaj iz druge strani, doker ni možno uskladiti barve mini 4-strane piramidke z vsemi 4-imi nogicami. Ko prideš do tega, pretvori nazaj v originalno piramido, ki bo seaj sestavljena.</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>2x2x3: </a>
+    <a href="https://www.youtube.com/watch?v=6dYOrUgFCsc&t=164s">Video</a>
+    <p style="color:gray;">Najprej uredi zgornjo in spodnjo ploskev. Ni treba, da se robovi ujemajo.</p>
+    <p style="color:gray;">Ureditev zgornjih stranskih robov: <span style="color: MediumSeaGreen;">R U R' U' R + obrat levo + L' U' L U L'</span></p>
+    <p style="color:gray;">Ureditev sredinskih robov: <span style="color: MediumSeaGreen;">R U2 R U2 - nekajkrat</span> </p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>3x3x2: </a>
+    <a href="https://www.youtube.com/watch?v=4AY6KzAox9I">Video</a>
+    <p style="color:gray;">Placing first layer corners: <span style="color: MediumSeaGreen;">R U R U' R</span></p>
+    <p style="color:gray;">Top layer Corner Swap: <span style="color: MediumSeaGreen;">R U R U' R &nbsp; U' D R U' R U R (če sta učka, naj bosta na levi)</span></p>
+    <p style="color:gray;">Opposite center swap: <span style="color: MediumSeaGreen;">R U2 R U2 R</span></p>
+    <p style="color:gray;">Adjacent center swap: <span style="color: MediumSeaGreen;">R U R U &nbsp; R U2 R U2 &nbsp; R U R U' R (urejeno levo in zadaj)</span></p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>3x3x3 Redi Cube: </a>
+    <p style="color:gray;">Najprej pravilno orientiraj bele vogale. Sestavi belo. Orientiraj rumene vogale. Reši 2 layer in na koncu še celotno rumeno ploskev.</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Dino Cube: </a>
+    <p style="color:gray;">1. Sestavi pravilno orientirano belo ploskev.</p>
+    <p style="color:gray;">2. Belo ploskev imej spodaj. Na pravo mesto postavi vse navpične koščke (oranžna-zelena, zelena-rdeča, rdeča-modra, modra-oranžna.</p>
+    <p style="color:gray;">3. Sestavi rumeno. Če je ena zgornja ploskev že na pravem mestu, jo daj zadej in naredi sladge hammer (levi ali desni; začni s tisto stranjo, ki mora iti na sprednjo stran).</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Ivy Cube: </a>
+    <p style="color:gray;">1. Sestavi belo ploskev.</p>
+    <p style="color:gray;">2. Sestavi rumeno ploskev.</p>
+    <p style="color:gray;">3. Belo in rumeno ploskev postavi na levo in desno stran.</p>
+    <p style="color:gray;">4. Če je še tretja ploskev že sestavljena, jo obrni navzdol.</p>
+    <p style="color:gray;">5. Sestavi tisto barvo, ki sta na sprednji in zadnji strani. Vse ostale se rešijo same.</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Super Ivy Cube: </a>
+    <p style="color:gray;">1. Reši vse robove (kot Dino Cube).</p>
+    <p style="color:gray;">2. Reši vse centre, da se ujemajo z robovi. Kocko obrni tako, da spredaj vidiš dve ploskvi. Tri centre, ki se vidijo se zarotirajo. Tisti center, ki ga hoče prenesti na vrh naj bo levo ali desno. Narediš sladge hammer (R↑ L↑ R↓ L↓ ali L↑ R↑ L↓ R↓), začneš s tisto stranjo, kjer je opazovani center.</p>
+    <p style="color:gray;">3. Rešimo stranske centre ... <še v raziskovanju> ... R↑ L↑ R↓ L↓ obrneš kocko (tisto barvo, katera mora iti na vrh zarotiraš na vrh) in narediš še L↑ R↑ L↓ R↓</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Skewb: </a>
+    <p style="color:gray;">1. Sestavi belo. Naj se robovi ujemajo.</p>
+    <p style="color:gray;">2. Belo daš na dno. Sestaviš rumene robove. Uporabi sladge hammer. Če imaš ob strani dve vzporedni rumeni, jih pred tem daj na desno stran.</p>
+    <p style="color:gray;">3. Uredi rumen center. Rumen center naj bo zadaj. Naredi sladge hammer, zarotiraj kocko za 180 stopinj, da bo rumen center spredaj in naredi še en sladge hammer.</p>
+    <p style="color:gray;">4. Sestavljeno belo in rumeno daj na levo in desno stran. Center neke barve urediš, kot si prej za rumeno.</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Skewb Xtreme: </a>
+    <p style="color:gray;">Sestavi navadno skewb. Če se ujema samo ena sredina, jo daš zadaj-spodaj. Narediš 6x sladge hammer. Kocka je sestavljena.</p>
+    <p style="color:gray;">Če se ujema v krogu, naj se ujema v vodoravni smeri. Narediš 6x sladge hammer. Ponavljaj, dokler ne dobiš prvo kombinacijo, ki se reši z 6x sladge hammer.</p>
+  </td> 
+</tr>
+
+<tr><td><br/><hr/><br/></td></tr>
+
+<tr>
+  <td>
+    <a>Clock: </a>
+    <p style="color:gray;">Ko vrtiš, mora biti tisti pin gor.</p>
+    <p style="color:gray;">1. Sestavi križ in obrni.</p>
+    <p style="color:gray;">2. Na drugi strani tud sestavi križ.</p>
+    <p style="color:gray;">3. Reši še vogale. En pin daš dol, ostale vrtiš, da izenačiš.</p>
+  </td> 
+</tr>
+
+
+<tr><td>&nbsp;</td></tr>
+
+</table>
+
+</body>
+</html>

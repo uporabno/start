@@ -1,0 +1,137 @@
+﻿table {
+    font-size: 20pt;
+} 
+
+a {
+    text-decoration: none;
+    color: silver;
+    font-family: Calibri,Candara,Segoe,Segoe UI,Optima,Arial,sans-serif;
+}
+
+#content{
+    position: relative;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 400px;
+    font-size: 16pt;
+}
+
+.element{
+    float: left;
+    width: 172px;
+    height: 162px;
+    background-color: #1C1C1C;
+    margin: 10px;
+    padding-top: 20px;
+    text-align: center;
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    box-shadow: #2C2C2C 6px 6px 2px;
+}
+
+.element_2w{
+    float: left;
+    width: 364px;
+    height: 162px;
+    background-color: #1C1C1C;
+    margin: 10px;
+    padding-top: 20px;
+    text-align: center;
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    box-shadow: #2C2C2C 6px 6px 2px;
+}
+
+.element_3w{
+    float: left;
+    width: 556px;
+    height: 162px;
+    background-color: #1C1C1C;
+    margin: 10px;
+    padding-top: 20px;
+    text-align: center;
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-top-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    box-shadow: #2C2C2C 6px 6px 2px;
+}
+
+.element_empty{
+    float: left;
+    width: 172px;
+    height: 162px;
+    margin: 10px;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.text_center{
+    line-height: 152px;
+}
+
+.rdeca{
+    background-color: #61210B;
+    box-shadow: #71311B 6px 6px 2px;
+}
+
+.modra{
+    background-color: #0B2161;
+    box-shadow: #1B3171 6px 6px 2px;
+}
+
+.zelena{
+    background-color: #004400;
+    box-shadow: #003300 6px 6px 2px;
+}
+
+.rumena{
+    background-color: #996633;
+    box-shadow: #885522 6px 6px 2px;
+}
+
+.vijola{
+    background-color: #550088;
+    box-shadow: #440077 6px 6px 2px;
+}
+
+.clear{
+    clear: both;
+}
+
+<!-- 
+.font_em1{
+    line-height: 28px;
+    margin: 0;
+}
+
+.font_em2{
+    line-height: 42px;
+    margin: 0;
+    margin-bottom:3px;
+    font-size:2em;
+}
+-->
+
+
+input[type='search'] {
+  background: white url(search-icon-16.png) no-repeat ;
+  background-position: 150 50%;
+}
+input[type='search']:focus {
+  background-image: none;
+}
+
+<!-- best blue background: #182A47 -->
+<!-- best blue shadow: #283A57 -->
+
+<!-- best background: #1C1C1C -->
+<!-- best shadow: #2C2C2C -->
+
+<!-- best braun background: #61210B -->
+<!-- best braun shadow: #71311B -->
