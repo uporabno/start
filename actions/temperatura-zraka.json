@@ -13,5 +13,20 @@
         "Značenje boje": "tlak raste"
       }
     }
+  },
+  {
+    "datum": "2026-09-10",
+    "ura": "17:05",
+    "postaje": {
+      "crvena boja teksta": {
+        "Značenje boje": "tlak pada"
+      },
+      "crna boja teksta": {
+        "Značenje boje": "tlak se ne mijenja"
+      },
+      "plava boja teksta": {
+        "Značenje boje": "tlak raste"
+      }
+    }
   }
 ]
