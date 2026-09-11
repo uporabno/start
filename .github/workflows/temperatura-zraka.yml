@@ -36,34 +36,56 @@ jobs:
           r.encoding = 'utf-8'
           soup = BeautifulSoup(r.text, 'html.parser')
 
-          # najdi vse tabele - vzemi zadnjo (detajlna)
+          # najdi tabelo s postajami - iščemo tabelo ki ima header z "temperatura"
           tables = soup.find_all('table')
-          table = tables[-1] if tables else tables[0]
+          table = None
+          temp_col = None
+          for t in tables:
+              rows = t.find_all('tr')
+              if not rows:
+                  continue
+              header_cells = rows[0].find_all(['th', 'td'])
+              stolpci = [h.get_text(strip=True).lower() for h in header_cells]
+              # poišči stolpec z temperaturo
+              for i, s in enumerate(stolpci):
+                  if 'temp' in s or s == 't':
+                      table = t
+                      temp_col = i  # indeks vključno s prvim stolpcem (ime postaje)
+                      break
+              if table is not None:
+                  break
+
+          if table is None:
+              print("NAPAKA: tabela s temperaturo ni najdena!")
+              exit(1)
+
           rows = table.find_all('tr')
+          print(f"Tabela najdena, stolpec temperature: {temp_col}, vrstic: {len(rows)}")
 
-          # header
-          header = rows[0].find_all(['th', 'td'])
-          stolpci = [h.get_text(strip=True) for h in header[1:]]
+          # besede ki nakazujejo da gre za legendo, ne postajo
+          LEGENDA_KLJUCNE = ['boja', 'znač', 'znac', 'legenda', 'color', 'colour']
 
-          # postaje
           postaje = {}
           for row in rows[1:]:
               cells = row.find_all(['td', 'th'])
-              if len(cells) < 2:
+              if len(cells) < temp_col + 1:
                   continue
               ime = cells[0].get_text(strip=True)
               if not ime:
                   continue
-              vrednosti = {}
-              for i, cell in enumerate(cells[1:]):
-                  if i < len(stolpci):
-                      val = cell.get_text(strip=True)
-                      # poskusi pretvoriti v število
-                      try:
-                          vrednosti[stolpci[i]] = float(val.replace(',', '.'))
-                      except:
-                          vrednosti[stolpci[i]] = val if val and val != '-' else None
-              postaje[ime] = vrednosti
+              # preskoči vrstice legende
+              ime_lower = ime.lower()
+              if any(k in ime_lower for k in LEGENDA_KLJUCNE):
+                  continue
+              # preskoči header vrstice (samo besede brez številk)
+              val_raw = cells[temp_col].get_text(strip=True)
+              if not val_raw or val_raw == '-':
+                  continue
+              try:
+                  temperatura = float(val_raw.replace(',', '.'))
+              except ValueError:
+                  continue  # ni številka → preskoči
+              postaje[ime] = temperatura
 
           nov_zapis = {
               'datum': danes,
