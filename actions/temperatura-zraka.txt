@@ -21,20 +21,15 @@ Podatki se NABIRAJO - vsak dan doda nov zapis (ne prepiše).
 
 VSEBINA JSON
 ------------
-Array zapisov, en element na dan:
+Array zapisov, en element na dan - samo temperature po krajih:
 [
   {
-    "datum": "2026-09-09",
-    "ura": "17:00",
+    "datum": "2026-09-10",
+    "ura": "17:05",
     "postaje": {
-      "Zagreb-Maksimir": {
-        "vjetar smjer": "S",
-        "vjetar brzina": 2.0,
-        "temperatura": 22.4,
-        "vlažnost": 65.0,
-        "tlak": 1013.2,
-        ...
-      },
+      "Zagreb-Maksimir": 22.4,
+      "Split": 28.1,
+      "Dubrovnik": 27.3,
       ...
     }
   },
@@ -46,8 +41,9 @@ POSTAJE (~50)
 Zagreb (3 lokacije), Rijeka, Split, Dubrovnik, Osijek, Zadar, Šibenik,
 Pula, Rovinj, Varaždin, Krapina, Karlovac, Gospić, Zavižan, in druge.
 
-STOLPCI V TABELI
-----------------
+STOLPCI V TABELI (vir)
+----------------------
 Ime postaje, smer vetra, hitrost vetra (m/s), temperatura zraka (°C),
-relativna vlažnost (%), zračni tlak (hPa), tendenco tlaka (hPa/3h),
+relativna vlažnost (%), zračni tlak (hPa), tendenca tlaka (hPa/3h),
 stanje vremena.
+→ V JSON se shrani SAMO temperatura zraka (°C) po postajah.
