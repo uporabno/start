@@ -32,6 +32,12 @@
     .extrasmallfontPcClass {
         font-size: 12px;
     }
+    .tecajifont {
+        font-size: 28px;
+    }
+    .tecajifontPcClass {
+        font-size: 21px;
+    }
 </style>
 
 </head>
@@ -79,6 +85,7 @@ onload="myOnLoad()">
         if (all[i].className == "mediumfont") all[i].className = "mediumfontPcClass";
         if (all[i].className == "smallfont") all[i].className = "smallfontPcClass";
         if (all[i].className == "extrasmallfont") all[i].className == "extrasmallfontPcClass";
+        if (all[i].className == "tecajifont") all[i].className = "tecajifontPcClass";
       }
     }
   }
@@ -165,7 +172,7 @@ onload="myOnLoad()">
 
 <tbody>
 <tr id="rowTecaji">
-  <td align="center" style="font-family:Calibri,Arial,sans-serif;font-size:21px;padding:6px 0 4px;line-height:1.6;">
+  <td align="center" class="tecajifont" style="font-family:Calibri,Arial,sans-serif;padding:6px 0 4px;line-height:1.6;">
     <span id="sKRKG" style="color:#666">KRKG…</span>
     &nbsp;<span style="color:#2a2a2a">|</span>&nbsp;
     <span id="sZVTG" style="color:#666">ZVTG…</span>
