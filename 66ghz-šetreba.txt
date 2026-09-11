@@ -14,6 +14,10 @@ pages/index.html:110
   <a href="https://gasilci.66ghz.com/jr">Gasilci Jr.</a>
   → ni lokalno
 
+data/lego/index.html
+  → start.66ghz.com/data/lego/index.html
+  → ni lokalno, source samo na strežniku
+
 ARHIVSKE DATOTEKE (pusti pri miru)
 -----------------------------------
 _navodila_/ljse.txt  → dokumentacija, ok
