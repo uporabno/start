@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor</title>
+  <link rel="icon" href="images/Editor.ico">
+  <link rel="stylesheet" href="editor.css">
+  <script src="ace/ace.min.js"></script>
+</head>
+<body>
+
+<!-- ===== MENIJSKA VRSTICA ===== -->
+<div class="menu-vrstica" id="menuVrstica">
+
+  <div class="menu-element">
+    <button class="menu-gumb" onclick="Menu_Preklopi('datoteka')">File</button>
+    <div class="menu-popup" id="menu-datoteka">
+      <div class="menu-postavka" onclick="Menu_File_New()"><img class="menu-ikona" src="images/tool - new.png" alt="" onerror="this.style.visibility='hidden'">New<span class="menu-bljuznica">Ctrl+N</span></div>
+      <div class="menu-postavka" onclick="Menu_File_Open()"><img class="menu-ikona" src="images/tool - open.png" alt="" onerror="this.style.visibility='hidden'">Open...<span class="menu-bljuznica">Ctrl+O</span></div>
+      <div class="menu-postavka" onclick="Menu_File_Save()"><img class="menu-ikona" src="images/tool - save.png" alt="" onerror="this.style.visibility='hidden'">Save<span class="menu-bljuznica">Ctrl+S</span></div>
+      <div class="menu-postavka" onclick="Menu_File_SaveAs()"><img class="menu-ikona" src="images/tool - save.png" alt="" onerror="this.style.visibility='hidden'">Save As...</div>
+      <div class="menu-locilo"></div>
+      <div class="menu-postavka" onclick="Menu_File_Exit()"><img class="menu-ikona" src="images/menu - exit.png" alt="" onerror="this.style.visibility='hidden'">Exit<span class="menu-bljuznica">Alt+F4</span></div>
+    </div>
+  </div>
+
+  <div class="menu-element">
+    <button class="menu-gumb" onclick="Menu_Preklopi('uredi')">Edit</button>
+    <div class="menu-popup" id="menu-uredi">
+      <div class="menu-postavka" onclick="Menu_Edit_Find()"><img class="menu-ikona" src="images/tool - find.png" alt="" onerror="this.style.visibility='hidden'">Find...<span class="menu-bljuznica">Ctrl+F</span></div>
+      <div class="menu-postavka" onclick="Menu_Edit_FindNext()"><img class="menu-ikona" src="images/tool - find next.png" alt="" onerror="this.style.visibility='hidden'">Find Next<span class="menu-bljuznica">F3</span></div>
+    </div>
+  </div>
+
+  <div class="menu-element">
+    <button class="menu-gumb" onclick="Menu_Preklopi('nastavitve')">Settings</button>
+    <div class="menu-popup" id="menu-nastavitve" style="min-width:160px">
+      <div class="menu-postavka" onclick="Menu_Settings_Font('Default')"><span class="menu-kljukica" id="pkDF"></span>Default</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Font('Courier New')"><span class="menu-kljukica" id="pkCN">•</span>Courier New</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Font('Fixedsys')"><span class="menu-kljukica" id="pkFS"></span>Fixedsys</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Font('Terminal')"><span class="menu-kljukica" id="pkTR"></span>Terminal</div>
+      <div class="menu-locilo"></div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(8)"><span class="menu-kljukica" id="pv8"></span>8</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(9)"><span class="menu-kljukica" id="pv9"></span>9</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(10)"><span class="menu-kljukica" id="pv10"></span>10</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(11)"><span class="menu-kljukica" id="pv11"></span>11</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(12)"><span class="menu-kljukica" id="pv12">•</span>12</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(14)"><span class="menu-kljukica" id="pv14"></span>14</div>
+      <div class="menu-postavka" onclick="Menu_Settings_Size(20)"><span class="menu-kljukica" id="pv20"></span>20</div>
+      <div class="menu-locilo"></div>
+      <div class="menu-postavka" onclick="Menu_Settings_WordWrap()"><span class="menu-kljukica" id="mkPrelopVrstic"></span>Word Wrap</div>
+      <div class="menu-postavka" onclick="Menu_Settings_AllowTabs()"><span class="menu-kljukica" id="mkDovoliZavihke"></span>Allow Tabs</div>
+      <div class="menu-locilo"></div>
+      <div class="menu-postavka" onclick="Menu_Settings_ShowPlugins()"><span class="menu-kljukica" id="mkPokaziVt">✓</span>Show Plugins</div>
+    </div>
+  </div>
+
+  <div class="menu-element">
+    <button class="menu-gumb" onclick="Menu_Preklopi('pomoc')">Help</button>
+    <div class="menu-popup" id="menu-pomoc">
+      <div class="menu-postavka" onclick="Menu_Help_About()"><img class="menu-ikona" src="images/menu - info.png" alt="" onerror="this.style.visibility='hidden'">About...</div>
+    </div>
+  </div>
+
+</div>
+
+
+
+<!-- ===== TELO ===== -->
+<div class="telo">
+
+  <!-- LEVI PANEL (orodja) -->
+  <div class="levi-panel" id="leviPanel">
+
+    <div class="orodja-zavihki">
+      <div class="orod-zavihek aktiven" id="ozt0" onclick="orodjeZavihek(0)"><img src="images/tool - settings.png" alt="">1</div>
+      <div class="orod-zavihek" id="ozt1" onclick="orodjeZavihek(1)"><img src="images/tool - settings.png" alt="">2</div>
+      <div class="orod-zavihek" id="ozt2" onclick="orodjeZavihek(2)"><img src="images/tool - settings.png" alt="">3</div>
+    </div>
+
+    <div class="orodja-vsebina">
+
+      <!-- TAB 1: Change Case, Replace, Add text, Padding, Sort/Move, Others -->
+      <div class="orod-tab aktiven" id="otab0">
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Change case</legend>
+          <div class="group-notranjost">
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkMale" value="male" checked><label for="crkMale">lower case</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkVelike" value="velike"><label for="crkVelike">UPPER CASE</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkStavek" value="stavek"><label for="crkStavek" style="color:#7a5c3a">Sentence case</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkKapital" value="kapital"><label for="crkKapital" style="color:#7a5c3a">Capitalized Case</label></div>
+            <div class="radio-vrstica" style="margin-top:5px"><input type="radio" name="crke" id="crkTitle" value="title"><label for="crkTitle" style="color:#7a5c3a">Title Case</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkCamel" value="camel"><label for="crkCamel">camelCase</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkPascal" value="pascal"><label for="crkPascal">PascalCase</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkSnake" value="snake"><label for="crkSnake">snake_case</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkScream" value="scream"><label for="crkScream" style="color:#7a5c3a">SCREAMING_SNAKE</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkKebab" value="kebab"><label for="crkKebab" style="color:#7a5c3a">kebab-case</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkTrain" value="train"><label for="crkTrain" style="color:#7a5c3a">Train-Case</label></div>
+            <div class="radio-vrstica" style="margin-top:5px"><input type="radio" name="crke" id="crkRandom" value="random"><label for="crkRandom" style="color:#7a5c3a">RaNDoM cASe</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkSQL" value="sql"><label for="crkSQL" style="color:#7a5c3a">SELECT id FROM t</label></div>
+            <div class="radio-vrstica"><input type="radio" name="crke" id="crkInvert" value="invert"><label for="crkInvert" style="color:#7a5c3a">iNVERT cASE</label></div>
+            <div class="check-vrstica" style="padding-left:25%">
+              <input type="checkbox" id="crkSamoIzbor">
+              <label for="crkSamoIzbor">Selected only</label>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_ChangeCase_Convert()"><img src="images/tool - btn-case.png" alt="">Convert</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Replace</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn" style="width:30px">What:</span>
+              <input id="repKaj" class="vhod-polje" type="text">
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn" style="width:30px">With:</span>
+              <input id="repZ" class="vhod-polje" type="text">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Replace_Replace()"><img src="images/tool - btn-replace.png" alt="">Replace</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Add text in all lines</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn" style="width:30px">Begin:</span>
+              <input id="dodajZac" class="vhod-polje" type="text">
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn" style="width:30px">End:</span>
+              <input id="dodajKon" class="vhod-polje" type="text">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_AddText_Add()"><img src="images/tool - btn-add.png" alt="">Add</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Padding</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn" style="width:30px">Char:</span>
+              <input id="padZnak" class="vhod-polje vhod-polje-majhno" type="text" value=" " maxlength="1" style="width:20px">
+              <span class="vhod-ozn">Len:</span>
+              <input id="padDolz" class="vhod-polje" type="text" value="10">
+            </div>
+            <div class="check-vrstica">
+              <input type="checkbox" id="padRezanje">
+              <label for="padRezanje">Cut if line is too long</label>
+            </div>
+            <div class="gumb-vrstica" style="display:flex;gap:0">
+              <button class="gumb" style="flex:1" onclick="Tools_Padding_LPad()">LPad<img src="images/tool - pad-l.png" alt=""></button>
+              <button class="gumb" style="flex:1" onclick="Tools_Padding_RPad()"><img src="images/tool - pad-r.png" alt="">RPad</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Others</legend>
+          <div class="group-notranjost">
+            <div class="gumb-vrstica" style="margin-top:0">
+              <button class="gumb gumb-blok" onclick="Tools_Others_Text1Text2()" title="Concat T0+T1 per line"><img src="images/tool - btn-concat12.png" alt="">Text 1 + Text 2</button>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Others_Text2Text1()" title="Concat T1+T0 per line"><img src="images/tool - btn-concat21.png" alt="">Text 2 + Text 1</button>
+            </div>
+            <div class="gumb-vrstica" style="display:flex;gap:2px">
+              <button class="gumb gumb-mali" style="flex:1;padding:1px 2px;display:flex;justify-content:center;align-items:center" onclick="Tools_Others_Copy0to1()" title="Copy T0 → T1"><img src="images/tool - t0-t1.png" alt=""></button>
+              <button class="gumb gumb-mali" style="flex:1;padding:1px 2px;display:flex;justify-content:center;align-items:center" onclick="Tools_Others_Copy0to2()" title="Copy T0 → T2"><img src="images/tool - t0-t2.png" alt=""></button>
+              <button class="gumb gumb-mali" style="flex:1;padding:1px 2px;display:flex;justify-content:center;align-items:center" onclick="Tools_Others_Copy1to0()" title="Copy T1 → T0"><img src="images/tool - t1-t0.png" alt=""></button>
+              <button class="gumb gumb-mali" style="flex:1;padding:1px 2px;display:flex;justify-content:center;align-items:center" onclick="Tools_Others_Copy2to0()" title="Copy T2 → T0"><img src="images/tool - t2-t0.png" alt=""></button>
+            </div>
+            <hr class="bevel-hr">
+            <div class="gumb-vrstica" style="display:flex;align-items:center;gap:0">
+              <div style="flex:1;display:flex;align-items:center;justify-content:flex-end;gap:4px;padding-right:4px">
+                <input type="checkbox" id="sortAsc" checked>
+                <label for="sortAsc" style="font-size:var(--vel-ui)">Asc</label>
+              </div>
+              <button class="gumb" style="width:50%" onclick="Tools_Others_Sort()"><img src="images/tool - sort.png" alt="">Sort</button>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Others_Reverse()"><img src="images/tool - order - reverse.png" alt="">Reverse order</button>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Others_Random()"><img src="images/tool - order - random.png" alt="">Random order</button>
+            </div>
+            <hr class="bevel-hr">
+            <div class="gumb-vrstica" style="display:flex;gap:0">
+              <button class="gumb gumb-mali" style="flex:1" onclick="Tools_Others_MoveLeft()"><img src="images/tool - move left.png" alt="">Move</button>
+              <button class="gumb gumb-mali" style="flex:1" onclick="Tools_Others_MoveRight()"><img src="images/tool - move right.png" alt="">Move</button>
+            </div>
+            <div class="gumb-vrstica" style="display:flex;gap:0;flex-wrap:nowrap">
+              <button class="gumb" style="flex:1;min-width:0" onclick="Tools_Others_Clear()"><img src="images/tool - clear.png" alt="">Clear</button>
+              <button class="gumb" style="flex:1;min-width:0" onclick="Menu_File_Undo()"><img src="images/tool - btn-undo.png" alt="">Undo</button>
+            </div>
+          </div>
+        </fieldset>
+
+      </div><!-- /otab0 -->
+
+      <!-- TAB 2: Cut, Trim+CutByChar, Add line numbers -->
+      <div class="orod-tab" id="otab1">
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Cut</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Left:</span>
+              <input id="rezLevo" class="vhod-polje vhod-polje-majhno" type="text" value="0" style="width:28px">
+              <span class="vhod-ozn">Right:</span>
+              <input id="rezDesno" class="vhod-polje vhod-polje-majhno" type="text" value="0" style="width:28px">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Cut_CutXChars()"><img src="images/tool - cut-3.png" alt="">Cut x chars</button>
+            </div>
+            <hr class="bevel-hr">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Char:</span>
+              <input id="rezZnak" class="vhod-polje vhod-polje-majhno" type="text" maxlength="1" placeholder="(char)">
+            </div>
+            <div class="radio-vrstica"><input type="radio" name="rezCut" id="rezCutL" value="L" checked><label for="rezCutL">Keep left side</label></div>
+            <div class="radio-vrstica"><input type="radio" name="rezCut" id="rezCutR" value="R"><label for="rezCutR">Keep right side</label></div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Cut_CutByChar()"><img src="images/tool - cut-c.png" alt="">Cut by char</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Trim</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Char:</span>
+              <input id="trimZnak" class="vhod-polje" type="text" placeholder="(space)">
+            </div>
+            <div class="gumb-vrstica" style="display:flex;gap:0;flex-wrap:nowrap">
+              <button class="gumb" style="flex:1;min-width:0" onclick="Tools_Trim_TrimL()"><img src="images/tool - trim-l.png" alt="">TrimL</button>
+              <button class="gumb" style="flex:1;min-width:0" onclick="Tools_Trim_TrimR()"><img src="images/tool - trim-r.png" alt="">TrimR</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Others 2</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica" style="margin-top:0">
+              <span class="vhod-ozn">Start:</span>
+              <input id="stevilkeStart" class="vhod-polje vhod-polje-majhno" type="text" value="1" style="width:28px">
+              <span class="vhod-ozn">Step:</span>
+              <input id="stevilkeKorak" class="vhod-polje vhod-polje-majhno" type="text" value="1" style="width:28px">
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Digit:</span>
+              <input id="stevilkeCifre" class="vhod-polje vhod-polje-majhno" type="text" value="4" style="width:20px">
+              <span class="vhod-ozn"># lines:</span>
+              <input id="stevilkeVrstice" class="vhod-polje vhod-polje-majhno" type="text" value="0" min="0" style="width:28px">
+            </div>
+            <div class="check-vrstica">
+              <input type="checkbox" id="stevilkeVse" checked>
+              <label for="stevilkeVse"># lines = all lines</label>
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Text after:</span>
+              <input id="stevilkeZa" class="vhod-polje" type="text" value=". ">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_Others2_AddNumbers()"><img src="images/tool - lines add numbers.png" alt="">Add numbers</button>
+            </div>
+          </div>
+        </fieldset>
+
+      </div><!-- /otab1 -->
+
+      <!-- TAB 3: Concat, Break, Add lines, Delete lines, Multiply -->
+      <div class="orod-tab" id="otab2">
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Concatenate lines</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Num of lines:</span>
+              <input id="concatN" class="vhod-polje" type="text" value="2">
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Max length:</span>
+              <input id="concatMaxDolz" class="vhod-polje" type="text" value="0">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_ConcatLines_Concatenate()"><img src="images/tool - lines concat.png" alt="">Concatenate</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Break lines</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Max length:</span>
+              <input id="breakMaxDolz" class="vhod-polje" type="text" value="80">
+            </div>
+            <div class="check-vrstica" style="justify-content:flex-end">
+              <input type="checkbox" id="breakCelebesede" checked>
+              <label for="breakCelebesede">Whole words</label>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_BreakLines_BreakByLength()"><img src="images/tool - lines break1.png" alt="">Break by length</button>
+            </div>
+            <hr class="bevel-hr">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Char:</span>
+              <input id="breakZnak" class="vhod-polje vhod-polje-majhno" type="text" placeholder="(char)" style="width:28px">
+              <input type="checkbox" id="breakTrim" style="margin-left:4px">
+              <label for="breakTrim" style="font-size:var(--vel-ui)">Trim</label>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_BreakLines_BreakByChar()"><img src="images/tool - lines break2.png" alt="">Break by char</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Add lines</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Start:</span>
+              <input id="addVrStart" class="vhod-polje vhod-polje-majhno" type="text" value="2" min="1" style="width:28px">
+              <span class="vhod-ozn">Step:</span>
+              <input id="addVrKorak" class="vhod-polje vhod-polje-majhno" type="text" value="2" min="2" style="width:28px">
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Line:</span>
+              <input id="addVrVrstica" class="vhod-polje" type="text">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_AddLines_AddLines()"><img src="images/tool - lines add.png" alt="">Add lines</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Delete lines</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Start:</span>
+              <input id="brisZacni" class="vhod-polje vhod-polje-majhno" type="text" value="1" min="1" style="width:28px">
+              <span class="vhod-ozn">Step:</span>
+              <input id="brisKorak" class="vhod-polje vhod-polje-majhno" type="text" value="2" min="2" style="width:28px">
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_DeleteLines_DeleteNth()"><img src="images/tool - lines delete 1.png" alt="">Delete lines</button>
+            </div>
+            <hr class="bevel-hr">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Substing:</span>
+              <input id="brisNiz" class="vhod-polje" type="text" placeholder="(contains)">
+            </div>
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">Position:</span>
+              <input id="brisPozicija" class="vhod-polje vhod-polje-majhno" type="text" value="1" min="1">
+            </div>
+            <div class="check-vrstica">
+              <input type="checkbox" id="brisPrazne">
+              <label for="brisPrazne">Delete empty lines</label>
+            </div>
+            <div class="check-vrstica">
+              <input type="checkbox" id="brisInvert">
+              <label for="brisInvert">Invert condition</label>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_DeleteLines_DeleteByPos()"><img src="images/tool - lines delete 2.png" alt="">Delete lines</button>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" style="font-size:10px" onclick="Tools_DeleteLines_DeleteEmpty()"><img src="images/tool - lines delete 3.png" alt="">Delete empty lines</button>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="group-box">
+          <legend class="group-box-naslov">Multiply lines</legend>
+          <div class="group-notranjost">
+            <div class="vhod-vrstica">
+              <span class="vhod-ozn">N:</span>
+              <input id="multN" class="vhod-polje vhod-polje-majhno" type="text" value="2" min="1">
+            </div>
+            <div class="check-vrstica">
+              <input type="checkbox" id="multOhrani">
+              <label for="multOhrani">Keep originals</label>
+            </div>
+            <div class="gumb-vrstica">
+              <button class="gumb gumb-blok" onclick="Tools_MultiplyLines_Multiply()"><img src="images/tool - multiply.png" alt="">Multiply</button>
+            </div>
+          </div>
+        </fieldset>
+
+      </div><!-- /otab2 -->
+
+    </div><!-- /orodja-vsebina -->
+
+  </div><!-- /levi-panel -->
+
+  <!-- SREDNJI PANEL (vtičniki) -->
+  <div class="srednji-panel" id="srednjiPanel">
+
+    <div class="vt-naslov">
+      <div class="vt-zavihek">
+        <img src="images/tool - compile.png" alt="" style="width:16px;height:16px;image-rendering:pixelated;vertical-align:middle"> Plugins
+      </div>
+    </div>
+
+    <div class="vt-vsebina">
+      <div class="vt-gumbi">
+        <input id="vtFilter" class="vt-filter" type="text" placeholder="Search..." oninput="vtFiltruj(this.value)" style="flex:1;min-width:0">
+        <button class="gumb gumb-mali" onclick="vtZazeni()">
+          <img src="images/tool - compile.png" alt="" style="width:16px;height:16px;image-rendering:pixelated"> Run
+        </button>
+      </div>
+      <div id="vtSeznam" class="vt-seznam" tabindex="0"></div>
+      <div id="vtPredogled" class="vt-predogled"></div>
+    </div>
+
+  </div><!-- /srednji-panel -->
+
+  <!-- DESNI PANEL (tekst areji) -->
+  <div class="desni-panel">
+
+    <div class="zavihki-pas">
+      <div class="zavihek aktiven" id="ztab-tekst1" onclick="zavihekTekst('tekst1')">
+        <img src="images/tool - tab - t1.png" alt="">Text 1
+      </div>
+      <div class="zavihek" id="ztab-tekst2" onclick="zavihekTekst('tekst2')">
+        <img src="images/tool - tab - t2.png" alt="">Text 2
+      </div>
+      <div class="zavihek" id="ztab-tekst12" onclick="zavihekTekst('tekst12')">
+        <img src="images/tool - tab - t12.png" alt="">Text 1 &amp; 2
+      </div>
+      <div class="zavihek" id="ztab-tekst0" onclick="zavihekTekst('tekst0')">
+        <img src="images/tool - tab - t0.png" alt="">Text 0
+      </div>
+      <div class="zavihek" id="ztab-undo" onclick="zavihekTekst('undo')">
+        <img src="images/tool - tab - u.png" alt="">Undo texts
+      </div>
+    </div>
+
+    <!-- Text 0 -->
+    <div class="zavihek-vsebina" id="zvsb-tekst0">
+      <div class="tekst-okvir" id="ace-wrap0"></div>
+    </div>
+    <!-- Text 1 -->
+    <div class="zavihek-vsebina aktiven" id="zvsb-tekst1">
+      <div class="tekst-okvir" id="ace-wrap1"></div>
+    </div>
+    <!-- Text 2 -->
+    <div class="zavihek-vsebina" id="zvsb-tekst2">
+      <div class="tekst-okvir" id="ace-wrap2"></div>
+    </div>
+    <!-- Text 1 & 2 -->
+    <div class="zavihek-vsebina" id="zvsb-tekst12">
+      <div class="undo-okvir">
+        <div class="undo-en" id="t12blok1">
+          <div class="undo-ozn">Text 1:</div>
+          <div class="tekst-okvir" id="ace12-wrap1"></div>
+        </div>
+        <div class="undo-en tekst12-neaktiven" id="t12blok2">
+          <div class="undo-ozn">Text 2:</div>
+          <div class="tekst-okvir" id="ace12-wrap2"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Undo -->
+    <div class="zavihek-vsebina" id="zvsb-undo">
+      <div class="undo-okvir">
+        <div class="undo-en"><div class="undo-ozn">Undo text 0:</div><textarea class="undo-polje" id="undo0" readonly></textarea></div>
+        <div class="undo-en"><div class="undo-ozn">Undo text 1:</div><textarea class="undo-polje" id="undo1" readonly></textarea></div>
+        <div class="undo-en"><div class="undo-ozn">Undo text 2:</div><textarea class="undo-polje" id="undo2" readonly></textarea></div>
+      </div>
+    </div>
+
+  </div><!-- /desni-panel -->
+
+</div><!-- /telo -->
+
+<!-- ===== STATUS VRSTICA ===== -->
+<div class="status-vrstica">
+  <div class="st-levi">Editor — Copyright © 2001, 2004-2026 Tauko</div>
+  <div class="st-desni">
+    <div class="st-del" style="white-space:nowrap">Active: <span class="st-val" id="stAkt12Val" style="color:#0055cc">Text 1</span></div>
+    <div class="st-del">Line: <span class="st-val" id="stVrs">1</span></div>
+    <div class="st-del">Col: <span class="st-val" id="stStol">1</span></div>
+    <div class="st-del">Lines: <span class="st-val" id="stSkup">0</span></div>
+  </div>
+</div>
+
+<!-- Modal dialog -->
+<div id="modal-overlay" class="modal-overlay" style="display:none" onmousedown="if(event.target===this)modalZapri(null)">
+  <div class="modal-okno">
+    <div class="modal-naslov" id="modal-naslov">
+      <span id="modal-naslov-txt">Vnos</span>
+      <button class="modal-x" onclick="modalZapri(null)" tabindex="-1">✕</button>
+    </div>
+    <div class="modal-vsebina">
+      <div id="modal-sporocilo" class="modal-sporocilo"></div>
+      <input id="modal-input" class="modal-input" type="text">
+      <div class="modal-gumbi">
+        <button class="modal-gumb modal-gumb-ok" id="modal-ok">OK</button>
+        <button class="modal-gumb" id="modal-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Obvestila -->
+<div id="obvestila"></div>
+<!-- File input -->
+<input type="file" id="datVhod" style="display:none" onchange="Menu_File_DatOdpri(this)">
+
+<script src="menu.js"></script>
+<script src="editor.js"></script>
+<script src="tools.js"></script>
+<script src="plugins.js"></script>
+</body>
+</html>
