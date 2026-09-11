@@ -1,0 +1,17 @@
+[
+  {
+    "datum": "2026-09-11",
+    "ura": "12:16",
+    "postaje": {
+      "crvena boja teksta": {
+        "Značenje boje": "tlak pada"
+      },
+      "crna boja teksta": {
+        "Značenje boje": "tlak se ne mijenja"
+      },
+      "plava boja teksta": {
+        "Značenje boje": "tlak raste"
+      }
+    }
+  }
+]
