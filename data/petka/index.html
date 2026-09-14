@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Petka pomočnik</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body {
+      background: #121213; color: #fff;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      min-height: 100dvh;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 16px 12px 32px;
+    }
+    h1 { font-size: 1.4rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 4px; }
+    .subtitle { font-size: 0.75rem; color: #818384; margin-bottom: 20px; text-align: center; }
+    .grid { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 340px; }
+    .row { display: flex; gap: 6px; align-items: stretch; }
+    .row-wrapper { position: relative; display: flex; gap: 6px; flex: 1; }
+    .cell {
+      flex: 1; aspect-ratio: 1; border: 2px solid #3a3a3c; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.5rem; font-weight: 700; text-transform: uppercase;
+      cursor: pointer; user-select: none; background: #121213; color: #fff;
+      transition: background 0.12s, border-color 0.12s;
+    }
+    .cell[data-color="gray"]   { background: #3a3a3c; border-color: #3a3a3c; }
+    .cell[data-color="yellow"] { background: #b59f3b; border-color: #b59f3b; }
+    .cell[data-color="green"]  { background: #538d4e; border-color: #538d4e; }
+    .row-input { position: absolute; opacity: 0; pointer-events: none; width: 1px; height: 1px; }
+    .clear-btn {
+      width: 40px; background: #3a3a3c; border: none; border-radius: 6px;
+      color: #818384; font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.12s;
+    }
+    .clear-btn:active { background: #555; }
+    .legend { display: flex; gap: 14px; margin-top: 18px; align-items: center; flex-wrap: wrap; justify-content: center; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 0.72rem; color: #818384; }
+    .legend-dot { width: 16px; height: 16px; border-radius: 3px; }
+    .legend-dot.gray   { background: #3a3a3c; }
+    .legend-dot.yellow { background: #b59f3b; }
+    .legend-dot.green  { background: #538d4e; }
+    .hint { margin-top: 8px; font-size: 0.68rem; color: #444; text-align: center; }
+    .btn-suggest {
+      margin-top: 22px; width: 100%; max-width: 340px; padding: 14px;
+      background: #538d4e; color: #fff; border: none; border-radius: 8px;
+      font-size: 1rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-suggest:active { background: #3d6e39; }
+    #rezultati { width: 100%; max-width: 340px; margin-top: 18px; }
+    .rez-section { margin-bottom: 16px; }
+    .rez-title {
+      font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.12em;
+      color: #818384; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .rez-count { font-size: 0.75rem; color: #538d4e; font-weight: 700; }
+    .besede-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+    .beseda {
+      background: #1a1a1b; border: 1px solid #3a3a3c; border-radius: 5px;
+      padding: 5px 9px; font-size: 0.85rem; font-weight: 600;
+      letter-spacing: 0.05em; text-transform: uppercase; color: #e0e0e0;
+    }
+    .beseda.pogosta { border-color: #538d4e55; color: #fff; }
+    .rez-empty { color: #555; font-size: 0.85rem; text-align: center; padding: 12px 0; }
+    .btn-vec {
+      background: none; border: 1px solid #3a3a3c; color: #818384;
+      border-radius: 5px; padding: 5px 12px; font-size: 0.7rem;
+      cursor: pointer; margin-top: 8px;
+    }
+    .btn-vec:active { background: #2a2a2c; }
+  </style>
+</head>
+<body>
+
+<h1>Petka</h1>
+<p class="subtitle">Vnesi ugibanja in označi barve</p>
+
+<div class="grid" id="grid"></div>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot gray"></div>Ni v besedi</div>
+  <div class="legend-item"><div class="legend-dot yellow"></div>Napačno mesto</div>
+  <div class="legend-item"><div class="legend-dot green"></div>Pravilno</div>
+</div>
+<p class="hint">Tipkaj v vrstici · tapni črko za barvo</p>
+
+<button class="btn-suggest" onclick="predlagaj()">Predlagaj besede</button>
+
+<div id="rezultati"></div>
+
+<script src="besede5-pogoste.js"></script>
+<script src="besede5-redke.js"></script>
+<script>
+  const ROWS = 5, COLS = 5;
+  const COLORS = [null, 'gray', 'yellow', 'green'];
+
+  const bPogoste = new Set(POGOSTE);
+  const bVse = POGOSTE.concat(REDKE);
+
+  const state = Array.from({length: ROWS}, () =>
+    Array.from({length: COLS}, () => ({ letter: '', colorIdx: 0 }))
+  );
+
+  function buildGrid() {
+    const grid = document.getElementById('grid');
+    for (let r = 0; r < ROWS; r++) {
+      const row = document.createElement('div');
+      row.className = 'row';
+      const wrapper = document.createElement('div');
+      wrapper.className = 'row-wrapper';
+
+      for (let c = 0; c < COLS; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.row = r; cell.dataset.col = c; cell.dataset.color = '';
+        cell.addEventListener('click', e => {
+          if (state[r][c].letter) {
+            state[r][c].colorIdx = state[r][c].colorIdx % (COLORS.length - 1) + 1;
+            renderCell(r, c);
+          } else {
+            document.getElementById('inp-' + r).focus();
+          }
+          e.stopPropagation();
+        });
+        wrapper.appendChild(cell);
+      }
+
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.id = 'inp-' + r; inp.className = 'row-input';
+      inp.autocomplete = 'off'; inp.autocorrect = 'off';
+      inp.autocapitalize = 'characters'; inp.spellcheck = false;
+      inp.setAttribute('inputmode', 'text');
+      inp.addEventListener('input', () => handleInput(r, inp));
+      inp.addEventListener('keydown', e => handleKey(r, e, inp));
+      wrapper.appendChild(inp);
+      wrapper.addEventListener('click', () => document.getElementById('inp-' + r).focus());
+
+      const clr = document.createElement('button');
+      clr.className = 'clear-btn'; clr.innerHTML = '✕';
+      clr.addEventListener('click', e => { clearRow(r); e.stopPropagation(); });
+
+      row.appendChild(wrapper); row.appendChild(clr);
+      grid.appendChild(row);
+    }
+  }
+
+  function renderCell(r, c) {
+    const el = document.querySelector('.cell[data-row="' + r + '"][data-col="' + c + '"]');
+    const s = state[r][c];
+    el.textContent = s.letter;
+    el.setAttribute('data-color', COLORS[s.colorIdx] ?? '');
+  }
+
+  function handleInput(r, inp) {
+    let val = inp.value.replace(/[^a-zA-ZčšžČŠŽćđČĆĐ]/g, '').toUpperCase();
+    if (val.length > COLS) val = val.slice(0, COLS);
+    if (inp.value !== val) {
+      inp.value = val;
+      inp.setSelectionRange(val.length, val.length);
+    }
+    for (let c = 0; c < COLS; c++) {
+      const ch = val[c] ?? '';
+      if (ch !== state[r][c].letter) {
+        state[r][c].letter = ch;
+        if (!ch) state[r][c].colorIdx = 0;
+        else if (state[r][c].colorIdx === 0) state[r][c].colorIdx = 1;
+        renderCell(r, c);
+      }
+    }
+    for (let c = val.length; c < COLS; c++) {
+      state[r][c] = { letter: '', colorIdx: 0 };
+      renderCell(r, c);
+    }
+  }
+
+  function handleKey(r, e, inp) {
+    if (e.key === 'Enter' && r < ROWS - 1) document.getElementById('inp-' + (r+1)).focus();
+    if (e.key === 'Backspace' && inp.value === '' && r > 0) document.getElementById('inp-' + (r-1)).focus();
+  }
+
+  function clearRow(r) {
+    for (let c = 0; c < COLS; c++) {
+      state[r][c] = { letter: '', colorIdx: 0 };
+      renderCell(r, c);
+    }
+    const inp = document.getElementById('inp-' + r);
+    inp.value = ''; inp.focus();
+  }
+
+  function ustrezaBeseda(word) {
+    for (let r = 0; r < ROWS; r++) {
+      const row = state[r];
+      if (row.every(c => !c.letter)) continue;
+
+      for (let c = 0; c < COLS; c++) {
+        if (row[c].colorIdx === 3 && word[c] !== row[c].letter) return false;
+      }
+      for (let c = 0; c < COLS; c++) {
+        if (row[c].colorIdx === 2) {
+          if (!word.includes(row[c].letter)) return false;
+          if (word[c] === row[c].letter) return false;
+        }
+      }
+
+      const info = {};
+      for (let c = 0; c < COLS; c++) {
+        const { letter, colorIdx } = row[c];
+        if (!letter) continue;
+        if (!info[letter]) info[letter] = { g: 0, y: 0, gray: 0 };
+        if (colorIdx === 3) info[letter].g++;
+        else if (colorIdx === 2) info[letter].y++;
+        else if (colorIdx === 1) info[letter].gray++;
+      }
+      for (const [letter, d] of Object.entries(info)) {
+        const min = d.g + d.y;
+        const cnt = [...word].filter(ch => ch === letter).length;
+        if (d.gray > 0) {
+          if (min === 0 ? cnt > 0 : cnt !== min) return false;
+        } else {
+          if (cnt < min) return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  let zadnji = null;
+
+  function predlagaj() {
+    const ujemanje = bVse.filter(ustrezaBeseda);
+    const pogoste = ujemanje.filter(w => bPogoste.has(w));
+    const redke   = ujemanje.filter(w => !bPogoste.has(w));
+    zadnji = { pogoste, redke };
+    renderRezultati(false);
+  }
+
+  function renderRezultati(vse) {
+    const { pogoste, redke } = zadnji;
+    const div = document.getElementById('rezultati');
+    if (!pogoste.length && !redke.length) {
+      div.innerHTML = '<p class="rez-empty">Nobena beseda ne ustreza pogojem.</p>';
+      return;
+    }
+    const sekcija = (naslov, seznam, razred, limit) => {
+      if (!seznam.length) return '';
+      const prikaz = vse ? seznam : seznam.slice(0, limit);
+      const ostane = seznam.length - prikaz.length;
+      return '<div class="rez-section">'
+        + '<div class="rez-title">' + naslov + '<span class="rez-count">' + seznam.length + '</span></div>'
+        + '<div class="besede-grid">'
+        + prikaz.map(b => '<span class="beseda ' + razred + '">' + b + '</span>').join('')
+        + '</div>'
+        + (ostane > 0 ? '<button class="btn-vec" onclick="renderRezultati(true)">Prikaži vseh ' + seznam.length + '…</button>' : '')
+        + '</div>';
+    };
+    div.innerHTML = sekcija('Pogoste besede', pogoste, 'pogosta', 40)
+                  + sekcija('Redkejše besede', redke, '', 20);
+  }
+
+  buildGrid();
+</script>
+</body>
+</html>
