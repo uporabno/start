@@ -561,5 +561,24 @@
       "PrevlakaA": 22.7,
       "LastovoA": 22.1
     }
+  },
+  {
+    "datum": "2026-09-25",
+    "ura": "17:05",
+    "postaje": {
+      "Zagreb-Maksimir": 18.5,
+      "Zagreb-aerodrom": 19.0,
+      "Puntijarka (Medvednica)": 11.5,
+      "Varaždin": 18.2,
+      "Bilogora": 16.9,
+      "Gorice (kod Nove Gradiške)": 17.0,
+      "Slavonski Brod": 17.4,
+      "Osijek-Čepin": 18.2,
+      "Pula-aerodrom": 21.2,
+      "Rijeka-aerodrom": 20.9,
+      "Zadar-aerodrom": 20.5,
+      "Split-aerodrom": 22.0,
+      "Dubrovnik-aerodrom": 19.4
+    }
   }
 ]
