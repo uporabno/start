@@ -580,5 +580,45 @@
       "Split-aerodrom": 22.0,
       "Dubrovnik-aerodrom": 19.4
     }
+  },
+  {
+    "datum": "2026-09-26",
+    "ura": "17:04",
+    "postaje": {
+      "Zagreb-Maksimir": 21.2,
+      "Zagreb-aerodrom": 22.1,
+      "Puntijarka (Medvednica)": 15.4,
+      "Varaždin": 21.1,
+      "KriževciA": 20.0,
+      "Bilogora": 20.0,
+      "DaruvarA": 22.1,
+      "BjelovarA": 21.7,
+      "Gorice (kod Nove Gradiške)": 21.0,
+      "KutjevoA": 19.9,
+      "Slavonski Brod": 21.2,
+      "Osijek-Čepin": 21.5,
+      "GradišteA": 21.5,
+      "OgulinA": 18.9,
+      "NP Plitvička jezeraA": 17.9,
+      "GospićA": 19.2,
+      "Pula-aerodrom": 23.2,
+      "PorerA": 23.0,
+      "Sv. Ivan na pučiniA": 23.5,
+      "OpatijaA": 23.5,
+      "Rijeka-aerodrom": 22.9,
+      "MalinskaA": 22.6,
+      "CrikvenicaA": 24.3,
+      "RabA": 25.0,
+      "Zadar-aerodrom": 23.6,
+      "Veli RatA": 22.6,
+      "KninA": 23.8,
+      "ŠibenikA": 26.2,
+      "Split-aerodrom": 24.2,
+      "DubrovnikA": 25.3,
+      "Dubrovnik-aerodrom": 23.0,
+      "GrudaA": 22.7,
+      "PrevlakaA": 23.6,
+      "LastovoA": 21.9
+    }
   }
 ]
