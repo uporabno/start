@@ -1,15 +1,19 @@
 ﻿var portfelj = {
 "valute":[
-    {"lokacija":"Ledger Nano S",      "sort": "101", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.10769709551" ,  "znesek":"0.18"},
-    {"lokacija":"Ledger Nano S",      "sort": "102", "valuta":"ETH",   "povprecna_nabavna_cena": "1242.81780675864" ,  "znesek":"0.7"},
+    {"lokacija":"Ledger Nano S",      "sort": "101", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.63656310182" ,  "znesek":"0.18"},
+    {"lokacija":"Ledger Nano S",      "sort": "102", "valuta":"ETH",   "povprecna_nabavna_cena": "1272.30212831239" ,  "znesek":"0.7"},
     {"lokacija":"Ledger Nano S",      "sort": "103", "valuta":"XRP",   "povprecna_nabavna_cena": "0.817933500550229" ,  "znesek":"2.01110900000003"},
 
 
-    {"lokacija":"Bitstamp",      "sort": "201", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.10769709551" ,  "znesek":"0.055770396"},
-    {"lokacija":"Bitstamp",      "sort": "202", "valuta":"ETH",   "povprecna_nabavna_cena": "1242.81780675864" ,  "znesek":"0.84580984"},
- 
-    {"lokacija":"Bitstamp",      "sort": "298", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"0.00035"},
-    {"lokacija":"Bitstamp",      "sort": "299", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"-9999.99965"},
+    {"lokacija":"Bitstamp",      "sort": "201", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.63656310182" ,  "znesek":"0.055729226"},
+    {"lokacija":"Bitstamp",      "sort": "202", "valuta":"ETH",   "povprecna_nabavna_cena": "1272.30212831239" ,  "znesek":"0.808200352"},
+    {"lokacija":"Bitstamp",      "sort": "203", "valuta":"XRP",   "povprecna_nabavna_cena": "0.817933500550229" ,  "znesek":"7.7000072451483E-08"},
+
+    {"lokacija":"Bitstamp",      "sort": "205", "valuta":"ALGO",   "povprecna_nabavna_cena": "1.53505541683783" ,  "znesek":"13.028521173"},
+
+    {"lokacija":"Bitstamp",      "sort": "207", "valuta":"FLR",   "povprecna_nabavna_cena": "0" ,  "znesek":"249.0128"},
+    {"lokacija":"Bitstamp",      "sort": "298", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"0.00161599999999567"},
+    {"lokacija":"Bitstamp",      "sort": "299", "valuta":"EUR",   "povprecna_nabavna_cena": "" ,  "znesek":"-9999.998384"},
 
 
 
@@ -162,7 +166,7 @@
 
 
 
-    {"lokacija":"Kucoin",      "sort": "590", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.10769709551" ,  "znesek":"0"},
+    {"lokacija":"Kucoin",      "sort": "590", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.63656310182" ,  "znesek":"0"},
 
     {"lokacija":"Kucoin",      "sort": "592", "valuta":"XRP",   "povprecna_nabavna_cena": "0.817933500550229" ,  "znesek":"-6.79999999999997"},
     {"lokacija":"Kucoin",      "sort": "510", "valuta":"KCS",   "povprecna_nabavna_cena": "10.1637288351905" ,  "znesek":"0.224802038"},
@@ -211,7 +215,7 @@
 
 
 
-    {"lokacija":"Huobi",      "sort": "690", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.10769709551" ,  "znesek":"0.00000446"},
+    {"lokacija":"Huobi",      "sort": "690", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.63656310182" ,  "znesek":"0.00000446"},
 
 
 
@@ -234,9 +238,9 @@
     {"lokacija":"Revolut X",      "sort": "404", "valuta":"AAVE",   "povprecna_nabavna_cena": "12.6359177445349" ,  "znesek":"0.8627755"},
     {"lokacija":"Revolut X",      "sort": "405", "valuta":"AVAX",   "povprecna_nabavna_cena": "5.61221169559645" ,  "znesek":"10.372002823"},
     {"lokacija":"Revolut X",      "sort": "103", "valuta":"XRP",   "povprecna_nabavna_cena": "0.817933500550229" ,  "znesek":"1076.229469"},
-    {"lokacija":"Revolut X",      "sort": "102", "valuta":"ETH",   "povprecna_nabavna_cena": "1242.81780675864" ,  "znesek":"0.025928263"},
+    {"lokacija":"Revolut X",      "sort": "102", "valuta":"ETH",   "povprecna_nabavna_cena": "1272.30212831239" ,  "znesek":"0.025928263"},
     {"lokacija":"Revolut X",      "sort": "302", "valuta":"SOL",   "povprecna_nabavna_cena": "0" ,  "znesek":"12.183742577"},
-    {"lokacija":"Revolut X",      "sort": "101", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.10769709551" ,  "znesek":"0.06040014"}
+    {"lokacija":"Revolut X",      "sort": "101", "valuta":"BTC",   "povprecna_nabavna_cena": "3804.63656310182" ,  "znesek":"0.06040014"}
 
 
 
