@@ -660,5 +660,44 @@
       "PrevlakaA": 23.7,
       "LastovoA": 23.1
     }
+  },
+  {
+    "datum": "2026-09-28",
+    "ura": "17:08",
+    "postaje": {
+      "Zagreb-Maksimir": 24.0,
+      "Zagreb-aerodrom": 24.5,
+      "Puntijarka (Medvednica)": 17.2,
+      "Varaždin": 23.9,
+      "Bilogora": 23.8,
+      "DaruvarA": 26.2,
+      "BjelovarA": 25.0,
+      "Gorice (kod Nove Gradiške)": 25.2,
+      "KutjevoA": 23.5,
+      "Slavonski Brod": 24.6,
+      "Osijek-Čepin": 25.6,
+      "GradišteA": 24.9,
+      "OgulinA": 21.1,
+      "NP Plitvička jezeraA": 21.4,
+      "GospićA": 22.9,
+      "Pula-aerodrom": 24.0,
+      "PorerA": 23.2,
+      "Sv. Ivan na pučiniA": 24.0,
+      "OpatijaA": 24.7,
+      "Rijeka-aerodrom": 24.6,
+      "MalinskaA": 23.9,
+      "CrikvenicaA": 24.6,
+      "RabA": 26.6,
+      "Zadar-aerodrom": 24.6,
+      "Veli RatA": 26.1,
+      "KninA": 26.6,
+      "ŠibenikA": 24.9,
+      "Split-aerodrom": 24.8,
+      "DubrovnikA": 25.0,
+      "Dubrovnik-aerodrom": 22.4,
+      "GrudaA": 24.7,
+      "PrevlakaA": 24.2,
+      "LastovoA": 23.2
+    }
   }
 ]
