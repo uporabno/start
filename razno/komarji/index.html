@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Komarji</title>
+<style>
+    :root{
+        --danger:#ff3b3b;
+        --accent:#7CFC00;
+        --panel-bg:rgba(20,20,20,0.72);
+    }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; -webkit-user-select:none; }
+    html,body{
+        margin:0; padding:0; width:100%; height:100%;
+        background:#000; overflow:hidden;
+        font-family:'Segoe UI',Tahoma,Arial,sans-serif;
+        touch-action:none;
+    }
+    #stage{
+        position:fixed; inset:0; width:100%; height:100%;
+        overflow:hidden; background:#000;
+    }
+    #camVideo{
+        position:absolute; inset:0; width:100%; height:100%;
+        object-fit:cover; transform:scaleX(1);
+        background:#111;
+    }
+    #camVideo.mirrored{ transform:scaleX(-1); }
+    #fallbackBg{
+        position:absolute; inset:0; width:100%; height:100%;
+        background:linear-gradient(135deg,#1b3d0f,#0e2410 40%,#142a17 70%,#0a1a0c);
+        display:none;
+    }
+    #fallbackBg.show{ display:block; }
+    #fallbackBg::before{
+        content:""; position:absolute; inset:0;
+        background:
+            radial-gradient(circle at 20% 30%, rgba(255,255,255,0.05), transparent 40%),
+            radial-gradient(circle at 80% 70%, rgba(255,255,255,0.04), transparent 45%);
+    }
+    #gameCanvas{
+        position:absolute; inset:0; width:100%; height:100%;
+        z-index:5;
+    }
+    #biteFlash{
+        position:fixed; inset:0; pointer-events:none; z-index:20;
+        background:radial-gradient(circle, rgba(255,0,0,0) 40%, rgba(255,0,0,0.55) 100%);
+        opacity:0; transition:opacity 0.15s ease-out;
+    }
+    #biteFlash.active{ opacity:1; transition:opacity 0.05s; }
+
+    /* HUD */
+    #hud{
+        position:fixed; top:0; left:0; right:0; z-index:15;
+        display:flex; align-items:center; justify-content:space-between;
+        padding:10px 14px; pointer-events:none;
+        padding-top:max(10px, env(safe-area-inset-top));
+    }
+    .hud-pill{
+        background:var(--panel-bg); color:#fff; border-radius:20px;
+        padding:6px 14px; font-weight:700; font-size:16px;
+        display:flex; align-items:center; gap:6px;
+        backdrop-filter:blur(3px);
+        pointer-events:auto;
+    }
+    #livesWrap{ font-size:18px; letter-spacing:2px; }
+    #pauseBtn{
+        width:40px; height:40px; border-radius:50%;
+        background:var(--panel-bg); color:#fff; border:none;
+        font-size:18px; pointer-events:auto; cursor:pointer;
+    }
+    #topRight{ display:flex; gap:8px; align-items:center; }
+
+    /* Overlays */
+    .overlay{
+        position:fixed; inset:0; z-index:50;
+        background:rgba(0,0,0,0.78);
+        display:flex; align-items:center; justify-content:center;
+        padding:20px;
+    }
+    .overlay.hidden{ display:none; }
+    .card{
+        background:#161616; color:#fff; border-radius:16px;
+        padding:28px 26px; max-width:380px; width:100%;
+        text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.6);
+        border:1px solid #2a2a2a;
+    }
+    .card h1{
+        margin:0 0 4px; font-size:30px;
+        color:var(--accent); text-shadow:0 0 10px rgba(124,252,0,0.4);
+    }
+    .card .mosq-emoji{ font-size:54px; display:block; margin:6px 0 10px; }
+    .card p{ color:#bbb; font-size:14px; line-height:1.5; margin:8px 0 18px; }
+    .btn{
+        display:block; width:100%; padding:13px; margin:8px 0;
+        border:none; border-radius:10px; font-size:16px; font-weight:700;
+        cursor:pointer; background:#2a2a2a; color:#fff;
+        transition:transform 0.08s ease;
+    }
+    .btn:active{ transform:scale(0.97); }
+    .btn-primary{ background:linear-gradient(135deg,#7CFC00,#4caf00); color:#0a1a00; }
+    .btn-secondary{ background:#333; color:#ddd; font-size:13px; padding:9px; }
+    .diff-row{ display:flex; gap:8px; margin:10px 0 4px; }
+    .diff-btn{
+        flex:1; padding:10px 4px; border-radius:10px; border:2px solid #333;
+        background:#1f1f1f; color:#ccc; font-size:13px; font-weight:700; cursor:pointer;
+    }
+    .diff-btn.active{ border-color:var(--accent); color:var(--accent); background:#1a2a0f; }
+    .stat-row{
+        display:flex; justify-content:space-between;
+        background:#1f1f1f; border-radius:10px; padding:12px 16px; margin:12px 0;
+    }
+    .stat-row div{ text-align:center; }
+    .stat-num{ font-size:24px; font-weight:800; color:var(--accent); }
+    .stat-lbl{ font-size:11px; color:#999; text-transform:uppercase; letter-spacing:0.5px; }
+    #errMsg{ color:var(--danger); font-size:13px; margin-top:6px; min-height:16px; }
+    .toggle-row{
+        display:flex; align-items:center; justify-content:space-between;
+        background:#1f1f1f; border-radius:10px; padding:10px 14px; margin:8px 0;
+        font-size:14px;
+    }
+    .switch{ position:relative; width:42px; height:24px; }
+    .switch input{ opacity:0; width:0; height:0; }
+    .slider-sw{
+        position:absolute; inset:0; background:#444; border-radius:24px; cursor:pointer; transition:0.2s;
+    }
+    .slider-sw::before{
+        content:""; position:absolute; width:18px; height:18px; left:3px; top:3px;
+        background:#fff; border-radius:50%; transition:0.2s;
+    }
+    .switch input:checked + .slider-sw{ background:var(--accent); }
+    .switch input:checked + .slider-sw::before{ transform:translateX(18px); }
+
+    #comboPopup{
+        position:fixed; z-index:16; pointer-events:none;
+        font-weight:900; color:#fff; text-shadow:0 0 6px rgba(0,0,0,0.8);
+        transform:translate(-50%,-50%);
+    }
+</style>
+</head>
+<body>
+
+<div id="stage">
+    <video id="camVideo" autoplay playsinline muted></video>
+    <div id="fallbackBg"></div>
+    <canvas id="gameCanvas"></canvas>
+</div>
+<div id="biteFlash"></div>
+
+<div id="hud">
+    <div class="hud-pill">🎯 <span id="scoreVal">0</span></div>
+    <div class="hud-pill" id="livesWrap">❤️❤️❤️</div>
+    <div id="topRight">
+        <button id="pauseBtn">⏸</button>
+    </div>
+</div>
+
+<!-- Start screen -->
+<div class="overlay" id="startOverlay">
+    <div class="card">
+        <span class="mosq-emoji">🦟</span>
+        <h1>KOMARJI</h1>
+        <p>Usmeri kamero po prostoru in tapni na komarje, preden te ugriznejo!</p>
+
+        <div class="diff-row" id="diffRow">
+            <button class="diff-btn" data-d="easy">Lahko</button>
+            <button class="diff-btn active" data-d="normal">Srednje</button>
+            <button class="diff-btn" data-d="hard">Težko</button>
+        </div>
+
+        <button class="btn btn-primary" id="startBtn">📷 Začni igro</button>
+        <button class="btn btn-secondary" id="noCamBtn">Igraj brez kamere</button>
+        <div id="errMsg"></div>
+        <div class="stat-row" style="margin-top:16px;">
+            <div><div class="stat-num" id="bestScoreStart">0</div><div class="stat-lbl">Najboljši rezultat</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Pause screen -->
+<div class="overlay hidden" id="pauseOverlay">
+    <div class="card">
+        <h1 style="font-size:24px;">PAVZA</h1>
+        <div class="toggle-row">
+            <span>🔊 Zvok</span>
+            <label class="switch"><input type="checkbox" id="soundToggle" checked><span class="slider-sw"></span></label>
+        </div>
+        <button class="btn btn-primary" id="resumeBtn">▶ Nadaljuj</button>
+        <button class="btn btn-secondary" id="restartFromPauseBtn">Nova igra</button>
+    </div>
+</div>
+
+<!-- Game over screen -->
+<div class="overlay hidden" id="overOverlay">
+    <div class="card">
+        <span class="mosq-emoji">💀🦟</span>
+        <h1 style="color:var(--danger); text-shadow:0 0 10px rgba(255,59,59,0.4);">KONEC IGRE</h1>
+        <div class="stat-row">
+            <div><div class="stat-num" id="finalScore">0</div><div class="stat-lbl">Rezultat</div></div>
+            <div><div class="stat-num" id="bestScore">0</div><div class="stat-lbl">Najboljši</div></div>
+            <div><div class="stat-num" id="finalSwats">0</div><div class="stat-lbl">Preplaskani</div></div>
+        </div>
+        <button class="btn btn-primary" id="retryBtn">🔁 Igraj znova</button>
+        <button class="btn btn-secondary" id="menuBtn">Nazaj na meni</button>
+    </div>
+</div>
+
+<script>
+(function(){
+    'use strict';
+
+    // ---------- DOM ----------
+    const video      = document.getElementById('camVideo');
+    const fallbackBg = document.getElementById('fallbackBg');
+    const canvas     = document.getElementById('gameCanvas');
+    const ctx        = canvas.getContext('2d');
+    const biteFlash  = document.getElementById('biteFlash');
+
+    const startOverlay = document.getElementById('startOverlay');
+    const pauseOverlay  = document.getElementById('pauseOverlay');
+    const overOverlay   = document.getElementById('overOverlay');
+
+    const scoreVal   = document.getElementById('scoreVal');
+    const livesWrap  = document.getElementById('livesWrap');
+    const pauseBtn   = document.getElementById('pauseBtn');
+
+    const startBtn   = document.getElementById('startBtn');
+    const noCamBtn   = document.getElementById('noCamBtn');
+    const errMsg     = document.getElementById('errMsg');
+    const diffRow    = document.getElementById('diffRow');
+    const bestScoreStartEl = document.getElementById('bestScoreStart');
+
+    const resumeBtn  = document.getElementById('resumeBtn');
+    const restartFromPauseBtn = document.getElementById('restartFromPauseBtn');
+    const soundToggle = document.getElementById('soundToggle');
+
+    const retryBtn   = document.getElementById('retryBtn');
+    const menuBtn    = document.getElementById('menuBtn');
+    const finalScoreEl = document.getElementById('finalScore');
+    const bestScoreEl  = document.getElementById('bestScore');
+    const finalSwatsEl = document.getElementById('finalSwats');
+
+    // ---------- State ----------
+    const STORAGE_KEY = 'komarji_best_score';
+    let bestScore = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10) || 0;
+    bestScoreStartEl.textContent = bestScore;
+
+    let difficulty = 'normal';
+    const DIFF = {
+        easy:   { spawnMs:[1100,1900], lifespan:[3200,4600], speed:[40,80],  maxAlive:4, biteDamage:1 },
+        normal: { spawnMs:[750,1300],  lifespan:[2400,3600], speed:[70,130], maxAlive:6, biteDamage:1 },
+        hard:   { spawnMs:[450,900],   lifespan:[1700,2700], speed:[110,190],maxAlive:8, biteDamage:1 }
+    };
+
+    let running = false;
+    let paused = false;
+    let soundOn = true;
+    let cameraActive = false;
+    let stream = null;
+
+    let score = 0;
+    let swats = 0;
+    let lives = 3;
+    let startTime = 0;
+    let lastSpawn = 0;
+    let nextSpawnDelay = 800;
+    let comboCount = 0;
+    let lastSwatTime = 0;
+
+    let mosquitoes = [];
+    let particles = [];
+    let rafId = null;
+    let W = 0, H = 0, DPR = 1;
+
+    // ---------- Sound (Web Audio, synthesized, no external files) ----------
+    let actx = null;
+    function ensureAudio(){
+        if(!actx){
+            try{ actx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ actx = null; }
+        }
+        if(actx && actx.state === 'suspended') actx.resume();
+    }
+    function beep(freq, dur, type, gainStart, glideTo){
+        if(!soundOn || !actx) return;
+        const t0 = actx.currentTime;
+        const osc = actx.createOscillator();
+        const gain = actx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.setValueAtTime(freq, t0);
+        if(glideTo) osc.frequency.exponentialRampToValueAtTime(Math.max(glideTo,1), t0+dur);
+        gain.gain.setValueAtTime(gainStart, t0);
+        gain.gain.exponentialRampToValueAtTime(0.001, t0+dur);
+        osc.connect(gain); gain.connect(actx.destination);
+        osc.start(t0); osc.stop(t0+dur+0.02);
+    }
+    function sndSwat(){ beep(180,0.12,'square',0.22,60); beep(900,0.05,'sine',0.1,300); }
+    function sndBite(){ beep(120,0.35,'sawtooth',0.3,40); }
+    function sndSpawn(){ if(!soundOn||!actx) return; beep(600,0.06,'sine',0.03,900); }
+    function sndGameOver(){ beep(300,0.5,'sawtooth',0.25,80); }
+    function sndCombo(){ beep(1200,0.08,'sine',0.15,1800); }
+
+    // buzzing loop (low volume, modulated) while mosquitoes alive
+    let buzzOsc=null, buzzGain=null;
+    function startBuzz(){
+        if(!actx) return;
+        if(buzzOsc) return;
+        buzzOsc = actx.createOscillator();
+        buzzGain = actx.createGain();
+        buzzOsc.type = 'sawtooth';
+        buzzOsc.frequency.value = 220;
+        buzzGain.gain.value = 0;
+        buzzOsc.connect(buzzGain); buzzGain.connect(actx.destination);
+        buzzOsc.start();
+    }
+    function updateBuzz(){
+        if(!buzzGain) return;
+        const targetVol = (soundOn && running && !paused) ? Math.min(0.05, 0.012*mosquitoes.length) : 0;
+        buzzGain.gain.setTargetAtTime(targetVol, actx.currentTime, 0.2);
+        if(buzzOsc){
+            buzzOsc.frequency.setTargetAtTime(210 + mosquitoes.length*8, actx.currentTime, 0.3);
+        }
+    }
+    function stopBuzz(){
+        if(buzzGain) buzzGain.gain.setTargetAtTime(0, actx ? actx.currentTime : 0, 0.1);
+    }
+
+    // ---------- Canvas sizing ----------
+    function resize(){
+        DPR = Math.min(window.devicePixelRatio || 1, 2);
+        W = window.innerWidth; H = window.innerHeight;
+        canvas.width = W*DPR; canvas.height = H*DPR;
+        canvas.style.width = W+'px'; canvas.style.height = H+'px';
+        ctx.setTransform(DPR,0,0,DPR,0,0);
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    // ---------- Camera ----------
+    async function startCamera(){
+        errMsg.textContent = '';
+        try{
+            stream = await navigator.mediaDevices.getUserMedia({
+                video:{ facingMode:{ ideal:'environment' }, width:{ideal:1280}, height:{ideal:720} },
+                audio:false
+            });
+            video.srcObject = stream;
+            await video.play();
+            video.classList.remove('mirrored');
+            fallbackBg.classList.remove('show');
+            cameraActive = true;
+            return true;
+        }catch(e){
+            console.warn('Kamera ni na voljo:', e);
+            cameraActive = false;
+            fallbackBg.classList.add('show');
+            errMsg.textContent = 'Kamera ni na voljo (' + (e.name||'napaka') + '). Igraš z nadomestnim ozadjem.';
+            return false;
+        }
+    }
+    function stopCamera(){
+        if(stream){
+            stream.getTracks().forEach(t=>t.stop());
+            stream = null;
+        }
+    }
+
+    // ---------- Mosquito ----------
+    function rand(a,b){ return a + Math.random()*(b-a); }
+    function pick(arr){ return arr[(Math.random()*arr.length)|0]; }
+
+    class Mosquito{
+        constructor(){
+            const d = DIFF[difficulty];
+            const margin = 60;
+            this.x = rand(margin, W-margin);
+            this.y = rand(H*0.12, H*0.88);
+            this.targetX = rand(margin, W-margin);
+            this.targetY = rand(H*0.1, H*0.9);
+            this.speed = rand(d.speed[0], d.speed[1]);
+            this.size = rand(22,34);
+            this.angle = 0;
+            this.wingPhase = Math.random()*Math.PI*2;
+            this.birthTime = performance.now();
+            this.lifespan = rand(d.lifespan[0], d.lifespan[1]);
+            this.state = 'alive'; // alive | dying | biting
+            this.dyingT = 0;
+            this.retargetT = 0;
+            this.jitterPhase = Math.random()*Math.PI*2;
+        }
+        timeLeftRatio(now){
+            return Math.max(0, 1 - (now - this.birthTime)/this.lifespan);
+        }
+        update(dt, now){
+            if(this.state === 'alive'){
+                this.retargetT -= dt;
+                if(this.retargetT <= 0){
+                    const margin=50;
+                    this.targetX = rand(margin, W-margin);
+                    this.targetY = rand(H*0.1, H*0.9);
+                    this.retargetT = rand(500,1400);
+                }
+                let dx = this.targetX - this.x, dy = this.targetY - this.y;
+                const dist = Math.hypot(dx,dy) || 1;
+                dx/=dist; dy/=dist;
+                this.jitterPhase += dt*0.02;
+                const jitterX = Math.sin(this.jitterPhase*3.1)*0.6;
+                const jitterY = Math.cos(this.jitterPhase*2.3)*0.6;
+                const sp = this.speed * (this.timeLeftRatio(now) < 0.25 ? 1.8 : 1); // panicky speedup near bite
+                this.x += (dx+jitterX*0.4)*sp*dt/1000;
+                this.y += (dy+jitterY*0.4)*sp*dt/1000;
+                this.angle = Math.atan2(dy,dx);
+                this.wingPhase += dt*0.06;
+                this.x = Math.max(20, Math.min(W-20, this.x));
+                this.y = Math.max(H*0.08, Math.min(H*0.94, this.y));
+
+                if(now - this.birthTime >= this.lifespan){
+                    this.state = 'biting';
+                    this.dyingT = 0;
+                }
+            } else if(this.state === 'biting'){
+                this.dyingT += dt;
+                this.wingPhase += dt*0.1;
+                if(this.dyingT > 220) return 'bite';
+            } else if(this.state === 'dying'){
+                this.dyingT += dt;
+                if(this.dyingT > 320) return 'remove';
+            }
+            return null;
+        }
+        draw(ctx, now){
+            ctx.save();
+            ctx.translate(this.x, this.y);
+            if(this.state === 'dying'){
+                const t = this.dyingT/320;
+                ctx.globalAlpha = 1-t;
+                ctx.rotate(this.angle + t*4);
+                ctx.scale(1+t*0.6, 1+t*0.6);
+            } else {
+                ctx.rotate(this.angle);
+                if(this.state==='biting'){
+                    const p = this.dyingT/220;
+                    ctx.scale(1+p*0.5, 1+p*0.5);
+                }
+            }
+            const s = this.size;
+            // warning pulse ring when about to bite
+            if(this.state==='alive'){
+                const ratio = this.timeLeftRatio(now);
+                if(ratio < 0.3){
+                    const pulse = (Math.sin(now*0.02)+1)/2;
+                    ctx.save();
+                    ctx.rotate(-this.angle);
+                    ctx.strokeStyle = `rgba(255,50,50,${0.35+0.35*pulse})`;
+                    ctx.lineWidth = 3;
+                    ctx.beginPath();
+                    ctx.arc(0,0,s*0.95,0,Math.PI*2);
+                    ctx.stroke();
+                    ctx.restore();
+                }
+            }
+            // wings
+            const flap = Math.sin(this.wingPhase)*0.9;
+            ctx.fillStyle = 'rgba(230,230,240,0.55)';
+            ctx.beginPath();
+            ctx.ellipse(-s*0.05, -s*0.28, s*0.42, s*0.16, -0.5+flap*0.3, 0, Math.PI*2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(-s*0.05, s*0.28, s*0.42, s*0.16, 0.5-flap*0.3, 0, Math.PI*2);
+            ctx.fill();
+            // legs
+            ctx.strokeStyle = 'rgba(20,20,20,0.85)';
+            ctx.lineWidth = Math.max(1, s*0.045);
+            for(let i=-1;i<=1;i++){
+                ctx.beginPath();
+                ctx.moveTo(s*0.05*i, 0);
+                ctx.lineTo(s*0.05*i - s*0.35, s*0.45*Math.sign(i||1));
+                ctx.stroke();
+            }
+            // body
+            const grad = ctx.createLinearGradient(-s*0.6,0,s*0.6,0);
+            grad.addColorStop(0,'#3b2a20');
+            grad.addColorStop(1,'#1a120c');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.ellipse(0,0, s*0.62, s*0.22, 0, 0, Math.PI*2);
+            ctx.fill();
+            // head + proboscis
+            ctx.beginPath();
+            ctx.arc(s*0.6,0, s*0.16, 0, Math.PI*2);
+            ctx.fill();
+            ctx.strokeStyle = '#150e08';
+            ctx.lineWidth = Math.max(1, s*0.05);
+            ctx.beginPath();
+            ctx.moveTo(s*0.72,0);
+            ctx.lineTo(s*1.05,0);
+            ctx.stroke();
+            ctx.restore();
+        }
+        hitTest(px,py){
+            const dx=px-this.x, dy=py-this.y;
+            const r = this.size*0.95 + 14; // forgiving hit radius for touch
+            return (dx*dx+dy*dy) <= r*r;
+        }
+    }
+
+    // ---------- Particles (splat) ----------
+    function spawnSplat(x,y){
+        for(let i=0;i<10;i++){
+            particles.push({
+                x,y,
+                vx: rand(-140,140), vy: rand(-140,140),
+                life: 0, maxLife: rand(300,550),
+                size: rand(2,5),
+                color: Math.random()<0.7 ? '200,20,20' : '90,10,10'
+            });
+        }
+    }
+    function updateParticles(dt){
+        for(let i=particles.length-1;i>=0;i--){
+            const p = particles[i];
+            p.life += dt;
+            if(p.life > p.maxLife){ particles.splice(i,1); continue; }
+            p.x += p.vx*dt/1000; p.y += p.vy*dt/1000;
+            p.vy += 260*dt/1000;
+        }
+    }
+    function drawParticles(ctx){
+        for(const p of particles){
+            const a = 1 - p.life/p.maxLife;
+            ctx.fillStyle = `rgba(${p.color},${a})`;
+            ctx.beginPath();
+            ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+            ctx.fill();
+        }
+    }
+
+    // ---------- Combo popup ----------
+    function showFloatText(x,y,text,color){
+        const el = document.createElement('div');
+        el.id='';
+        el.style.position='fixed';
+        el.style.left = x+'px';
+        el.style.top = y+'px';
+        el.style.zIndex = 16;
+        el.style.pointerEvents='none';
+        el.style.fontWeight='900';
+        el.style.fontSize='20px';
+        el.style.color = color || '#fff';
+        el.style.textShadow='0 0 6px rgba(0,0,0,0.8)';
+        el.style.transform='translate(-50%,-50%)';
+        el.textContent = text;
+        document.body.appendChild(el);
+        let t=0;
+        const dur=650;
+        function anim(){
+            t+=16;
+            const p=t/dur;
+            el.style.transform = `translate(-50%, ${-50 - p*40}%)`;
+            el.style.opacity = 1-p;
+            if(p<1) requestAnimationFrame(anim);
+            else el.remove();
+        }
+        requestAnimationFrame(anim);
+    }
+
+    // ---------- Game flow ----------
+    function updateLivesHud(){
+        let s='';
+        for(let i=0;i<3;i++) s += (i<lives?'❤️':'🖤');
+        livesWrap.textContent = s;
+    }
+
+    function spawnMosquitoIfNeeded(now){
+        const d = DIFF[difficulty];
+        if(mosquitoes.length < d.maxAlive && now - lastSpawn > nextSpawnDelay){
+            mosquitoes.push(new Mosquito());
+            lastSpawn = now;
+            nextSpawnDelay = rand(d.spawnMs[0], d.spawnMs[1]);
+            sndSpawn();
+        }
+    }
+
+    function doBite(m){
+        lives -= DIFF[difficulty].biteDamage;
+        updateLivesHud();
+        sndBite();
+        biteFlash.classList.add('active');
+        setTimeout(()=>biteFlash.classList.remove('active'),150);
+        if(navigator.vibrate) navigator.vibrate([40,30,40]);
+        comboCount = 0;
+        if(lives <= 0){
+            endGame();
+        }
+    }
+
+    function doSwat(m, now){
+        m.state = 'dying';
+        m.dyingT = 0;
+        swats++;
+        spawnSplat(m.x,m.y);
+        sndSwat();
+
+        if(now - lastSwatTime < 900){
+            comboCount++;
+        } else {
+            comboCount = 1;
+        }
+        lastSwatTime = now;
+
+        const base = 10;
+        const comboBonus = Math.min(comboCount-1, 8)*5;
+        const gained = base + comboBonus;
+        score += gained;
+        scoreVal.textContent = score;
+
+        if(comboCount >= 2){
+            showFloatText(m.x, m.y-20, `+${gained}  x${comboCount}`, '#ffdd33');
+            sndCombo();
+        } else {
+            showFloatText(m.x, m.y-20, `+${gained}`, '#7CFC00');
+        }
+    }
+
+    function handleTap(clientX, clientY){
+        if(!running || paused) return;
+        ensureAudio();
+        const now = performance.now();
+        // check topmost (last drawn = last in array) first
+        for(let i=mosquitoes.length-1;i>=0;i--){
+            const m = mosquitoes[i];
+            if(m.state==='alive' && m.hitTest(clientX,clientY)){
+                doSwat(m, now);
+                return;
+            }
+        }
+    }
+
+    canvas.addEventListener('pointerdown', (e)=>{
+        handleTap(e.clientX, e.clientY);
+    });
+
+    // ---------- Main loop ----------
+    let lastFrame = 0;
+    function loop(ts){
+        if(!running){ return; }
+        if(!lastFrame) lastFrame = ts;
+        const dt = Math.min(48, ts-lastFrame);
+        lastFrame = ts;
+
+        ctx.clearRect(0,0,W,H);
+
+        if(!paused){
+            const now = performance.now();
+            spawnMosquitoIfNeeded(now);
+
+            for(let i=mosquitoes.length-1;i>=0;i--){
+                const m = mosquitoes[i];
+                const result = m.update(dt, now);
+                if(result === 'bite'){
+                    doBite(m);
+                    mosquitoes.splice(i,1);
+                } else if(result === 'remove'){
+                    mosquitoes.splice(i,1);
+                }
+            }
+            updateParticles(dt);
+            updateBuzz();
+        }
+
+        for(const m of mosquitoes) m.draw(ctx, performance.now());
+        drawParticles(ctx);
+
+        rafId = requestAnimationFrame(loop);
+    }
+
+    function resetGameState(){
+        score = 0; swats = 0; lives = 3; comboCount = 0;
+        mosquitoes = []; particles = [];
+        lastSpawn = 0; nextSpawnDelay = 300;
+        scoreVal.textContent = '0';
+        updateLivesHud();
+    }
+
+    async function beginGame(withCamera){
+        startOverlay.classList.add('hidden');
+        overOverlay.classList.add('hidden');
+        pauseOverlay.classList.add('hidden');
+        ensureAudio();
+        startBuzz();
+
+        if(withCamera){
+            await startCamera();
+        } else {
+            stopCamera();
+            fallbackBg.classList.add('show');
+            cameraActive = false;
+        }
+        resetGameState();
+        running = true;
+        paused = false;
+        lastFrame = 0;
+        startTime = performance.now();
+        if(rafId) cancelAnimationFrame(rafId);
+        rafId = requestAnimationFrame(loop);
+    }
+
+    function endGame(){
+        running = false;
+        if(rafId) cancelAnimationFrame(rafId);
+        stopBuzz();
+        sndGameOver();
+        if(score > bestScore){
+            bestScore = score;
+            localStorage.setItem(STORAGE_KEY, String(bestScore));
+        }
+        finalScoreEl.textContent = score;
+        bestScoreEl.textContent = bestScore;
+        finalSwatsEl.textContent = swats;
+        overOverlay.classList.remove('hidden');
+    }
+
+    function togglePause(forceState){
+        if(!running) return;
+        paused = (typeof forceState === 'boolean') ? forceState : !paused;
+        pauseOverlay.classList.toggle('hidden', !paused);
+        lastFrame = 0;
+    }
+
+    // ---------- UI wiring ----------
+    diffRow.addEventListener('click',(e)=>{
+        const btn = e.target.closest('.diff-btn');
+        if(!btn) return;
+        diffRow.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        difficulty = btn.dataset.d;
+    });
+
+    startBtn.addEventListener('click', ()=> beginGame(true));
+    noCamBtn.addEventListener('click', ()=> beginGame(false));
+
+    pauseBtn.addEventListener('click', ()=> togglePause());
+    resumeBtn.addEventListener('click', ()=> togglePause(false));
+    restartFromPauseBtn.addEventListener('click', ()=>{
+        togglePause(false);
+        beginGame(cameraActive);
+    });
+
+    soundToggle.addEventListener('change', ()=>{ soundOn = soundToggle.checked; });
+
+    retryBtn.addEventListener('click', ()=>{
+        overOverlay.classList.add('hidden');
+        beginGame(cameraActive);
+    });
+    menuBtn.addEventListener('click', ()=>{
+        overOverlay.classList.add('hidden');
+        stopCamera();
+        cameraActive = false;
+        fallbackBg.classList.remove('show');
+        bestScoreStartEl.textContent = bestScore;
+        startOverlay.classList.remove('hidden');
+    });
+
+    document.addEventListener('visibilitychange', ()=>{
+        if(document.hidden && running && !paused){
+            togglePause(true);
+        }
+    });
+
+    // Prevent page scroll/zoom gestures on mobile
+    document.addEventListener('touchmove', (e)=>e.preventDefault(), {passive:false});
+    document.addEventListener('gesturestart', (e)=>e.preventDefault());
+
+})();
+</script>
+</body>
+</html>
