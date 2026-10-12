@@ -1337,5 +1337,17 @@
       "Dubrovnik-aerodrom": 17.4,
       "Lastovo": 17.2
     }
+  },
+  {
+    "datum": "2026-10-13",
+    "ura": "00:19",
+    "postaje": {
+      "Zagreb-aerodrom": 5.5,
+      "Pula-aerodrom": 13.1,
+      "Rijeka-aerodrom": 10.7,
+      "Zadar-aerodrom": 13.3,
+      "Split-aerodrom": 15.4,
+      "Dubrovnik-aerodrom": 16.8
+    }
   }
 ]
