@@ -12,6 +12,7 @@
 
 <div id="id_header">
     <button id="btn_vse" onclick="prikaziVse()">Prikaži vse</button>
+    <span id="id_count"></span>
 </div>
 
 <div id="id_content" class="contentNormalno"></div>
@@ -43,6 +44,9 @@
     const container = document.getElementById("id_content");
     const overlay = document.getElementById("overlay");
     const overlayImg = document.getElementById("overlay_img");
+
+    const steviloZbranih = ck100Data.filter(item => item.datum !== "").length;
+    document.getElementById("id_count").textContent = `${steviloZbranih}/${ck100Data.length}`;
 
     ck100Data.forEach((item, i) => {
         const div = document.createElement("div");

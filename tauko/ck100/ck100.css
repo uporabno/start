@@ -54,8 +54,20 @@ body {
 .zelena { color: #22AA00; cursor: pointer; }
 
 #id_header {
+    position: relative;
     text-align: center;
-    padding: 10px 0 8px;
+    padding: 10px 10px 8px;
+}
+
+#id_count {
+    position: absolute;
+    left: calc(100% - 10% - 8px);
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: #888;
+    font-family: 'Segoe UI', Candara, Calibri, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
 }
 
 #btn_vse {

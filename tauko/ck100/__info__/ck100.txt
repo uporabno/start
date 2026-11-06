@@ -1,0 +1,37 @@
+Android apilkacija: CK100
+Namen je poslikati čimveč čolnov do CK100.
+Aplikacija naj ima procent najdenih čolnov.
+Seznam, kateri so že in kateri ne...
+Najbolj, da 25x5, če bi šlo vse na en ekran,
+pa z zeleno najdeni, z rdečo ne.
+Če klikneš na CKxx, odprejo podatki za vnos,
+če je še rdeče, če pa je zelono pa display podatki
+z gumbom za možne spremembe.
+Pri vnosi za posamezni CKxx:
+- datum
+- luka (Crni mul, Selce, Pazdehova, Braščanovica) - prednastavi glede na GPS koordianto. Combo box za izbiro z možnostjo napisa svojega texta...
+- slika za upload
+Katero bazo za to boš uporabil? A SQLite? Je kaj bolj primernega?
+
+Aplikacija naj na začetku tudi ima, da se exportajo podatki v json.
+Naj se exporta tudi SQLite file.
+Naredi še HTML aplikacijo za pc, ki prebere ta json in prikaže podatke.
+
+
+--
+
+Nove slike - postopek:
+1. Nove slike dodaj v e:\GitHub\uporabno\start\tauko\ck100\jpg-original\
+2. Datum datotek (created/modified/accessed) v jpg-original nastavi iz EXIF DateTimeOriginal
+3. Pomanjšaj v e:\GitHub\uporabno\start\tauko\ck100\jpg-small\, 1440x1080 (JPEG quality=90, brez optimize),
+   isto ime + pripona "-small" pred .jpg (npr. ck003---20260802_072314-small.jpg)
+4. Datum datotek v jpg-small uskladi z EXIF datumom iz ustreznega originala v jpg-original
+   (pomanjšane slike same ne nosijo EXIF podatkov)
+5. GPS iz EXIF (GPSInfo tag 34853) uporabi za predlog lokacije (luka/plaža)
+6. Dodaj/popravi vnos v ck100-data.js: datum, lokacija, slika (pot "jpg-small/...-small.jpg")
+
+--
+
+Lokacija projekta (od 06.11.2026):
+Vse delo (HTML, CSS, JS, slike) poteka v e:\GitHub\uporabno\start\tauko\ck100\
+(prej e:\Claude\Html\CK100\)
