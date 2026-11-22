@@ -9300,5 +9300,138 @@
         "16h": 16.7
       }
     }
+  },
+  {
+    "datum": "2026-11-23",
+    "postaje": {
+      "Božava": {
+        "06h": null,
+        "07h": 17.5,
+        "10h": null,
+        "13h": 17.5,
+        "14h": null,
+        "16h": null
+      },
+      "CrikvenicaA": {
+        "06h": null,
+        "07h": null,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "DubrovnikA": {
+        "06h": null,
+        "07h": null,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "Komiža": {
+        "06h": null,
+        "07h": 18.1,
+        "10h": null,
+        "13h": 18.2,
+        "14h": 18.2,
+        "16h": null
+      },
+      "Mali LosinjA": {
+        "06h": 17.0,
+        "07h": 17.0,
+        "10h": 16.9,
+        "13h": 16.9,
+        "14h": 16.9,
+        "16h": 16.9
+      },
+      "MalinskaA": {
+        "06h": 14.9,
+        "07h": 14.9,
+        "10h": 15.0,
+        "13h": 15.0,
+        "14h": 15.1,
+        "16h": 15.0
+      },
+      "Mljet-Malo jezeroA": {
+        "06h": null,
+        "07h": null,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "Mljet-Veliko jezeroA": {
+        "06h": null,
+        "07h": null,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "Mljet-otvoreno moreA": {
+        "06h": null,
+        "07h": null,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "OpatijaA": {
+        "06h": 14.8,
+        "07h": 14.8,
+        "10h": 14.9,
+        "13h": 14.6,
+        "14h": 14.7,
+        "16h": 13.1
+      },
+      "Pula": {
+        "06h": null,
+        "07h": 16.1,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "Rab": {
+        "06h": null,
+        "07h": 14.5,
+        "10h": null,
+        "13h": null,
+        "14h": 14.7,
+        "16h": null
+      },
+      "Rovinj-Sv.Ivan n/p": {
+        "06h": null,
+        "07h": 16.3,
+        "10h": null,
+        "13h": null,
+        "14h": null,
+        "16h": null
+      },
+      "Split": {
+        "06h": null,
+        "07h": 17.0,
+        "10h": null,
+        "13h": 16.5,
+        "14h": null,
+        "16h": null
+      },
+      "Šibenik": {
+        "06h": null,
+        "07h": 16.0,
+        "10h": null,
+        "13h": null,
+        "14h": 17.0,
+        "16h": null
+      },
+      "ZadarA": {
+        "06h": 16.0,
+        "07h": 16.1,
+        "10h": 16.1,
+        "13h": 16.4,
+        "14h": 16.4,
+        "16h": 16.5
+      }
+    }
   }
 ]
