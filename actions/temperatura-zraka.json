@@ -3982,5 +3982,42 @@
       "PrevlakaA": 8.3,
       "LastovoA": 10.0
     }
+  },
+  {
+    "datum": "2026-11-26",
+    "ura": "01:25",
+    "postaje": {
+      "Zagreb-MaksimirA": 2.6,
+      "Zagreb-aerodrom": 2.5,
+      "VaraždinA": 1.5,
+      "KriževciA": 1.5,
+      "DaruvarA": 2.3,
+      "BjelovarA": 1.8,
+      "Gorice (kod Nove Gradiške)A": 3.8,
+      "KutjevoA": 3.2,
+      "Slavonski BrodA": 3.9,
+      "GradišteA": 3.6,
+      "OgulinA": 2.6,
+      "NP Plitvička jezeraA": 2.3,
+      "GospićA": 10.0,
+      "Pula-aerodrom": 13.6,
+      "PorerA": 15.5,
+      "Sv. Ivan na pučiniA": 15.5,
+      "OpatijaA": 11.0,
+      "Rijeka-aerodrom": 10.9,
+      "MalinskaA": 11.8,
+      "RabA": 15.5,
+      "Mali LošinjA": 13.6,
+      "Zadar-aerodrom": 13.3,
+      "KninA": 12.4,
+      "ŠibenikA": 15.2,
+      "Split-aerodrom": 14.9,
+      "HvarA": 15.7,
+      "PločeA": 14.1,
+      "DubrovnikA": 13.7,
+      "Dubrovnik-aerodrom": 12.0,
+      "PrevlakaA": 14.3,
+      "LastovoA": 14.3
+    }
   }
 ]
